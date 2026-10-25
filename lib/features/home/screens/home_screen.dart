@@ -270,32 +270,39 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          Text(
-                            '⚡ Bestsellers in 10 Mins',
-                            style: TanizTypography.headlineSmall.copyWith(
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                            decoration: BoxDecoration(
-                              color: TanizColors.greenContainer,
-                              borderRadius: BorderRadius.circular(999),
-                              border: Border.all(color: TanizColors.greenBorder),
-                            ),
-                            child: Text(
-                              'Express Delivery',
-                              style: TanizTypography.caption.copyWith(
-                                color: TanizColors.rapidGreenDark,
-                                fontWeight: FontWeight.w700,
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Flexible(
+                              child: Text(
+                                '⚡ Bestsellers in 10m',
+                                style: TanizTypography.titleMedium.copyWith(
+                                  fontWeight: FontWeight.w800,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                          ),
-                        ],
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: TanizColors.greenContainer,
+                                borderRadius: BorderRadius.circular(999),
+                                border: Border.all(color: TanizColors.greenBorder),
+                              ),
+                              child: Text(
+                                'Express',
+                                style: TanizTypography.caption.copyWith(
+                                  color: TanizColors.rapidGreenDark,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
+                      const SizedBox(width: 8),
                       TanizTappable(
                         onTap: () {
                           Navigator.push(
@@ -375,32 +382,39 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          Text(
-                            'Daily Kitchen Staples',
-                            style: TanizTypography.headlineSmall.copyWith(
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFEFF6FF),
-                              borderRadius: BorderRadius.circular(999),
-                              border: Border.all(color: const Color(0xFFBFDBFE)),
-                            ),
-                            child: Text(
-                              'Wholesale Rates',
-                              style: TanizTypography.caption.copyWith(
-                                color: const Color(0xFF1D4ED8),
-                                fontWeight: FontWeight.w700,
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Flexible(
+                              child: Text(
+                                'Daily Staples',
+                                style: TanizTypography.titleMedium.copyWith(
+                                  fontWeight: FontWeight.w800,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                          ),
-                        ],
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFEFF6FF),
+                                borderRadius: BorderRadius.circular(999),
+                                border: Border.all(color: const Color(0xFFBFDBFE)),
+                              ),
+                              child: Text(
+                                'Wholesale',
+                                style: TanizTypography.caption.copyWith(
+                                  color: const Color(0xFF1D4ED8),
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
+                      const SizedBox(width: 8),
                       TanizTappable(
                         onTap: () {
                           Navigator.push(
@@ -618,41 +632,48 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 8,
-                      height: 8,
-                      decoration: const BoxDecoration(
-                        color: TanizColors.goldenAmber,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      '⚡ Lightning Rush Deals',
-                      style: TanizTypography.headlineSmall.copyWith(
-                        fontWeight: FontWeight.w800,
-                        color: TanizColors.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(
-                        color: TanizColors.goldenAmber,
-                        borderRadius: BorderRadius.circular(999),
-                      ),
-                      child: Text(
-                        'Ending in ${_formatRushTimer()}',
-                        style: TanizTypography.caption.copyWith(
-                          fontWeight: FontWeight.w900,
-                          color: TanizColors.midnightNavy,
+                Expanded(
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: const BoxDecoration(
+                          color: TanizColors.goldenAmber,
+                          shape: BoxShape.circle,
                         ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 6),
+                      Flexible(
+                        child: Text(
+                          '⚡ Lightning Deals',
+                          style: TanizTypography.titleMedium.copyWith(
+                            fontWeight: FontWeight.w800,
+                            color: TanizColors.textPrimary,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: TanizColors.goldenAmber,
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                        child: Text(
+                          _formatRushTimer(),
+                          style: TanizTypography.caption.copyWith(
+                            fontWeight: FontWeight.w900,
+                            fontSize: 11,
+                            color: TanizColors.midnightNavy,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
+                const SizedBox(width: 8),
                 TanizTappable(
                   onTap: () {
                     Navigator.push(

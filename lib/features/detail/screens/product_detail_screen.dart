@@ -13,10 +13,12 @@ import '../../cart/screens/cart_checkout_screen.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final Product product;
+  final String? heroTag;
 
   const ProductDetailScreen({
     super.key,
     required this.product,
+    this.heroTag,
   });
 
   @override
@@ -153,28 +155,48 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             child: SizedBox(
                               width: 220,
                               height: 220,
-                              child: Hero(
-                                tag: 'product_img_${product.id}',
-                                child: CachedNetworkImage(
-                                  imageUrl: product.imageUrl,
-                                  fit: BoxFit.cover,
-                                  placeholder: (_, _) => const TanizShimmerBox(
-                                    width: 220,
-                                    height: 220,
-                                    borderRadius: 16,
-                                  ),
-                                  errorWidget: (_, _, _) => Container(
-                                    color: TanizColors.canvasBackground,
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.shopping_bag_outlined,
-                                        size: 64,
-                                        color: TanizColors.primaryBlue.withValues(alpha: 0.4),
+                              child: widget.heroTag != null
+                                  ? Hero(
+                                      tag: widget.heroTag!,
+                                      child: CachedNetworkImage(
+                                        imageUrl: product.imageUrl,
+                                        fit: BoxFit.cover,
+                                        placeholder: (_, _) => const TanizShimmerBox(
+                                          width: 220,
+                                          height: 220,
+                                          borderRadius: 16,
+                                        ),
+                                        errorWidget: (_, _, _) => Container(
+                                          color: TanizColors.canvasBackground,
+                                          child: Center(
+                                            child: Icon(
+                                              Icons.shopping_bag_outlined,
+                                              size: 64,
+                                              color: TanizColors.primaryBlue.withValues(alpha: 0.4),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : CachedNetworkImage(
+                                      imageUrl: product.imageUrl,
+                                      fit: BoxFit.cover,
+                                      placeholder: (_, _) => const TanizShimmerBox(
+                                        width: 220,
+                                        height: 220,
+                                        borderRadius: 16,
+                                      ),
+                                      errorWidget: (_, _, _) => Container(
+                                        color: TanizColors.canvasBackground,
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.shopping_bag_outlined,
+                                            size: 64,
+                                            color: TanizColors.primaryBlue.withValues(alpha: 0.4),
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                              ),
                             ),
                           ),
                         ),

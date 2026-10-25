@@ -41,24 +41,21 @@ class CategoryCard extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-                child: Hero(
-                  tag: 'cat_img_${category.id}',
-                  child: CachedNetworkImage(
-                    imageUrl: category.iconUrl,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => const TanizShimmerBox(
-                      width: 72,
-                      height: 72,
-                      borderRadius: 16,
-                    ),
-                    errorWidget: (context, url, error) => Container(
-                      color: TanizColors.surfaceLow,
-                      child: const Center(
-                        child: Icon(
-                          Icons.category_rounded,
-                          size: 28,
-                          color: TanizColors.primaryBlue,
-                        ),
+                child: CachedNetworkImage(
+                  imageUrl: category.iconUrl,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => const TanizShimmerBox(
+                    width: 72,
+                    height: 72,
+                    borderRadius: 16,
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    color: TanizColors.surfaceLow,
+                    child: const Center(
+                      child: Icon(
+                        Icons.category_rounded,
+                        size: 28,
+                        color: TanizColors.primaryBlue,
                       ),
                     ),
                   ),

@@ -16,6 +16,7 @@ class ProductCard extends StatelessWidget {
   final VoidCallback onDecrement;
 
   final double? width;
+  final String? heroTag;
 
   const ProductCard({
     super.key,
@@ -26,6 +27,7 @@ class ProductCard extends StatelessWidget {
     required this.onIncrement,
     required this.onDecrement,
     this.width,
+    this.heroTag,
   });
 
   @override
@@ -67,28 +69,48 @@ class ProductCard extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
-                    child: Hero(
-                      tag: 'product_img_${product.id}',
-                      child: CachedNetworkImage(
-                        imageUrl: product.imageUrl,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => const TanizShimmerBox(
-                          width: double.infinity,
-                          height: double.infinity,
-                          borderRadius: 15,
-                        ),
-                        errorWidget: (context, url, error) => Container(
-                          color: TanizColors.surfaceLow,
-                          child: const Center(
-                            child: Icon(
-                              Icons.local_grocery_store_outlined,
-                              size: 36,
-                              color: TanizColors.primaryBlue,
+                    child: heroTag != null
+                        ? Hero(
+                            tag: heroTag!,
+                            child: CachedNetworkImage(
+                              imageUrl: product.imageUrl,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => const TanizShimmerBox(
+                                width: double.infinity,
+                                height: double.infinity,
+                                borderRadius: 15,
+                              ),
+                              errorWidget: (context, url, error) => Container(
+                                color: TanizColors.surfaceLow,
+                                child: const Center(
+                                  child: Icon(
+                                    Icons.local_grocery_store_outlined,
+                                    size: 36,
+                                    color: TanizColors.primaryBlue,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        : CachedNetworkImage(
+                            imageUrl: product.imageUrl,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => const TanizShimmerBox(
+                              width: double.infinity,
+                              height: double.infinity,
+                              borderRadius: 15,
+                            ),
+                            errorWidget: (context, url, error) => Container(
+                              color: TanizColors.surfaceLow,
+                              child: const Center(
+                                child: Icon(
+                                  Icons.local_grocery_store_outlined,
+                                  size: 36,
+                                  color: TanizColors.primaryBlue,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    ),
                   ),
 
                   // Top Left: High-Impact Discount Tag (e.g. 23% OFF)
