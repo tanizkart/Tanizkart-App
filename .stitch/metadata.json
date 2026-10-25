@@ -1,0 +1,56 @@
+{
+  "projectId": "9866036870179315711",
+  "projectTitle": "Tanizkart Mobile E-Commerce",
+  "deviceType": "MOBILE",
+  "designSystem": "assets/589aa25c088e4c05801ca3d0648875de",
+  "screens": {
+    "home": {
+      "id": "b941d95be6d045eaaa24d8ace1475d4b",
+      "title": "Tanizkart Ultra-Vibrant Quick-Commerce Home",
+      "width": 780,
+      "height": 3158,
+      "htmlFile": ".stitch/designs/home.html",
+      "screenshotFile": ".stitch/designs/home.png"
+    },
+    "listing": {
+      "id": "1095768ab36e4a9483770f2c59fabd79",
+      "title": "Tanizkart Ultra-Vibrant PLP - Dairy, Bread & Eggs",
+      "width": 780,
+      "height": 2918,
+      "htmlFile": ".stitch/designs/listing.html",
+      "screenshotFile": ".stitch/designs/listing.png"
+    },
+    "detail": {
+      "id": "8d9c1900e78146e18eff56b6207141d8",
+      "title": "Tanizkart Ultra-Vibrant PDP - Amul Taaza Milk",
+      "width": 780,
+      "height": 4334,
+      "htmlFile": ".stitch/designs/detail.html",
+      "screenshotFile": ".stitch/designs/detail.png"
+    },
+    "cart": {
+      "id": "66597e2df5b446cf92f1f00e6f3898bc",
+      "title": "Tanizkart Ultra-Vibrant Cart & Checkout",
+      "width": 780,
+      "height": 3260,
+      "htmlFile": ".stitch/designs/cart.html",
+      "screenshotFile": ".stitch/designs/cart.png"
+    },
+    "tracking": {
+      "id": "9e9b600aa9cf4c5baf6e3d1c945632e6",
+      "title": "Tanizkart Live Order Tracking & Map",
+      "width": 780,
+      "height": 1800,
+      "htmlFile": ".stitch/designs/tracking.html",
+      "screenshotFile": ".stitch/designs/tracking.png"
+    },
+    "profile": {
+      "id": "92db0db1699f46a19d3b9bca2805ec6b",
+      "title": "Tanizkart Profile & Account Hub",
+      "width": 780,
+      "height": 3382,
+      "htmlFile": ".stitch/designs/profile.html",
+      "screenshotFile": ".stitch/designs/profile.png"
+    }
+  }
+}

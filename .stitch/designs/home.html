@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Tanizkart - Save money save time | 10 Min Delivery</title>
+  
+  <!-- Material Symbols Outlined & Rounded -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <!-- Plus Jakarta Sans Font Family -->
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet"/>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  
+  <!-- Tailwind Configuration matching the brand tokens -->
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container": "#f1f4ff",
+            "surface-container-high": "#e8edff",
+            "surface-container-lowest": "#ffffff",
+            "surface": "#faf8ff",
+            "surface-bright": "#ffffff",
+            "primary": "#0052cc",
+            "primary-container": "#003d9b",
+            "primary-dark": "#0a1b3f",
+            "secondary": "#835500",
+            "secondary-container": "#feae2c",
+            "brand-gold": "#f5a623",
+            "brand-gold-hover": "#e69818",
+            "brand-gold-glow": "#ffb703",
+            "brand-blue": "#0052cc",
+            "brand-blue-deep": "#082873",
+            "rapid-green": "#10b981",
+            "rapid-green-dark": "#059669",
+            "tertiary": "#004e33",
+            "tertiary-container": "#006846",
+            "outline": "#737685",
+            "outline-variant": "#e2e6f0",
+            "on-surface": "#131b2e",
+            "on-surface-variant": "#434654",
+            "error": "#ba1a1a"
+          },
+          fontFamily: {
+            sans: ["Plus Jakarta Sans", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          },
+          boxShadow: {
+            'glow-gold': '0 0 20px -3px rgba(245, 166, 35, 0.45)',
+            'glow-blue': '0 0 24px -4px rgba(0, 82, 204, 0.40)',
+            'glow-green': '0 0 16px -2px rgba(16, 185, 129, 0.45)',
+            'card-lift': '0 12px 30px -8px rgba(0, 40, 110, 0.10)',
+            'glass': '0 8px 32px 0 rgba(0, 30, 90, 0.08)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .tnum {
+      font-variant-numeric: tabular-nums;
+    }
+    body {
+      min-height: max(884px, 100dvh);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* Ambient pulse animations */
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(1.04); }
+    }
+    .animate-pulse-subtle {
+      animation: pulse-subtle 2.5s infinite ease-in-out;
+    }
+
+    @keyframes radar-ripple {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      100% { transform: scale(2.4); opacity: 0; }
+    }
+    .radar-ping {
+      position: relative;
+    }
+    .radar-ping::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 9999px;
+      background-color: #10B981;
+      animation: radar-ripple 1.8s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+    }
+
+    @keyframes shimmer-sweep {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(200%); }
+    }
+    .shimmer-badge {
+      position: relative;
+      overflow: hidden;
+    }
+    .shimmer-badge::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: shimmer-sweep 2.8s infinite;
+    }
+
+    /* Tactile button bounce */
+    .btn-tap {
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+    .btn-tap:active {
+      transform: scale(0.94);
+    }
+
+    /* Smooth image transitions */
+    .product-img-frame {
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .group:hover .product-img-frame {
+      transform: scale(1.12) translateY(-2px);
+    }
+
+    /* Toast animation */
+    @keyframes slide-up-fade {
+      0% { transform: translate(-50%, 20px); opacity: 0; }
+      100% { transform: translate(-50%, 0); opacity: 1; }
+    }
+    .toast-animate {
+      animation: slide-up-fade 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
+</head>
+
+<body class="bg-[#F4F6FC] text-[#131B2E] antialiased min-h-screen selection:bg-[#FEAE2C] selection:text-[#0052CC]">
+
+<!-- Main Mobile Canvas Container -->
+<div class="max-w-screen-md mx-auto min-h-screen flex flex-col bg-[#F4F6FC] relative pb-36">
+
+  <!-- ========================================================================= -->
+  <!-- 1. BRAND LOGO & TOP HEADER (Ultra-Clean, Luminous Glassmorphism)          -->
+  <!-- ========================================================================= -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/70 shadow-[0_4px_20px_rgba(0,40,120,0.05)]">
+    
+    <!-- Top Delivery Navigation Row -->
+    <div class="flex justify-between items-center px-4 pt-3 pb-2">
+      <!-- Location & ETA Pill (Clickable trigger for Address Drawer) -->
+      <div class="flex items-center gap-2">
+        <!-- ⚡ 10 MINS Glowing Speed Pill -->
+        <div class="flex items-center gap-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-2.5 py-1 rounded-full shadow-sm shadow-emerald-600/30">
+          <span class="w-1.5 h-1.5 rounded-full bg-white radar-ping"></span>
+          <span class="text-xs">⚡</span>
+          <span class="text-[11px] font-black uppercase tracking-wider">10 MINS</span>
+        </div>
+        
+        <!-- Location Selector Button -->
+        <button onclick="openAddressModal()" class="flex flex-col text-left group cursor-pointer focus:outline-none">
+          <div class="flex items-center gap-1 text-[13.5px] font-extrabold text-[#131B2E] group-hover:text-[#0052CC] transition-colors leading-tight">
+            <span>Deliver to Flat 302, Lawyerpet</span>
+            <span class="material-symbols-outlined text-[17px] text-[#0052CC] transform group-hover:translate-y-0.5 transition-transform">expand_more</span>
+          </div>
+          <span class="text-[11px] text-slate-500 font-semibold truncate max-w-[200px]">Ongole, AP • Home (Hub #304)</span>
+        </button>
+      </div>
+
+      <!-- Action Icons (Notifications & Profile) -->
+      <div class="flex items-center gap-2">
+        <button onclick="triggerNotificationToast()" aria-label="Notifications" class="w-9 h-9 rounded-full bg-slate-50 hover:bg-slate-100 border border-slate-200/80 flex items-center justify-center text-slate-700 relative btn-tap">
+          <span class="material-symbols-outlined text-[20px]">notifications</span>
+          <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#F5A623] ring-2 ring-white animate-pulse"></span>
+        </button>
+        
+        <button onclick="window.location.href='profile.html'" aria-label="User Profile" class="w-9 h-9 rounded-full bg-gradient-to-br from-[#0052CC] to-[#0A1B3F] p-0.5 btn-tap shadow-sm shadow-blue-900/20">
+          <div class="w-full h-full rounded-full bg-white flex items-center justify-center text-[#0052CC] font-black text-xs">
+            <span class="material-symbols-outlined text-[20px]">account_circle</span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Official Brand Logo Banner & Darkstore Status -->
+    <div class="px-4 py-1.5 flex items-center justify-between border-t border-slate-100/90 bg-gradient-to-r from-blue-50/40 via-white to-amber-50/40">
+      <div class="flex items-center gap-2.5">
+        <img src="assets/logo.png" alt="Tanizkart - Save money save time" class="h-8 w-auto object-contain drop-shadow-xs" />
+        <span class="text-[10px] font-bold text-slate-400 border-l border-slate-200 pl-2 hidden sm:inline">Warehouse Direct</span>
+      </div>
+      
+      <!-- Live Darkstore Status Pill -->
+      <div class="flex items-center gap-1.5 bg-emerald-50/90 border border-emerald-200/80 px-2.5 py-0.5 rounded-full shadow-xs">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+        <span class="text-[10px] font-extrabold text-emerald-800 tracking-tight">Hub #304 Active • 100% Cold-Chain</span>
+      </div>
+    </div>
+
+    <!-- Search Bar Section with Animated Cycling Placeholder & Quick Tools -->
+    <div class="px-4 pb-3 pt-2">
+      <div class="relative flex items-center bg-white rounded-2xl border border-slate-200/90 shadow-[0_3px_12px_rgba(0,40,120,0.06)] pl-3.5 pr-2 py-1.5 hover:border-[#0052CC]/50 focus-within:border-[#0052CC] focus-within:ring-2 focus-within:ring-[#0052CC]/15 transition-all">
+        <span class="material-symbols-outlined text-[#0052CC] text-xl flex-shrink-0">search</span>
+        <input id="searchInput" onclick="openSearchModal()" class="w-full bg-transparent border-none text-[#131B2E] placeholder:text-slate-400 text-[13.5px] font-semibold focus:ring-0 focus:outline-none px-2.5 cursor-pointer" placeholder='Search "fresh milk", "bread", "lays"...' type="text" readonly/>
+        
+        <div class="flex items-center gap-1 border-l border-slate-200 pl-2">
+          <button onclick="triggerVoiceSearch()" title="Voice Search" class="p-1 rounded-xl text-slate-500 hover:text-[#0052CC] hover:bg-blue-50 transition-colors btn-tap">
+            <span class="material-symbols-outlined text-[19px]">mic</span>
+          </button>
+          <button onclick="triggerBarcodeSearch()" title="Scan Barcode" class="p-1 rounded-xl text-slate-500 hover:text-[#0052CC] hover:bg-blue-50 transition-colors btn-tap">
+            <span class="material-symbols-outlined text-[19px]">barcode_scanner</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- Main Scrollable Flow                                                      -->
+  <!-- ========================================================================= -->
+  <main class="flex-1 flex flex-col gap-5 pt-3">
+
+    <!-- ======================================================================= -->
+    <!-- 2. INSTANT MOODS / QUICK STORIES RAIL (Zepto/Blinkit Style)              -->
+    <!-- ======================================================================= -->
+    <section class="px-4">
+      <div class="flex items-center gap-3 overflow-x-auto no-scrollbar py-1">
+        
+        <!-- Story 1: 10m Rush -->
+        <button onclick="filterShelf('rush')" class="flex flex-col items-center gap-1 shrink-0 group focus:outline-none cursor-pointer">
+          <div class="w-14 h-14 rounded-2xl p-0.5 bg-gradient-to-tr from-amber-400 via-[#F5A623] to-yellow-300 shadow-sm shadow-amber-500/20 group-hover:scale-105 transition-transform">
+            <div class="w-full h-full rounded-[14px] bg-white flex items-center justify-center text-amber-500 font-black text-xl">
+              ⚡
+            </div>
+          </div>
+          <span class="text-[10.5px] font-extrabold text-slate-800 tracking-tight">10m Rush</span>
+        </button>
+
+        <!-- Story 2: Farm Fresh -->
+        <button onclick="filterShelf('farm')" class="flex flex-col items-center gap-1 shrink-0 group focus:outline-none cursor-pointer">
+          <div class="w-14 h-14 rounded-2xl p-0.5 bg-gradient-to-tr from-emerald-500 via-teal-400 to-green-300 shadow-sm shadow-emerald-500/20 group-hover:scale-105 transition-transform">
+            <div class="w-full h-full rounded-[14px] bg-white flex items-center justify-center text-emerald-600 font-black text-xl">
+              🥦
+            </div>
+          </div>
+          <span class="text-[10.5px] font-extrabold text-slate-800 tracking-tight">Farm Fresh</span>
+        </button>
+
+        <!-- Story 3: Morning Dairy -->
+        <button onclick="filterShelf('dairy')" class="flex flex-col items-center gap-1 shrink-0 group focus:outline-none cursor-pointer">
+          <div class="w-14 h-14 rounded-2xl p-0.5 bg-gradient-to-tr from-blue-500 via-sky-400 to-indigo-300 shadow-sm shadow-blue-500/20 group-hover:scale-105 transition-transform">
+            <div class="w-full h-full rounded-[14px] bg-white flex items-center justify-center text-blue-600 font-black text-xl">
+              🥛
+            </div>
+          </div>
+          <span class="text-[10.5px] font-extrabold text-slate-800 tracking-tight">Dairy Hub</span>
+        </button>
+
+        <!-- Story 4: Midnight Munch -->
+        <button onclick="filterShelf('snacks')" class="flex flex-col items-center gap-1 shrink-0 group focus:outline-none cursor-pointer">
+          <div class="w-14 h-14 rounded-2xl p-0.5 bg-gradient-to-tr from-purple-500 via-fuchsia-400 to-pink-300 shadow-sm shadow-purple-500/20 group-hover:scale-105 transition-transform">
+            <div class="w-full h-full rounded-[14px] bg-white flex items-center justify-center text-purple-600 font-black text-xl">
+              🍿
+            </div>
+          </div>
+          <span class="text-[10.5px] font-extrabold text-slate-800 tracking-tight">Munchies</span>
+        </button>
+
+        <!-- Story 5: ₹99 Deals -->
+        <button onclick="filterShelf('deals')" class="flex flex-col items-center gap-1 shrink-0 group focus:outline-none cursor-pointer">
+          <div class="w-14 h-14 rounded-2xl p-0.5 bg-gradient-to-tr from-rose-500 via-red-400 to-orange-300 shadow-sm shadow-rose-500/20 group-hover:scale-105 transition-transform">
+            <div class="w-full h-full rounded-[14px] bg-white flex items-center justify-center text-rose-600 font-black text-xs font-mono">
+              ₹99
+            </div>
+          </div>
+          <span class="text-[10.5px] font-extrabold text-slate-800 tracking-tight">Under ₹99</span>
+        </button>
+
+        <!-- Story 6: Cold Sips -->
+        <button onclick="filterShelf('drinks')" class="flex flex-col items-center gap-1 shrink-0 group focus:outline-none cursor-pointer">
+          <div class="w-14 h-14 rounded-2xl p-0.5 bg-gradient-to-tr from-cyan-500 via-blue-400 to-teal-300 shadow-sm shadow-cyan-500/20 group-hover:scale-105 transition-transform">
+            <div class="w-full h-full rounded-[14px] bg-white flex items-center justify-center text-cyan-600 font-black text-xl">
+              🧊
+            </div>
+          </div>
+          <span class="text-[10.5px] font-extrabold text-slate-800 tracking-tight">Ice Cold</span>
+        </button>
+
+        <!-- Story 7: Chai & Bakes -->
+        <button onclick="filterShelf('chai')" class="flex flex-col items-center gap-1 shrink-0 group focus:outline-none cursor-pointer">
+          <div class="w-14 h-14 rounded-2xl p-0.5 bg-gradient-to-tr from-amber-600 via-orange-500 to-yellow-400 shadow-sm shadow-amber-600/20 group-hover:scale-105 transition-transform">
+            <div class="w-full h-full rounded-[14px] bg-white flex items-center justify-center text-amber-700 font-black text-xl">
+              ☕
+            </div>
+          </div>
+          <span class="text-[10.5px] font-extrabold text-slate-800 tracking-tight">Chai &amp; Bakes</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 3. INTERACTIVE 3D HERO CAROUSEL BANNER (Royal Blue to Amber Gold)       -->
+    <!-- ======================================================================= -->
+    <section class="px-4">
+      <div id="heroBannerContainer" class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#0038A8] via-[#0052CC] to-[#0A1B3F] text-white shadow-glow-blue p-5 border border-blue-400/30 transition-all duration-500">
+        
+        <!-- Ambient Decorative Lighting Elements -->
+        <div class="absolute -right-10 -top-10 w-48 h-48 rounded-full bg-[#F5A623]/25 blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-10 -bottom-10 w-40 h-40 rounded-full bg-blue-400/20 blur-2xl pointer-events-none"></div>
+
+        <!-- Slide 1 Content: Warehouse Direct Flash Sale (Default) -->
+        <div id="slide-1" class="hero-slide relative z-10 flex flex-col gap-2.5 transition-opacity duration-300">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div class="flex items-center gap-2">
+              <span class="shimmer-badge bg-[#F5A623] text-slate-950 px-2.5 py-0.5 rounded-full text-[10.5px] font-black uppercase tracking-wider shadow-sm shadow-amber-900/30 flex items-center gap-1">
+                <span>⚡</span> FLASH SALE
+              </span>
+              <!-- Urgency Timer Pill -->
+              <span class="bg-black/30 backdrop-blur-md text-amber-300 text-[10.5px] font-mono font-bold px-2.5 py-0.5 rounded-full border border-amber-300/30 flex items-center gap-1">
+                <span class="material-symbols-outlined text-[13px]">timer</span>
+                <span id="flashTimer">01:42:18</span>
+              </span>
+            </div>
+
+            <!-- Coupon Code Copy Pill -->
+            <button onclick="copyCoupon('SAVE45')" class="bg-white/15 hover:bg-white/25 active:scale-95 text-blue-100 text-[10px] font-extrabold px-2 py-0.5 rounded-full border border-white/25 flex items-center gap-1 transition-all">
+              <span>Code: <b class="text-white">SAVE45</b></span>
+              <span class="material-symbols-outlined text-[12px]">content_copy</span>
+            </button>
+          </div>
+
+          <div class="max-w-[85%]">
+            <h2 class="text-xl sm:text-2xl font-black text-white leading-tight tracking-tight mt-1">
+              Direct Warehouse Savings • <span class="text-[#F5A623] drop-shadow-sm">Up to 45% OFF</span>
+            </h2>
+            <p class="text-xs text-blue-100/90 font-medium mt-1 leading-relaxed">
+              Fresh dairy, atta, cooking oil &amp; daily staples delivered at wholesale prices in 10 minutes.
+            </p>
+          </div>
+
+          <div class="pt-2 flex items-center gap-3">
+            <button onclick="window.location.href='listing.html'" class="inline-flex items-center gap-1.5 bg-gradient-to-r from-[#F5A623] to-[#FEAE2C] hover:from-[#E69818] hover:to-[#F5A623] text-slate-950 px-4 py-2.5 rounded-xl text-xs font-black shadow-glow-gold btn-tap transition-all">
+              <span>Shop Warehouse Sale</span>
+              <span class="material-symbols-outlined text-sm font-black">arrow_forward</span>
+            </button>
+            <span class="text-[11px] text-blue-200/80 font-bold">Free delivery on ₹149+</span>
+          </div>
+        </div>
+
+        <!-- Slide Indicators & Controls -->
+        <div class="flex items-center justify-between pt-3 border-t border-white/10 mt-3 relative z-10">
+          <div class="flex items-center gap-1.5">
+            <button onclick="switchHeroSlide(0)" class="slide-dot w-6 h-1.5 rounded-full bg-[#F5A623] transition-all"></button>
+            <button onclick="switchHeroSlide(1)" class="slide-dot w-2 h-1.5 rounded-full bg-white/40 hover:bg-white transition-all"></button>
+            <button onclick="switchHeroSlide(2)" class="slide-dot w-2 h-1.5 rounded-full bg-white/40 hover:bg-white transition-all"></button>
+          </div>
+          <span class="text-[10px] text-blue-200 font-bold uppercase tracking-wider">⚡ 10-Min Darkstore Guaranteed</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 4. EXPLORE CATEGORIES (8 Appetizing Squircles in 4 Columns)               -->
+    <!-- ======================================================================= -->
+    <section class="px-4 flex flex-col gap-2.5">
+      <div class="flex justify-between items-center">
+        <div>
+          <h3 class="text-base font-extrabold text-[#131B2E] tracking-tight">Explore Categories</h3>
+          <p class="text-[11px] text-slate-400 font-semibold">Organized aisles with 1,200+ fresh items</p>
+        </div>
+        <a class="text-xs text-[#0052CC] font-extrabold hover:underline flex items-center gap-0.5" href="listing.html">
+          <span>View All (24+)</span>
+          <span class="material-symbols-outlined text-sm">chevron_right</span>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-4 gap-2.5">
+        
+        <!-- 1. Dairy, Bread & Eggs -->
+        <div onclick="window.location.href='listing.html'" class="flex flex-col items-center text-center group cursor-pointer btn-tap">
+          <div class="w-full aspect-square max-w-[82px] rounded-2xl bg-gradient-to-b from-[#FFF9E6] to-[#FFEEC2] border border-amber-200/80 p-2 flex items-center justify-center shadow-xs group-hover:shadow-card-lift transition-all relative overflow-hidden">
+            <span class="absolute top-1 right-1 text-[8.5px] font-black bg-amber-500/20 text-amber-800 px-1 rounded">HOT</span>
+            <img class="w-full h-full object-contain product-img-frame" alt="Dairy, Bread & Eggs" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_zg4idKN0gPq7Y-fgt7Fm7q3gNPNGlqNyIT7tLWnymMb5R67f1SavN5tf7Y3_Ow-Rqb-YyNz7t-Ez2gjLG7hNflWrNfnBQ5oIqzofkPGlW2N144GE2PlrkUi0fzd2sDemqJ_ZW3dm1SC5yW4W2xYCLSWoYSB6JDIQ-tmZiE3uH-7bl5Zo1hU3UEYwn_pifSWOXJz7dvVB1xeRF5XvnC6x9rcx1Va2JxEJzzEKp5vvODf10b3PAwZzMd2uxrRUSN-gMR57nnswuiA"/>
+          </div>
+          <span class="text-[11px] text-slate-900 font-extrabold leading-tight mt-1.5 line-clamp-2">Dairy &amp; Bread</span>
+          <span class="text-[9.5px] text-slate-400 font-bold">140+ Items</span>
+        </div>
+
+        <!-- 2. Fresh Fruits & Veggies -->
+        <div onclick="window.location.href='listing.html'" class="flex flex-col items-center text-center group cursor-pointer btn-tap">
+          <div class="w-full aspect-square max-w-[82px] rounded-2xl bg-gradient-to-b from-[#ECFDF5] to-[#D1FAE5] border border-emerald-200/80 p-2 flex items-center justify-center shadow-xs group-hover:shadow-card-lift transition-all relative overflow-hidden">
+            <span class="absolute top-1 right-1 text-[8.5px] font-black bg-emerald-600/20 text-emerald-800 px-1 rounded">FARM</span>
+            <img class="w-full h-full object-contain product-img-frame" alt="Fresh Fruits & Veggies" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDoWVh64aiH6LnZNNtIkagQmHpT68RdceKHVcJKN0cqfQTJuObUvJwcSu-fTVWdS7p58ht9cV_xOWJ2QrC8X8nRh1n9Ohul9AhXHlIe__wpdLjbdzjSAPtxXmnCATiSitNDEIZNdq9jmj0SaK8z2ClReXee_v5287iZj_usAxDaGEbghFsFpN2tYbBihJRMlcfkJ96ZQAUmbXYnOenNy4kkdLQ2tf7q_gSUwffCAC3Zo5V-UaijLsbFQqY2z4oSkBeKYVdB6Fwkc-M"/>
+          </div>
+          <span class="text-[11px] text-slate-900 font-extrabold leading-tight mt-1.5 line-clamp-2">Fruits &amp; Veg</span>
+          <span class="text-[9.5px] text-slate-400 font-bold">95+ Items</span>
+        </div>
+
+        <!-- 3. Snacks & Munchies -->
+        <div onclick="window.location.href='listing.html'" class="flex flex-col items-center text-center group cursor-pointer btn-tap">
+          <div class="w-full aspect-square max-w-[82px] rounded-2xl bg-gradient-to-b from-[#FFF7ED] to-[#FED7AA] border border-orange-200/80 p-2 flex items-center justify-center shadow-xs group-hover:shadow-card-lift transition-all relative overflow-hidden">
+            <span class="absolute top-1 right-1 text-[8.5px] font-black bg-orange-600/20 text-orange-800 px-1 rounded">-30%</span>
+            <img class="w-full h-full object-contain product-img-frame" alt="Snacks & Munchies" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzT24iqkZd6yJlU5I9gM_Ct1CAjs8TIS4FiigbJTp-nsFxZ5VrabIFE48HKRZhDywu5i4Ll-U4fTjr51OkDXItn-tCWk8S7d74I_l55QaFGkHVU4thdnoAWclpZl45BljMEnU6G4-ZO0DMxjTQw4kKPgIZ8RSWYGWksEpBesm-rRjDHevlX5rP_lqg4X02gmZVgDueWIIy7fKePi191waIiteGiqaTEV2ZG49Uyx7HZWwqlu8rp4xH4gJ-Y15N29IwGtbHlihQEKU"/>
+          </div>
+          <span class="text-[11px] text-slate-900 font-extrabold leading-tight mt-1.5 line-clamp-2">Munchies</span>
+          <span class="text-[9.5px] text-slate-400 font-bold">210+ Items</span>
+        </div>
+
+        <!-- 4. Cold Drinks & Juices -->
+        <div onclick="window.location.href='listing.html'" class="flex flex-col items-center text-center group cursor-pointer btn-tap">
+          <div class="w-full aspect-square max-w-[82px] rounded-2xl bg-gradient-to-b from-[#EFF6FF] to-[#DBEAFE] border border-blue-200/80 p-2 flex items-center justify-center shadow-xs group-hover:shadow-card-lift transition-all relative overflow-hidden">
+            <span class="absolute top-1 right-1 text-[8.5px] font-black bg-blue-600/20 text-blue-800 px-1 rounded">CHILL</span>
+            <img class="w-full h-full object-contain product-img-frame" alt="Cold Drinks & Juices" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBU5V4esUlrvOJWfCa0e_haxYj7mYf5A8mGbEyMiM0sGJSXcU1efQtOR45M_3yX6r64nMB77yfCsdkyylrsCYf5BL-Ki4bzHi0b2GxpY-BGqMoY7oZ3T03Xyv0DHkoboZtn927ZJH9hPwLMB9fk9a163rDHsh-7Y5-4LcLHGQ0o2sX_6CV_CcUeEjHIhDjIK1doQVMsJnEeZQzoKS3pbIK1QqbYOxPptEACqBT8taashbNBuSNdwv0YiKnwY8zjRYBygRomFM1499w"/>
+          </div>
+          <span class="text-[11px] text-slate-900 font-extrabold leading-tight mt-1.5 line-clamp-2">Cold Drinks</span>
+          <span class="text-[9.5px] text-slate-400 font-bold">80+ Items</span>
+        </div>
+
+        <!-- 5. Atta, Rice & Dals -->
+        <div onclick="window.location.href='listing.html'" class="flex flex-col items-center text-center group cursor-pointer btn-tap">
+          <div class="w-full aspect-square max-w-[82px] rounded-2xl bg-gradient-to-b from-[#FEFCE8] to-[#FEF08A] border border-amber-200/80 p-2 flex items-center justify-center shadow-xs group-hover:shadow-card-lift transition-all relative overflow-hidden">
+            <img class="w-full h-full object-contain product-img-frame" alt="Atta, Rice & Dals" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeU5UIGdchHuRaiiHqARjPaK2yzlT4Jhj1uAQWObmC81IJpG24rXS5hkC8ZIa4F3anyGdCrP3mgCzqx7wqbb4O1OxPecSB2jM5rfX7oQmL7vOQgxXVKc7wpZ-_xslgSIhQqw5lYTYrVt65o3PDfOE9GHTr_Zd-v6HMOHpum2aeZwKH8tzyGctEhI3lt9sjawTsvbx3bjZC9HFYJZJAvSBa1h_DK_w4sz2x0JA3LO7MqnShOarhBUcVZuub3BMFR6NMrO1zFr2lVAY"/>
+          </div>
+          <span class="text-[11px] text-slate-900 font-extrabold leading-tight mt-1.5 line-clamp-2">Atta &amp; Dals</span>
+          <span class="text-[9.5px] text-slate-400 font-bold">120+ Items</span>
+        </div>
+
+        <!-- 6. Instant Food -->
+        <div onclick="window.location.href='listing.html'" class="flex flex-col items-center text-center group cursor-pointer btn-tap">
+          <div class="w-full aspect-square max-w-[82px] rounded-2xl bg-gradient-to-b from-[#FEF2F2] to-[#FECACA] border border-red-200/80 p-2 flex items-center justify-center shadow-xs group-hover:shadow-card-lift transition-all relative overflow-hidden">
+            <img class="w-full h-full object-contain product-img-frame" alt="Instant Food" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDE9AlKgbwGPQpzVLD0_zua0WuYgh1Mr3sLYEFQUPpQLyS_n3EnLo03-2vQMA6dDQGshb3x3G9YKYS8gocaqrkUA9ZUyz5ihYgdxhjTAOki40NuMIJwbmeQSpY3_IDy2-4AnF1qzWfk-9PBFrqpQPpyECo_SOYYYne-UndEqwh4L7ryWkeaJaOl8LuPjZVAJP4dcV5igZrJxEEdFQ5kQMqxQON0SrGFIhQarGeoa051umUWTX5KE-JG88TwtCW5GEkfB-4rsr0KY9Q"/>
+          </div>
+          <span class="text-[11px] text-slate-900 font-extrabold leading-tight mt-1.5 line-clamp-2">Instant Food</span>
+          <span class="text-[9.5px] text-slate-400 font-bold">65+ Items</span>
+        </div>
+
+        <!-- 7. Personal Care -->
+        <div onclick="window.location.href='listing.html'" class="flex flex-col items-center text-center group cursor-pointer btn-tap">
+          <div class="w-full aspect-square max-w-[82px] rounded-2xl bg-gradient-to-b from-[#FAF5FF] to-[#E9D5FF] border border-purple-200/80 p-2 flex items-center justify-center shadow-xs group-hover:shadow-card-lift transition-all relative overflow-hidden">
+            <img class="w-full h-full object-contain product-img-frame" alt="Personal Care" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLabf8N_dU9OKTSqql65nAy-bDuO-55rIPo6y2PqesRammrPGbhKO-uWsIeV4VSbk9AV3jQgPiJIdKNGiZKMMqM89l1Xjo-bnldyWXdOtrUIeHxKs_ydnvmjnNu3akvEavtfx2YLTOZ6qlP1T-DS1e-6UBNAx8wN_CZep1TVTTsMbjLuHH83uw70ycA1NGdUfXJWzEMJ-Q5Z9CuvhNM1STPPgGIYSBt9gD-j9gXtT6RMHKK75XOmqHd8QImERdrIFoCwVtJVHJvGk"/>
+          </div>
+          <span class="text-[11px] text-slate-900 font-extrabold leading-tight mt-1.5 line-clamp-2">Personal Care</span>
+          <span class="text-[9.5px] text-slate-400 font-bold">110+ Items</span>
+        </div>
+
+        <!-- 8. Cleaning -->
+        <div onclick="window.location.href='listing.html'" class="flex flex-col items-center text-center group cursor-pointer btn-tap">
+          <div class="w-full aspect-square max-w-[82px] rounded-2xl bg-gradient-to-b from-[#F0FDFA] to-[#CCFBF1] border border-teal-200/80 p-2 flex items-center justify-center shadow-xs group-hover:shadow-card-lift transition-all relative overflow-hidden">
+            <img class="w-full h-full object-contain product-img-frame" alt="Cleaning & Essentials" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoWYxdmorHo_czzNVmgxAjo0ml1xC3PpEhmW02UFjjWw9iDSfirQEG_uXt2gZ5kyv9xkPgLXUKH1dSJ2Y_uSGIu6As6w2_THI9vBhdcynm5RnU1UH_94-PVxohLB31MWZXHOgp1EuufKu_IOIzulFwiKvoAZ7k9Z0zFZII6J2hHAIFxzME2oTZ2002gFnZ9bMKVDNwUpdo5eDwRqV1zK2VQAf6-E337R0z30B42xhMwgxd5piUKo9cDrRfnS_HC2_rzkppLycL3uo"/>
+          </div>
+          <span class="text-[11px] text-slate-900 font-extrabold leading-tight mt-1.5 line-clamp-2">Cleaning</span>
+          <span class="text-[9.5px] text-slate-400 font-bold">90+ Items</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 5. ⚡ LIGHTNING RUSH DEALS (Urgency Shelf with Live Ticking Timer)        -->
+    <!-- ======================================================================= -->
+    <section class="flex flex-col gap-2.5 bg-gradient-to-r from-amber-500/10 via-orange-500/5 to-transparent py-3 border-y border-amber-200/60">
+      <div class="px-4 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+          <span class="text-base font-black text-[#131B2E] tracking-tight">⚡ Lightning Rush Deals</span>
+          <span class="bg-amber-500 text-slate-950 font-black text-[10px] px-2 py-0.5 rounded-full shadow-xs">
+            Ending in <span id="rushTimer">14:28</span>
+          </span>
+        </div>
+        <a class="text-xs text-[#0052CC] font-extrabold hover:underline" href="listing.html">All Deals</a>
+      </div>
+
+      <!-- Horizontal Rush Carousel -->
+      <div class="flex gap-3 overflow-x-auto px-4 no-scrollbar pb-1">
+
+        <!-- Rush Item 1: Nandini Pure Cow Ghee -->
+        <article class="flex-shrink-0 w-44 bg-white rounded-2xl p-2.5 border border-amber-200/80 shadow-[0_4px_16px_rgba(245,166,35,0.08)] flex flex-col justify-between group hover:border-[#F5A623] transition-all relative">
+          <div onclick="window.location.href='detail.html'" class="cursor-pointer">
+            <div class="relative bg-gradient-to-b from-[#FFFDF7] to-[#FFF8E7] rounded-xl h-36 flex items-center justify-center p-2 mb-2 overflow-hidden border border-amber-100">
+              <span class="absolute top-1.5 left-1.5 bg-emerald-50 text-emerald-700 font-extrabold text-[10px] px-1.5 py-0.5 rounded-md border border-emerald-200 shadow-xs z-10">
+                ⚡ 10 MINS
+              </span>
+              <span class="absolute top-1.5 right-1.5 bg-red-600 text-white font-black text-[10px] px-1.5 py-0.5 rounded-md shadow-xs z-10">
+                SAVE ₹25
+              </span>
+              <img class="w-full h-full object-contain product-img-frame drop-shadow-sm" alt="Nandini Pure Cow Ghee" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhbu-D2n356183KDtBVNBlHVTYryfKLXvIY0c4dZlPvBOXS_26iQ4BlYmjPa5xIC6hAOfULLn5jzHfQtInoaGVSXlidRwXZg-iB2526wK-eYTzHeG6wO7XWuBypCZIP_2zwlubzkUIDhGdpLN3Kswhe4A3U-E8ys2Id1KaCLLq4AQXKlNHiLiiYYzNa93p2TJiZrmA0WIthti6FfPXJ6EnY-XJUR5oD8CwQgs7b0GHhQdZpakrwzY7ziwLOS5M9w5KOBY0PKpkOak"/>
+            </div>
+
+            <div class="mb-1">
+              <span class="text-[9.5px] text-amber-700 font-black uppercase tracking-wider bg-amber-50 px-1.5 py-0.5 rounded">NANDINI</span>
+              <h4 class="text-xs text-[#131B2E] font-bold line-clamp-2 leading-snug mt-1">
+                Pure Cow Ghee Aroma Jar
+              </h4>
+              <span class="text-[11px] text-slate-500 font-semibold">200 ml Jar</span>
+            </div>
+
+            <!-- Stock Progress Bar -->
+            <div class="w-full bg-slate-100 h-1.5 rounded-full my-1.5 overflow-hidden">
+              <div class="bg-gradient-to-r from-amber-500 to-rose-500 h-full w-[78%] rounded-full"></div>
+            </div>
+            <span class="text-[9.5px] text-rose-600 font-extrabold block">🔥 Only 3 left at this price</span>
+          </div>
+
+          <!-- Price & Dynamic Cart Stepper -->
+          <div class="flex items-center justify-between pt-2 mt-1 border-t border-slate-100">
+            <div class="flex flex-col">
+              <span class="text-[15px] font-black text-[#131B2E] tnum">₹135</span>
+              <span class="text-[11px] text-slate-400 line-through tnum">₹160</span>
+            </div>
+            
+            <div id="btn-wrap-nandini">
+              <button onclick="handleAddToCart('nandini', 'Nandini Cow Ghee', 135)" class="bg-[#F5A623] hover:bg-[#E69818] active:scale-95 text-slate-950 font-black text-xs px-3.5 py-1.5 rounded-xl shadow-sm transition-all btn-tap">
+                + ADD
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Rush Item 2: Milky Mist Fresh Malai Paneer -->
+        <article class="flex-shrink-0 w-44 bg-white rounded-2xl p-2.5 border border-amber-200/80 shadow-[0_4px_16px_rgba(245,166,35,0.08)] flex flex-col justify-between group hover:border-[#F5A623] transition-all relative">
+          <div onclick="window.location.href='detail.html'" class="cursor-pointer">
+            <div class="relative bg-gradient-to-b from-[#FFFDF7] to-[#FFF8E7] rounded-xl h-36 flex items-center justify-center p-2 mb-2 overflow-hidden border border-amber-100">
+              <span class="absolute top-1.5 left-1.5 bg-emerald-50 text-emerald-700 font-extrabold text-[10px] px-1.5 py-0.5 rounded-md border border-emerald-200 shadow-xs z-10">
+                ⚡ 10 MINS
+              </span>
+              <span class="absolute top-1.5 right-1.5 bg-red-600 text-white font-black text-[10px] px-1.5 py-0.5 rounded-md shadow-xs z-10">
+                20% OFF
+              </span>
+              <img class="w-full h-full object-contain product-img-frame drop-shadow-sm" alt="Milky Mist Paneer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD37vOwftSh_ESD0bUnYGDA4qzq3yxBYG_IKGkc6siG7EQ4sAuLq6MUqg6JqAkkFDiqPe-SP3YWmBZOcqU5gvmZuFvc1Dq08iQJ0fpkDsK5QFilfG_5wPW5yl_p5qyTj74thG9-4Q4eLy7InetkEkilBA3qVTCoqH-04xo8EJL6F8p5KZntZRf-U0y8aKuTPzDMbvyubjW6d1d5GQ4w9QPVcKzyiREK76bME6HoXQ3oik5Dfj6YR6Zy-Dw05hOu2tH840KuI0UrvRs"/>
+            </div>
+
+            <div class="mb-1">
+              <span class="text-[9.5px] text-emerald-700 font-black uppercase tracking-wider bg-emerald-50 px-1.5 py-0.5 rounded">COLD-CHAIN</span>
+              <h4 class="text-xs text-[#131B2E] font-bold line-clamp-2 leading-snug mt-1">
+                Milky Mist Fresh Malai Paneer
+              </h4>
+              <span class="text-[11px] text-slate-500 font-semibold">200g Pack</span>
+            </div>
+
+            <div class="w-full bg-slate-100 h-1.5 rounded-full my-1.5 overflow-hidden">
+              <div class="bg-gradient-to-r from-amber-500 to-rose-500 h-full w-[85%] rounded-full"></div>
+            </div>
+            <span class="text-[9.5px] text-rose-600 font-extrabold block">🔥 5 packs claimed in Ongole</span>
+          </div>
+
+          <div class="flex items-center justify-between pt-2 mt-1 border-t border-slate-100">
+            <div class="flex flex-col">
+              <span class="text-[15px] font-black text-[#131B2E] tnum">₹88</span>
+              <span class="text-[11px] text-slate-400 line-through tnum">₹110</span>
+            </div>
+
+            <div id="btn-wrap-paneer">
+              <div class="flex items-center bg-[#F5A623] text-slate-950 rounded-xl px-1.5 py-1 shadow-sm font-black">
+                <button onclick="decrementCart('paneer')" aria-label="Decrease quantity" class="w-5 h-5 flex items-center justify-center hover:opacity-80 active:scale-90">
+                  <span class="material-symbols-outlined text-xs font-black">remove</span>
+                </button>
+                <span class="text-xs px-1.5 tnum font-black">1</span>
+                <button onclick="incrementCart('paneer')" aria-label="Increase quantity" class="w-5 h-5 flex items-center justify-center hover:opacity-80 active:scale-90">
+                  <span class="material-symbols-outlined text-xs font-black">add</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Rush Item 3: Epigamia Strawberry Greek Yogurt -->
+        <article class="flex-shrink-0 w-44 bg-white rounded-2xl p-2.5 border border-amber-200/80 shadow-[0_4px_16px_rgba(245,166,35,0.08)] flex flex-col justify-between group hover:border-[#F5A623] transition-all relative">
+          <div onclick="window.location.href='detail.html'" class="cursor-pointer">
+            <div class="relative bg-gradient-to-b from-[#FFFDF7] to-[#FFF8E7] rounded-xl h-36 flex items-center justify-center p-2 mb-2 overflow-hidden border border-amber-100">
+              <span class="absolute top-1.5 left-1.5 bg-emerald-50 text-emerald-700 font-extrabold text-[10px] px-1.5 py-0.5 rounded-md border border-emerald-200 shadow-xs z-10">
+                ⚡ 10 MINS
+              </span>
+              <span class="absolute top-1.5 right-1.5 bg-red-600 text-white font-black text-[10px] px-1.5 py-0.5 rounded-md shadow-xs z-10">
+                25% OFF
+              </span>
+              <img class="w-full h-full object-contain product-img-frame drop-shadow-sm" alt="Epigamia Greek Yogurt" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqUEkysMYAlRdTDRBPPk_UNyEHh0lfDJRFjp5YrPs1V9cTEO5INVJ9SRH-_y5njXMRCHNWgNITUA7O--EZFTWnUdAldklA3mJwvUoI_s7n0RWyJXo4kuwnjtQ9X-b_maGJuWp0OV08oegJQt8Hp3RhZSyTSClEH-cHy2nku09kuvdCghiyh6u5eNrp7AugfNxfw5uzjJ5-fcKEjwvlfa67J2kTwn_g_XaEvl4syVDvnJvmyVaqGjx0NopA5Ikbe25pCCZQf58MXdA"/>
+            </div>
+
+            <div class="mb-1">
+              <span class="text-[9.5px] text-pink-700 font-black uppercase tracking-wider bg-pink-50 px-1.5 py-0.5 rounded">EPIGAMIA</span>
+              <h4 class="text-xs text-[#131B2E] font-bold line-clamp-2 leading-snug mt-1">
+                Strawberry Greek Yogurt Cup
+              </h4>
+              <span class="text-[11px] text-slate-500 font-semibold">90g Cup</span>
+            </div>
+
+            <div class="w-full bg-slate-100 h-1.5 rounded-full my-1.5 overflow-hidden">
+              <div class="bg-gradient-to-r from-amber-500 to-rose-500 h-full w-[60%] rounded-full"></div>
+            </div>
+            <span class="text-[9.5px] text-emerald-600 font-extrabold block">✓ Chilled in Sub-4°C</span>
+          </div>
+
+          <div class="flex items-center justify-between pt-2 mt-1 border-t border-slate-100">
+            <div class="flex flex-col">
+              <span class="text-[15px] font-black text-[#131B2E] tnum">₹45</span>
+              <span class="text-[11px] text-slate-400 line-through tnum">₹60</span>
+            </div>
+
+            <div id="btn-wrap-epigamia">
+              <button onclick="handleAddToCart('epigamia', 'Epigamia Yogurt', 45)" class="bg-[#F5A623] hover:bg-[#E69818] active:scale-95 text-slate-950 font-black text-xs px-3.5 py-1.5 rounded-xl shadow-sm transition-all btn-tap">
+                + ADD
+              </button>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 6. SHELF 1: ⚡ Bestsellers in 10 Mins (Appetizing Packshots)              -->
+    <!-- ======================================================================= -->
+    <section class="flex flex-col gap-2.5">
+      <div class="px-4 flex justify-between items-baseline">
+        <div class="flex items-center gap-2">
+          <span class="text-base font-extrabold text-[#131B2E]">⚡ Bestsellers in 10 Mins</span>
+          <span class="text-[10px] font-extrabold text-emerald-800 bg-emerald-100/90 px-2 py-0.5 rounded-full border border-emerald-200">Express Delivery</span>
+        </div>
+        <a class="text-xs text-[#0052CC] font-bold hover:underline" href="listing.html">See All</a>
+      </div>
+
+      <!-- Horizontal Scrollable Shelf -->
+      <div class="flex gap-3 overflow-x-auto px-4 no-scrollbar pb-1">
+        
+        <!-- Product 1: Amul Taaza -->
+        <article class="flex-shrink-0 w-44 bg-white rounded-2xl p-2.5 border border-slate-200/80 shadow-[0_3px_12px_rgba(0,0,0,0.04)] flex flex-col justify-between group hover:border-[#0052CC]/50 transition-all">
+          <div onclick="window.location.href='detail.html'" class="cursor-pointer">
+            <div class="relative bg-[#F8FAFD] rounded-xl h-36 flex items-center justify-center p-2 mb-2 overflow-hidden">
+              <span class="absolute top-1.5 left-1.5 bg-emerald-50 text-emerald-700 font-extrabold text-[10px] px-1.5 py-0.5 rounded-md border border-emerald-200/80 shadow-xs z-10">
+                ⚡ 10 MINS
+              </span>
+              <span class="absolute top-1.5 right-1.5 bg-[#F5A623] text-slate-950 font-black text-[10px] px-1.5 py-0.5 rounded-md shadow-xs z-10">
+                12% OFF
+              </span>
+              <img class="w-full h-full object-contain product-img-frame" alt="Amul Taaza Milk 500ml" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtb7hY35pcn7OcLcSgnzV1VL_itQwYY8h4qNEoDW1nhEH0Iy4Mh7jZQG83bTCaHyjiBnBWDITqtyh_qwfi6uQjuw2k5zvnmnbFLFRxgsiGDFwIX5_J8KkuGj6jXUE7-C9GuvXYg-d4HjcNwcDriWyLLeBGk1B1_Dl8yJfqmYjt3dMxbaTweMbdsL0kvr07bSMtdqrL22H1Urg2hA0c20SA7a7nu0MYFY0r-I3AdzFyLSZsvLIRmhdNYHWdhI7Majx6YvTklDySehA"/>
+            </div>
+
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">AMUL</span>
+            <h4 class="text-xs text-[#131B2E] font-bold line-clamp-2 leading-snug">
+              Amul Taaza Toned Milk
+            </h4>
+            <span class="text-[11px] text-slate-500 font-medium">500 ml Pouch</span>
+          </div>
+
+          <div class="flex items-center justify-between pt-2 mt-2 border-t border-slate-100">
+            <div class="flex flex-col">
+              <span class="text-[15px] font-black text-[#131B2E] tnum">₹28</span>
+              <span class="text-[11px] text-slate-400 line-through tnum">₹32</span>
+            </div>
+
+            <div id="btn-wrap-amul">
+              <div class="flex items-center bg-[#F5A623] text-slate-950 rounded-xl px-1.5 py-1 shadow-sm font-black">
+                <button onclick="decrementCart('amul')" aria-label="Decrease quantity" class="w-5 h-5 flex items-center justify-center hover:opacity-80 active:scale-90">
+                  <span class="material-symbols-outlined text-xs font-black">remove</span>
+                </button>
+                <span class="text-xs px-1.5 tnum font-extrabold">1</span>
+                <button onclick="incrementCart('amul')" aria-label="Increase quantity" class="w-5 h-5 flex items-center justify-center hover:opacity-80 active:scale-90">
+                  <span class="material-symbols-outlined text-xs font-black">add</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Product 2: Farm Fresh Brown Eggs -->
+        <article class="flex-shrink-0 w-44 bg-white rounded-2xl p-2.5 border border-slate-200/80 shadow-[0_3px_12px_rgba(0,0,0,0.04)] flex flex-col justify-between group hover:border-[#0052CC]/50 transition-all">
+          <div onclick="window.location.href='detail.html'" class="cursor-pointer">
+            <div class="relative bg-[#F8FAFD] rounded-xl h-36 flex items-center justify-center p-2 mb-2 overflow-hidden">
+              <span class="absolute top-1.5 left-1.5 bg-emerald-50 text-emerald-700 font-extrabold text-[10px] px-1.5 py-0.5 rounded-md border border-emerald-200/80 shadow-xs z-10">
+                ⚡ 10 MINS
+              </span>
+              <span class="absolute top-1.5 right-1.5 bg-[#F5A623] text-slate-950 font-black text-[10px] px-1.5 py-0.5 rounded-md shadow-xs z-10">
+                23% OFF
+              </span>
+              <img class="w-full h-full object-contain product-img-frame" alt="Country Fresh Eggs" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAU9YiVdYAbKY0nJ8HqVfs8-nF7qU6qsCGCGrLhx0Ri2qZwVDzw29O9Yp4i1SCGJP5tXNTcvNrWecoS902HdBHbc9IInME1S0VbbdX4UlZ0MAg-D6jhLsJ4PEGqdpskUrfVhXN42Q76Fwh3OrS1jWXiV3i9yzUI0VDgOnCqZgo4EvKSlyKGDoi5voPXFpEDWxGZcw67WTUD6vYoCsY-Ixc6JNbDUfBHmrIkohERLDBioMEfOTCbNtKnCBbENEyHApYGyl-tXILNU94"/>
+            </div>
+
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">FARM FRESH</span>
+            <h4 class="text-xs text-[#131B2E] font-bold line-clamp-2 leading-snug">
+              Farm Fresh Brown Eggs
+            </h4>
+            <span class="text-[11px] text-slate-500 font-medium">Pack of 6</span>
+          </div>
+
+          <div class="flex items-center justify-between pt-2 mt-2 border-t border-slate-100">
+            <div class="flex flex-col">
+              <span class="text-[15px] font-black text-[#131B2E] tnum">₹46</span>
+              <span class="text-[11px] text-slate-400 line-through tnum">₹60</span>
+            </div>
+
+            <div id="btn-wrap-eggs">
+              <button onclick="handleAddToCart('eggs', 'Farm Brown Eggs', 46)" class="bg-[#F5A623] hover:bg-[#E69818] active:scale-95 text-slate-950 font-black text-xs px-3.5 py-1.5 rounded-xl shadow-xs transition-all btn-tap">
+                + ADD
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Product 3: Fortune Sunlite Sunflower Oil -->
+        <article class="flex-shrink-0 w-44 bg-white rounded-2xl p-2.5 border border-slate-200/80 shadow-[0_3px_12px_rgba(0,0,0,0.04)] flex flex-col justify-between group hover:border-[#0052CC]/50 transition-all">
+          <div onclick="window.location.href='detail.html'" class="cursor-pointer">
+            <div class="relative bg-[#F8FAFD] rounded-xl h-36 flex items-center justify-center p-2 mb-2 overflow-hidden">
+              <span class="absolute top-1.5 left-1.5 bg-emerald-50 text-emerald-700 font-extrabold text-[10px] px-1.5 py-0.5 rounded-md border border-emerald-200/80 shadow-xs z-10">
+                ⚡ 10 MINS
+              </span>
+              <span class="absolute top-1.5 right-1.5 bg-[#F5A623] text-slate-950 font-black text-[10px] px-1.5 py-0.5 rounded-md shadow-xs z-10">
+                SAVE ₹27
+              </span>
+              <img class="w-full h-full object-contain product-img-frame" alt="Fortune Sunflower Oil" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4ywtcF-N6lG_mZ8xJlLUNwiYtcw2c5sut_YMQaWK_He79nb9ZWVOmNJitXHTUfMGWEMd80BGM-Ymcp9ud2JnGDQdDJbpAMJ8bJfRiNdL2rVJCl_EYTNgdT7AMqOtmSI9wenioB2fZr35ikwNgN53AtCzPSL8zVpvwkR5GKcCIAERi5hJwhBMqUIPZnMj_EzQ5lP-bXyVeT8KLEydzZgRF7u1PwoSvfiU4WyWoyezy0bF2l_8KjNVUA5Zx5zTcDlS69ozFkPPsHEU"/>
+            </div>
+
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">FORTUNE</span>
+            <h4 class="text-xs text-[#131B2E] font-bold line-clamp-2 leading-snug">
+              Fortune Refined Sunflower Oil
+            </h4>
+            <span class="text-[11px] text-slate-500 font-medium">1 Litre Pouch</span>
+          </div>
+
+          <div class="flex items-center justify-between pt-2 mt-2 border-t border-slate-100">
+            <div class="flex flex-col">
+              <span class="text-[15px] font-black text-[#131B2E] tnum">₹138</span>
+              <span class="text-[11px] text-slate-400 line-through tnum">₹165</span>
+            </div>
+
+            <div id="btn-wrap-oil">
+              <button onclick="handleAddToCart('oil', 'Fortune Oil 1L', 138)" class="bg-[#F5A623] hover:bg-[#E69818] active:scale-95 text-slate-950 font-black text-xs px-3.5 py-1.5 rounded-xl shadow-xs transition-all btn-tap">
+                + ADD
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Product 4: Britannia Whole Wheat Bread -->
+        <article class="flex-shrink-0 w-44 bg-white rounded-2xl p-2.5 border border-slate-200/80 shadow-[0_3px_12px_rgba(0,0,0,0.04)] flex flex-col justify-between group hover:border-[#0052CC]/50 transition-all">
+          <div onclick="window.location.href='detail.html'" class="cursor-pointer">
+            <div class="relative bg-[#F8FAFD] rounded-xl h-36 flex items-center justify-center p-2 mb-2 overflow-hidden">
+              <span class="absolute top-1.5 left-1.5 bg-emerald-50 text-emerald-700 font-extrabold text-[10px] px-1.5 py-0.5 rounded-md border border-emerald-200/80 shadow-xs z-10">
+                ⚡ 10 MINS
+              </span>
+              <span class="absolute top-1.5 right-1.5 bg-[#F5A623] text-slate-950 font-black text-[10px] px-1.5 py-0.5 rounded-md shadow-xs z-10">
+                18% OFF
+              </span>
+              <img class="w-full h-full object-contain product-img-frame" alt="Britannia Whole Wheat Bread" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3X399RwteW1dm7AdyWlgPqDrYSiy-mtpYLlWPsdxLxGpYeQ3vwdXVZaLAq3q92OLhi10eOZKYYM8eY7tG9gY5vUYNNPE_3-awgwRTCMyMrQ3QNvWbalX2W-3SSKqDM9npG8y1J0F8veiLWj5mJefd9Ugb_kDUWm1I-1drHzWdLpiZw7q1V1ZVIBEEg8_AavdbDdD7Yzf2_LOCx2s_DEwOPlQmJkQEDx0FQ-kzjP1yksJK6b6xCECV0z9VoDHZwFLpeUKNFwHIduE"/>
+            </div>
+
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">BRITANNIA</span>
+            <h4 class="text-xs text-[#131B2E] font-bold line-clamp-2 leading-snug">
+              100% Whole Wheat Bread
+            </h4>
+            <span class="text-[11px] text-slate-500 font-medium">400 g Pack</span>
+          </div>
+
+          <div class="flex items-center justify-between pt-2 mt-2 border-t border-slate-100">
+            <div class="flex flex-col">
+              <span class="text-[15px] font-black text-[#131B2E] tnum">₹45</span>
+              <span class="text-[11px] text-slate-400 line-through tnum">₹55</span>
+            </div>
+
+            <div id="btn-wrap-bread">
+              <button onclick="handleAddToCart('bread', 'Britannia Bread', 45)" class="bg-[#F5A623] hover:bg-[#E69818] active:scale-95 text-slate-950 font-black text-xs px-3.5 py-1.5 rounded-xl shadow-xs transition-all btn-tap">
+                + ADD
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Product 5: Tata Tea Gold Leaf -->
+        <article class="flex-shrink-0 w-44 bg-white rounded-2xl p-2.5 border border-slate-200/80 shadow-[0_3px_12px_rgba(0,0,0,0.04)] flex flex-col justify-between group hover:border-[#0052CC]/50 transition-all">
+          <div onclick="window.location.href='detail.html'" class="cursor-pointer">
+            <div class="relative bg-[#F8FAFD] rounded-xl h-36 flex items-center justify-center p-2 mb-2 overflow-hidden">
+              <span class="absolute top-1.5 left-1.5 bg-emerald-50 text-emerald-700 font-extrabold text-[10px] px-1.5 py-0.5 rounded-md border border-emerald-200/80 shadow-xs z-10">
+                ⚡ 10 MINS
+              </span>
+              <span class="absolute top-1.5 right-1.5 bg-[#F5A623] text-slate-950 font-black text-[10px] px-1.5 py-0.5 rounded-md shadow-xs z-10">
+                15% OFF
+              </span>
+              <img class="w-full h-full object-contain product-img-frame" alt="Tata Tea Gold Leaf" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-KfWCoXAU3T0-Tg15FqcEK9NGkbSo77eDWcmAkQSs1UQ7epucpT8tDNyeRt7Lp6RyKNo2ws8b0DWXn6cvXfGFYFlXXmBk5KQBVTmONbqcuJDrdEC8uJebGEGn_EwIEfRgDNZlUfLLJWTJOfKmoFCrmKMTZSFuqvbfwSvg9U9088BFrVqlBsQ7S8D_NcW6SirOq0kViVSRerILMRN0GMqArGXNSxB_9dQ1GJinKFo5Qw2-w7c5IP23JNH-X6TdvFV8VNs2sxi_0zs"/>
+            </div>
+
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">TATA TEA</span>
+            <h4 class="text-xs text-[#131B2E] font-bold line-clamp-2 leading-snug">
+              Tata Tea Gold Leaf Blend
+            </h4>
+            <span class="text-[11px] text-slate-500 font-medium">500 g Pack</span>
+          </div>
+
+          <div class="flex items-center justify-between pt-2 mt-2 border-t border-slate-100">
+            <div class="flex flex-col">
+              <span class="text-[15px] font-black text-[#131B2E] tnum">₹265</span>
+              <span class="text-[11px] text-slate-400 line-through tnum">₹310</span>
+            </div>
+
+            <div id="btn-wrap-tatatea">
+              <button onclick="handleAddToCart('tatatea', 'Tata Tea Gold', 265)" class="bg-[#F5A623] hover:bg-[#E69818] active:scale-95 text-slate-950 font-black text-xs px-3.5 py-1.5 rounded-xl shadow-xs transition-all btn-tap">
+                + ADD
+              </button>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 7. SHELF 2: Daily Kitchen Staples & Noodles (2-Column Fast-Tap Grid)    -->
+    <!-- ======================================================================= -->
+    <section class="flex flex-col gap-2.5 px-4">
+      <div class="flex justify-between items-baseline">
+        <div class="flex items-center gap-2">
+          <span class="text-base font-extrabold text-[#131B2E]">Daily Kitchen Staples</span>
+          <span class="text-[10px] font-extrabold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">Wholesale Rates</span>
+        </div>
+        <a class="text-xs text-[#0052CC] font-bold hover:underline" href="listing.html">View Shelf</a>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+
+        <!-- Item 1: Aashirvaad Chakki Atta -->
+        <article class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-[0_3px_12px_rgba(0,0,0,0.04)] flex flex-col justify-between group hover:border-[#0052CC]/50 transition-all">
+          <div onclick="window.location.href='detail.html'" class="cursor-pointer">
+            <div class="relative bg-[#F8FAFD] rounded-xl h-36 flex items-center justify-center p-2 mb-2 overflow-hidden">
+              <span class="absolute top-1.5 left-1.5 bg-emerald-50 text-emerald-700 font-extrabold text-[10px] px-1.5 py-0.5 rounded-md border border-emerald-200/80 shadow-xs z-10">
+                ⚡ 10 MINS
+              </span>
+              <span class="absolute top-1.5 right-1.5 bg-[#F5A623] text-slate-950 font-black text-[10px] px-1.5 py-0.5 rounded-md shadow-xs z-10">
+                20% OFF
+              </span>
+              <img class="w-full h-full object-contain product-img-frame" alt="Aashirvaad Atta 5kg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeU5UIGdchHuRaiiHqARjPaK2yzlT4Jhj1uAQWObmC81IJpG24rXS5hkC8ZIa4F3anyGdCrP3mgCzqx7wqbb4O1OxPecSB2jM5rfX7oQmL7vOQgxXVKc7wpZ-_xslgSIhQqw5lYTYrVt65o3PDfOE9GHTr_Zd-v6HMOHpum2aeZwKH8tzyGctEhI3lt9sjawTsvbx3bjZC9HFYJZJAvSBa1h_DK_w4sz2x0JA3LO7MqnShOarhBUcVZuub3BMFR6NMrO1zFr2lVAY"/>
+            </div>
+
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">AASHIRVAAD</span>
+            <h4 class="text-xs text-[#131B2E] font-bold line-clamp-1 leading-snug">Shudh Chakki Whole Wheat Atta</h4>
+            <span class="text-[11px] text-slate-500 font-medium">5 kg Pack</span>
+          </div>
+
+          <div class="flex items-center justify-between pt-2 mt-2 border-t border-slate-100">
+            <div class="flex flex-col">
+              <span class="text-[15px] font-black text-[#131B2E] tnum">₹228</span>
+              <span class="text-[11px] text-slate-400 line-through tnum">₹285</span>
+            </div>
+
+            <div id="btn-wrap-atta">
+              <button onclick="handleAddToCart('atta', 'Aashirvaad Atta 5kg', 228)" class="bg-[#F5A623] hover:bg-[#E69818] active:scale-95 text-slate-950 font-black text-xs px-3.5 py-1.5 rounded-xl shadow-xs transition-all btn-tap">
+                + ADD
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Item 2: Maggi 2-Minute Noodles -->
+        <article class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-[0_3px_12px_rgba(0,0,0,0.04)] flex flex-col justify-between group hover:border-[#0052CC]/50 transition-all">
+          <div onclick="window.location.href='detail.html'" class="cursor-pointer">
+            <div class="relative bg-[#F8FAFD] rounded-xl h-36 flex items-center justify-center p-2 mb-2 overflow-hidden">
+              <span class="absolute top-1.5 left-1.5 bg-emerald-50 text-emerald-700 font-extrabold text-[10px] px-1.5 py-0.5 rounded-md border border-emerald-200/80 shadow-xs z-10">
+                ⚡ 10 MINS
+              </span>
+              <span class="absolute top-1.5 right-1.5 bg-[#F5A623] text-slate-950 font-black text-[10px] px-1.5 py-0.5 rounded-md shadow-xs z-10">
+                25% OFF
+              </span>
+              <img class="w-full h-full object-contain product-img-frame" alt="Maggi Noodles" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDE9AlKgbwGPQpzVLD0_zua0WuYgh1Mr3sLYEFQUPpQLyS_n3EnLo03-2vQMA6dDQGshb3x3G9YKYS8gocaqrkUA9ZUyz5ihYgdxhjTAOki40NuMIJwbmeQSpY3_IDy2-4AnF1qzWfk-9PBFrqpQPpyECo_SOYYYne-UndEqwh4L7ryWkeaJaOl8LuPjZVAJP4dcV5igZrJxEEdFQ5kQMqxQON0SrGFIhQarGeoa051umUWTX5KE-JG88TwtCW5GEkfB-4rsr0KY9Q"/>
+            </div>
+
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">MAGGI</span>
+            <h4 class="text-xs text-[#131B2E] font-bold line-clamp-1 leading-snug">Masala Noodles Pack of 8</h4>
+            <span class="text-[11px] text-slate-500 font-medium">560 g</span>
+          </div>
+
+          <div class="flex items-center justify-between pt-2 mt-2 border-t border-slate-100">
+            <div class="flex flex-col">
+              <span class="text-[15px] font-black text-[#131B2E] tnum">₹105</span>
+              <span class="text-[11px] text-slate-400 line-through tnum">₹140</span>
+            </div>
+
+            <div id="btn-wrap-maggi">
+              <button onclick="handleAddToCart('maggi', 'Maggi Noodles 8-Pack', 105)" class="bg-[#F5A623] hover:bg-[#E69818] active:scale-95 text-slate-950 font-black text-xs px-3.5 py-1.5 rounded-xl shadow-xs transition-all btn-tap">
+                + ADD
+              </button>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 8. WHY TANIZKART? (Trust & Speed Bento Grid)                             -->
+    <!-- ======================================================================= -->
+    <section class="px-4 py-2">
+      <div class="bg-gradient-to-br from-white to-blue-50/50 rounded-3xl p-4.5 border border-slate-200/80 shadow-[0_4px_20px_rgba(0,40,120,0.04)] space-y-3">
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="text-[10.5px] font-extrabold uppercase tracking-wider text-[#0052CC]">The Tanizkart Promise</span>
+            <h3 class="text-sm font-black text-slate-900">Why Lawyerpet Trusts Us Every Morning</h3>
+          </div>
+          <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+            ⭐ 4.8 / 5 Rating
+          </span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div class="p-2.5 rounded-2xl bg-white border border-slate-100 shadow-xs flex items-start gap-2">
+            <span class="text-xl">⚡</span>
+            <div>
+              <h4 class="text-xs font-black text-slate-800">10-15 Min SLA</h4>
+              <p class="text-[10px] text-slate-500 font-medium leading-tight">Darkstore packed in 180s flat</p>
+            </div>
+          </div>
+
+          <div class="p-2.5 rounded-2xl bg-white border border-slate-100 shadow-xs flex items-start gap-2">
+            <span class="text-xl">❄️</span>
+            <div>
+              <h4 class="text-xs font-black text-slate-800">Sub-4°C Cold Chain</h4>
+              <p class="text-[10px] text-slate-500 font-medium leading-tight">Milk &amp; dairy ice-bag sealed</p>
+            </div>
+          </div>
+
+          <div class="p-2.5 rounded-2xl bg-white border border-slate-100 shadow-xs flex items-start gap-2">
+            <span class="text-xl">💰</span>
+            <div>
+              <h4 class="text-xs font-black text-slate-800">Warehouse Rates</h4>
+              <p class="text-[10px] text-slate-500 font-medium leading-tight">Direct factory savings passed on</p>
+            </div>
+          </div>
+
+          <div class="p-2.5 rounded-2xl bg-white border border-slate-100 shadow-xs flex items-start gap-2">
+            <span class="text-xl">🛡️</span>
+            <div>
+              <h4 class="text-xs font-black text-slate-800">1-Tap Refund</h4>
+              <p class="text-[10px] text-slate-500 font-medium leading-tight">Zero questions asked exchange</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 9. VERIFIED CUSTOMER LOVE BANNER                                        -->
+    <!-- ======================================================================= -->
+    <section class="px-4 pb-2">
+      <div class="bg-gradient-to-r from-[#0A1B3F] to-[#002F87] rounded-2xl p-3.5 text-white flex items-center justify-between shadow-sm shadow-blue-950/20">
+        <div class="flex items-center gap-2.5">
+          <div class="flex -space-x-2">
+            <div class="w-7 h-7 rounded-full bg-amber-400 text-slate-900 font-black text-[10px] flex items-center justify-center ring-2 ring-[#0A1B3F]">RK</div>
+            <div class="w-7 h-7 rounded-full bg-emerald-400 text-slate-900 font-black text-[10px] flex items-center justify-center ring-2 ring-[#0A1B3F]">SP</div>
+            <div class="w-7 h-7 rounded-full bg-blue-400 text-slate-900 font-black text-[10px] flex items-center justify-center ring-2 ring-[#0A1B3F]">YN</div>
+          </div>
+          <div>
+            <p class="text-xs font-extrabold text-white">12,500+ Happy Orders Delivered</p>
+            <p class="text-[10px] text-blue-200">Across Lawyerpet, Trunk Road &amp; Ongole</p>
+          </div>
+        </div>
+        <span class="material-symbols-outlined text-amber-400 text-xl">verified</span>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- 10. FLOATING DOCKED QUICK-CART BAR (Dynamic Live Cart State)             -->
+  <!-- ========================================================================= -->
+  <div id="floatingCartContainer" class="fixed bottom-16 left-0 w-full z-40 px-4 pointer-events-none transition-all duration-300">
+    <div class="max-w-screen-md mx-auto pointer-events-auto">
+      <div class="bg-gradient-to-r from-[#0A1B3F] via-[#0D2452] to-[#0A1B3F] text-white rounded-2xl p-2.5 px-3.5 shadow-[0_8px_30px_rgba(10,27,63,0.5)] flex items-center justify-between border border-blue-400/30">
+        
+        <!-- Cart Item Summary -->
+        <div class="flex items-center gap-3">
+          <div class="relative w-10 h-10 rounded-xl bg-gradient-to-tr from-[#0052CC] to-[#1E70EB] flex items-center justify-center text-white shadow-inner">
+            <span class="material-symbols-outlined text-xl">shopping_bag</span>
+            <span id="cartCountBadge" class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#F5A623] text-slate-950 font-black text-[9.5px] flex items-center justify-center shadow-xs">2</span>
+          </div>
+
+          <div class="flex flex-col">
+            <div class="flex items-center gap-1.5">
+              <span id="cartItemLabel" class="text-xs font-black text-slate-100">2 Items</span>
+              <span class="text-slate-400 text-xs">•</span>
+              <span id="cartTotalPrice" class="text-sm font-black text-[#F5A623] tnum">₹116</span>
+            </div>
+            <div class="flex items-center gap-1 text-[11px] text-emerald-400 font-extrabold">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+              <span>⚡ 10 Mins delivery to Lawyerpet</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- View Cart Button -->
+        <button onclick="window.location.href='cart.html'" class="bg-gradient-to-r from-[#F5A623] to-[#FEAE2C] hover:from-[#E69818] hover:to-[#F5A623] active:scale-95 text-slate-950 font-black text-xs px-4 py-2.5 rounded-xl flex items-center gap-1 shadow-glow-gold btn-tap transition-all">
+          <span>View Cart</span>
+          <span class="material-symbols-outlined text-base font-bold">arrow_forward</span>
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 11. PERSISTENT BOTTOM NAVIGATION BAR (Home Active in Royal Blue)          -->
+  <!-- ========================================================================= -->
+  <nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 max-w-screen-md mx-auto bg-white/95 backdrop-blur-md border-t border-slate-200/80 shadow-[0_-4px_16px_rgba(0,0,0,0.05)]">
+    <!-- 1: Home (ACTIVE in Royal Blue) -->
+    <a class="flex flex-col items-center justify-center text-[#0052CC] font-bold py-1 btn-tap" href="home.html">
+      <div class="relative">
+        <span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">storefront</span>
+        <span class="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-[#0052CC]"></span>
+      </div>
+      <span class="text-[10.5px] mt-0.5 tracking-tight font-black">Home</span>
+    </a>
+
+    <!-- 2: Categories -->
+    <a class="flex flex-col items-center justify-center text-slate-500 hover:text-[#0052CC] py-1 transition-colors btn-tap" href="listing.html">
+      <span class="material-symbols-outlined text-[24px]">grid_view</span>
+      <span class="text-[10.5px] mt-0.5 tracking-tight font-bold">Categories</span>
+    </a>
+
+    <!-- 3: Orders -->
+    <a class="flex flex-col items-center justify-center text-slate-500 hover:text-[#0052CC] py-1 transition-colors btn-tap" href="tracking.html">
+      <span class="material-symbols-outlined text-[24px]">receipt_long</span>
+      <span class="text-[10.5px] mt-0.5 tracking-tight font-bold">Orders</span>
+    </a>
+
+    <!-- 4: Profile -->
+    <a class="flex flex-col items-center justify-center text-slate-500 hover:text-[#0052CC] py-1 transition-colors btn-tap" href="profile.html">
+      <span class="material-symbols-outlined text-[24px]">person</span>
+      <span class="text-[10.5px] mt-0.5 tracking-tight font-bold">Profile</span>
+    </a>
+  </nav>
+
+</div>
+
+<!-- =========================================================================== -->
+<!-- 12. INTERACTIVE BOTTOM SHEET MODALS & TOASTS                                -->
+<!-- =========================================================================== -->
+
+<!-- Address Switcher Modal -->
+<div id="addressModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden items-end justify-center transition-all">
+  <div class="bg-white w-full max-w-screen-md rounded-t-3xl p-5 shadow-2xl flex flex-col gap-4 animate-slide-up">
+    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+      <div>
+        <h3 class="text-base font-black text-slate-900">Choose Delivery Location</h3>
+        <p class="text-xs text-slate-400 font-medium">Delivering in 10-15 mins from Hub #304</p>
+      </div>
+      <button onclick="closeAddressModal()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200">
+        <span class="material-symbols-outlined text-lg">close</span>
+      </button>
+    </div>
+
+    <div class="space-y-2.5">
+      <!-- Address 1 (Active) -->
+      <button onclick="selectAddress('Flat 302, Lawyerpet', 'Ongole • Home')" class="w-full text-left p-3 rounded-2xl border-2 border-[#0052CC] bg-blue-50/50 flex items-center justify-between">
+        <div class="flex items-start gap-2.5">
+          <span class="material-symbols-outlined text-[#0052CC] text-xl mt-0.5">home</span>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-xs font-black text-slate-900">Home • Flat 302</span>
+              <span class="text-[9.5px] font-extrabold bg-[#0052CC] text-white px-1.5 py-0.2 rounded">DEFAULT</span>
+            </div>
+            <p class="text-xs text-slate-600 mt-0.5">Green Meadows, Lawyerpet, Ongole</p>
+            <span class="text-[10.5px] font-extrabold text-emerald-600">⚡ 10 Mins ETA</span>
+          </div>
+        </div>
+        <span class="material-symbols-outlined text-[#0052CC]">check_circle</span>
+      </button>
+
+      <!-- Address 2 -->
+      <button onclick="selectAddress('Floor 2, Trunk Road', 'Ongole • Work')" class="w-full text-left p-3 rounded-2xl border border-slate-200 hover:border-slate-300 flex items-center justify-between">
+        <div class="flex items-start gap-2.5">
+          <span class="material-symbols-outlined text-slate-500 text-xl mt-0.5">apartment</span>
+          <div>
+            <span class="text-xs font-black text-slate-900">Office • Trunk Road</span>
+            <p class="text-xs text-slate-600 mt-0.5">Opposite SBI Main Branch, Trunk Road</p>
+            <span class="text-[10.5px] font-extrabold text-emerald-600">⚡ 12 Mins ETA</span>
+          </div>
+        </div>
+        <span class="material-symbols-outlined text-slate-300">radio_button_unchecked</span>
+      </button>
+    </div>
+
+    <button onclick="closeAddressModal()" class="w-full py-3 rounded-xl border border-dashed border-[#0052CC] text-[#0052CC] font-black text-xs hover:bg-blue-50 transition-colors flex items-center justify-center gap-1.5">
+      <span class="material-symbols-outlined text-sm font-bold">add</span>
+      <span>Add New Address</span>
+    </button>
+  </div>
+</div>
+
+<!-- Instant Search Suggestion Drawer -->
+<div id="searchModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden items-start justify-center pt-16 px-4">
+  <div class="bg-white w-full max-w-screen-md rounded-3xl p-4 shadow-2xl flex flex-col gap-3">
+    <div class="flex items-center gap-2 border-b border-slate-100 pb-3">
+      <span class="material-symbols-outlined text-[#0052CC]">search</span>
+      <input id="modalSearchInput" type="text" placeholder="Search milk, chips, atta, oil..." class="w-full text-sm font-bold text-slate-900 border-none focus:ring-0 p-0" oninput="handleSearchType(this.value)"/>
+      <button onclick="closeSearchModal()" class="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">
+        <span class="material-symbols-outlined text-base">close</span>
+      </button>
+    </div>
+
+    <!-- Trending Tags -->
+    <div>
+      <span class="text-[11px] font-black uppercase tracking-wider text-slate-400 block mb-2">🔥 Trending Searches in Ongole</span>
+      <div class="flex flex-wrap gap-1.5">
+        <button onclick="fillSearch('Amul Taaza Milk 500ml')" class="px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-blue-50 hover:text-[#0052CC] text-xs font-bold text-slate-700 transition-colors">🥛 Amul Milk 500ml</button>
+        <button onclick="fillSearch('Farm Brown Eggs')" class="px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-blue-50 hover:text-[#0052CC] text-xs font-bold text-slate-700 transition-colors">🥚 Farm Eggs</button>
+        <button onclick="fillSearch('Aashirvaad Atta')" class="px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-blue-50 hover:text-[#0052CC] text-xs font-bold text-slate-700 transition-colors">🌾 Aashirvaad Atta</button>
+        <button onclick="fillSearch('Fortune Oil')" class="px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-blue-50 hover:text-[#0052CC] text-xs font-bold text-slate-700 transition-colors">🌻 Fortune Oil</button>
+        <button onclick="fillSearch('Maggi Noodles')" class="px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-blue-50 hover:text-[#0052CC] text-xs font-bold text-slate-700 transition-colors">🍜 Maggi Noodles</button>
+      </div>
+    </div>
+
+    <!-- Direct Jump to Listing -->
+    <button onclick="window.location.href='listing.html'" class="w-full py-2.5 rounded-xl bg-[#0052CC] text-white font-extrabold text-xs flex items-center justify-center gap-1">
+      <span>Browse Full 1,200+ Catalog</span>
+      <span class="material-symbols-outlined text-sm">arrow_forward</span>
+    </button>
+  </div>
+</div>
+
+<!-- Floating Toast Container -->
+<div id="toastNotification" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-[#0A1B3F] text-white px-4 py-2.5 rounded-2xl shadow-2xl border border-blue-400/40 flex items-center gap-2.5 text-xs font-bold pointer-events-none hidden toast-animate">
+  <span id="toastIcon" class="text-base">🛒</span>
+  <span id="toastMessage">Added item to cart!</span>
+</div>
+
+<!-- =========================================================================== -->
+<!-- JAVASCRIPT: Full Interactive Cart State, Carousel, Timers & Modals         -->
+<!-- =========================================================================== -->
+<script>
+  // 1. Live Dynamic Cart State
+  const cartState = {
+    amul: { name: 'Amul Taaza Milk', price: 28, qty: 1 },
+    paneer: { name: 'Milky Mist Paneer', price: 88, qty: 1 }
+  };
+
+  function updateCartUI() {
+    let totalQty = 0;
+    let totalPrice = 0;
+
+    for (const key in cartState) {
+      if (cartState[key].qty > 0) {
+        totalQty += cartState[key].qty;
+        totalPrice += cartState[key].price * cartState[key].qty;
+      }
+    }
+
+    const countBadge = document.getElementById('cartCountBadge');
+    const itemLabel = document.getElementById('cartItemLabel');
+    const priceLabel = document.getElementById('cartTotalPrice');
+    const container = document.getElementById('floatingCartContainer');
+
+    if (totalQty > 0) {
+      countBadge.textContent = totalQty;
+      itemLabel.textContent = totalQty + (totalQty === 1 ? ' Item' : ' Items');
+      priceLabel.textContent = '₹' + totalPrice;
+      container.classList.remove('opacity-0', 'translate-y-8');
+      container.classList.add('opacity-100', 'translate-y-0');
+    } else {
+      container.classList.add('opacity-0', 'translate-y-8');
+    }
+  }
+
+  function handleAddToCart(key, name, price) {
+    if (!cartState[key]) {
+      cartState[key] = { name: name, price: price, qty: 0 };
+    }
+    cartState[key].qty = 1;
+    
+    // Replace ADD button with Stepper
+    renderStepper(key);
+    updateCartUI();
+    showToast('🛒', `Added ${name} (₹${price}) to cart!`);
+  }
+
+  function incrementCart(key) {
+    if (cartState[key]) {
+      cartState[key].qty += 1;
+      renderStepper(key);
+      updateCartUI();
+      showToast('⚡', `Updated ${cartState[key].name} (${cartState[key].qty})`);
+    }
+  }
+
+  function decrementCart(key) {
+    if (cartState[key] && cartState[key].qty > 0) {
+      cartState[key].qty -= 1;
+      if (cartState[key].qty === 0) {
+        renderAddButton(key);
+        showToast('🗑️', `Removed ${cartState[key].name} from cart`);
+      } else {
+        renderStepper(key);
+      }
+      updateCartUI();
+    }
+  }
+
+  function renderStepper(key) {
+    const wrap = document.getElementById(`btn-wrap-${key}`);
+    if (!wrap) return;
+    const qty = cartState[key].qty;
+    wrap.innerHTML = `
+      <div class="flex items-center bg-[#F5A623] text-slate-950 rounded-xl px-1.5 py-1 shadow-sm font-black">
+        <button onclick="decrementCart('${key}')" aria-label="Decrease quantity" class="w-5 h-5 flex items-center justify-center hover:opacity-80 active:scale-90">
+          <span class="material-symbols-outlined text-xs font-black">remove</span>
+        </button>
+        <span class="text-xs px-1.5 tnum font-black">${qty}</span>
+        <button onclick="incrementCart('${key}')" aria-label="Increase quantity" class="w-5 h-5 flex items-center justify-center hover:opacity-80 active:scale-90">
+          <span class="material-symbols-outlined text-xs font-black">add</span>
+        </button>
+      </div>
+    `;
+  }
+
+  function renderAddButton(key) {
+    const wrap = document.getElementById(`btn-wrap-${key}`);
+    if (!wrap) return;
+    const item = cartState[key];
+    wrap.innerHTML = `
+      <button onclick="handleAddToCart('${key}', '${item.name}', ${item.price})" class="bg-[#F5A623] hover:bg-[#E69818] active:scale-95 text-slate-950 font-black text-xs px-3.5 py-1.5 rounded-xl shadow-xs transition-all btn-tap">
+        + ADD
+      </button>
+    `;
+  }
+
+  // 2. Interactive Toast Function
+  let toastTimeout;
+  function showToast(icon, msg) {
+    const toast = document.getElementById('toastNotification');
+    document.getElementById('toastIcon').textContent = icon;
+    document.getElementById('toastMessage').textContent = msg;
+    
+    toast.classList.remove('hidden');
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => {
+      toast.classList.add('hidden');
+    }, 2400);
+  }
+
+  function triggerNotificationToast() {
+    showToast('🔔', '3 Darkstore Deals active in Lawyerpet today!');
+  }
+
+  function triggerVoiceSearch() {
+    showToast('🎙️', 'Listening... Say "Milk", "Curd", or "Bread"');
+  }
+
+  function triggerBarcodeSearch() {
+    showToast('📷', 'Camera scanner ready — Point at grocery barcode');
+  }
+
+  function copyCoupon(code) {
+    navigator.clipboard?.writeText(code);
+    showToast('🎉', `Coupon ${code} applied! 45% discount activated.`);
+  }
+
+  // 3. Carousel Logic
+  const heroSlides = [
+    {
+      title: 'Direct Warehouse Savings • <span class="text-[#F5A623]">Up to 45% OFF</span>',
+      desc: 'Fresh dairy, atta, cooking oil & daily staples delivered at wholesale prices in 10 minutes.',
+      btnText: 'Shop Warehouse Sale',
+      bgClass: 'from-[#0038A8] via-[#0052CC] to-[#0A1B3F]'
+    },
+    {
+      title: 'Sub-4°C Cold-Chain • <span class="text-emerald-400">Zero Spoilage Guarantee</span>',
+      desc: 'Refrigerated milk, paneer, eggs and desserts handled with insulated thermal ice-packs.',
+      btnText: 'Explore Fresh Dairy',
+      bgClass: 'from-[#004D40] via-[#00796B] to-[#0A1B3F]'
+    },
+    {
+      title: 'Tanizkart VIP Pass • <span class="text-amber-300">Free Delivery 365 Days</span>',
+      desc: 'No minimum order, priority 10-minute dispatch, and extra 5% cashback on every cart.',
+      btnText: 'Join VIP Club @ ₹99',
+      bgClass: 'from-[#111827] via-[#1E293B] to-[#3B2D05]'
+    }
+  ];
+
+  let currentSlide = 0;
+  function switchHeroSlide(index) {
+    currentSlide = index;
+    const dots = document.querySelectorAll('.slide-dot');
+    dots.forEach((dot, i) => {
+      if (i === index) {
+        dot.className = 'slide-dot w-6 h-1.5 rounded-full bg-[#F5A623] transition-all';
+      } else {
+        dot.className = 'slide-dot w-2 h-1.5 rounded-full bg-white/40 hover:bg-white transition-all';
+      }
+    });
+
+    const banner = document.getElementById('heroBannerContainer');
+    banner.className = `relative overflow-hidden rounded-3xl bg-gradient-to-r ${heroSlides[index].bgClass} text-white shadow-glow-blue p-5 border border-blue-400/30 transition-all duration-500`;
+  }
+
+  // Auto rotate banner every 6 seconds
+  setInterval(() => {
+    currentSlide = (currentSlide + 1) % heroSlides.length;
+    switchHeroSlide(currentSlide);
+  }, 6000);
+
+  // 4. Live Countdown Timers
+  let flashSeconds = 6138; // ~1h 42m 18s
+  let rushSeconds = 868;   // ~14m 28s
+
+  setInterval(() => {
+    if (flashSeconds > 0) flashSeconds--;
+    if (rushSeconds > 0) rushSeconds--;
+
+    const fH = String(Math.floor(flashSeconds / 3600)).padStart(2, '0');
+    const fM = String(Math.floor((flashSeconds % 3600) / 60)).padStart(2, '0');
+    const fS = String(flashSeconds % 60).padStart(2, '0');
+    const flashEl = document.getElementById('flashTimer');
+    if (flashEl) flashEl.textContent = `${fH}:${fM}:${fS}`;
+
+    const rM = String(Math.floor(rushSeconds / 60)).padStart(2, '0');
+    const rS = String(rushSeconds % 60).padStart(2, '0');
+    const rushEl = document.getElementById('rushTimer');
+    if (rushEl) rushEl.textContent = `${rM}:${rS}`;
+  }, 1000);
+
+  // 5. Cycling Search Input Placeholder
+  const searchQueries = [
+    'Search "fresh milk", "bread", "lays"...',
+    'Search "fortune oil", "aashirvaad atta"...',
+    'Search "paneer", "eggs", "amul butter"...',
+    'Search "cadbury", "tata tea", "maggi"...'
+  ];
+  let searchIndex = 0;
+  setInterval(() => {
+    searchIndex = (searchIndex + 1) % searchQueries.length;
+    const input = document.getElementById('searchInput');
+    if (input) input.placeholder = searchQueries[searchIndex];
+  }, 3200);
+
+  // 6. Modals & Drawers
+  function openAddressModal() {
+    document.getElementById('addressModal').classList.remove('hidden');
+    document.getElementById('addressModal').classList.add('flex');
+  }
+  function closeAddressModal() {
+    document.getElementById('addressModal').classList.add('hidden');
+    document.getElementById('addressModal').classList.remove('flex');
+  }
+  function selectAddress(addr, sub) {
+    closeAddressModal();
+    showToast('📍', `Delivering to ${addr}`);
+  }
+
+  function openSearchModal() {
+    document.getElementById('searchModal').classList.remove('hidden');
+    document.getElementById('searchModal').classList.add('flex');
+    setTimeout(() => document.getElementById('modalSearchInput').focus(), 100);
+  }
+  function closeSearchModal() {
+    document.getElementById('searchModal').classList.add('hidden');
+    document.getElementById('searchModal').classList.remove('flex');
+  }
+  function fillSearch(val) {
+    closeSearchModal();
+    window.location.href = 'listing.html';
+  }
+  function handleSearchType(val) {
+    // Live query handling
+  }
+
+  function filterShelf(type) {
+    showToast('✨', `Filtered items for ${type.toUpperCase()}`);
+  }
+
+  // Initial render
+  updateCartUI();
+</script>
+
+</body>
+</html>

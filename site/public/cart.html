@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tanizkart - Cart &amp; Checkout</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Plus Jakarta Sans Font Family -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration matching the brand tokens -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container": "#f1f4ff",
+            "surface-container-high": "#e8edff",
+            "surface-container-lowest": "#ffffff",
+            "surface": "#faf8ff",
+            "surface-bright": "#ffffff",
+            "primary": "#0052cc",
+            "primary-container": "#0052cc",
+            "primary-dark": "#0a1b3f",
+            "secondary": "#835500",
+            "secondary-container": "#f5a623",
+            "brand-gold": "#f5a623",
+            "brand-gold-hover": "#e69818",
+            "brand-blue": "#0052cc",
+            "tertiary": "#004e33",
+            "tertiary-container": "#006846",
+            "tertiary-fixed": "#6ffbbe",
+            "outline": "#737685",
+            "outline-variant": "#e2e6f0",
+            "on-surface": "#131b2e",
+            "on-surface-variant": "#434654",
+            "error": "#ba1a1a"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "2xl": "1rem",
+            "3xl": "1.5rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            sans: ["Plus Jakarta Sans", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .tnum {
+      font-variant-numeric: tabular-nums;
+    }
+    body {
+      min-height: max(884px, 100dvh);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-fill {
+      font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body class="bg-[#F6F8FD] text-[#131B2E] antialiased min-h-screen flex justify-center selection:bg-[#FEAE2C] selection:text-[#0052CC]">
+<!-- Main Mobile Canvas Container (matching Screen 5, 4, 2) -->
+<main class="w-full max-w-[420px] bg-[#F6F8FD] min-h-screen relative flex flex-col pb-36">
+<!-- 1. BRAND HEADER & DELIVERY SUMMARY (Clean luminous crisp white sticky top bar) -->
+<header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-[0_2px_12px_rgba(0,45,120,0.06)]">
+<div class="px-4 py-2.5 flex items-center justify-between gap-3">
+<!-- Left: Back Arrow Button -->
+<button onclick="window.location.href='detail.html'" style="cursor:pointer;" aria-label="Go Back" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-slate-100 active:scale-95 text-slate-700 transition-colors shrink-0">
+<span class="material-symbols-outlined text-[22px]">arrow_back</span>
+</button>
+<!-- Middle: Tanizkart Official Dual-tone Brand Mark -->
+<div class="flex items-center gap-2">
+<img src="assets/logo.png" alt="Tanizkart - Save money save time" class="h-8 w-auto max-h-8.5 object-contain" />
+</div>
+<!-- Right: Cart Item Counter Pill Badge -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 border border-blue-200/70 text-[#0052CC] shadow-xs">
+<span class="material-symbols-outlined text-[15px] material-symbols-fill">shopping_bag</span>
+<span class="text-[11px] font-extrabold tracking-tight">3 Items</span>
+</div>
+</div>
+<!-- Savings Announcement Banner: Warm emerald green & gold high-energy strip -->
+<div class="px-4 py-2 bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-700 text-white flex items-center justify-between shadow-xs">
+<div class="flex items-center gap-2">
+<span class="text-base select-none">🎉</span>
+<div class="flex flex-col">
+<span class="text-xs font-black tracking-tight leading-tight">Yay! You are saving ₹57 on this order</span>
+<span class="text-[10px] text-emerald-100 font-medium">Warehouse direct instant discount applied</span>
+</div>
+</div>
+<span class="shrink-0 bg-white/20 text-white text-[10px] font-black px-2 py-0.5 rounded-full border border-white/25">24% SAVINGS</span>
+</div>
+</header>
+<!-- Scrollable Canvas Content -->
+<div class="px-3.5 pt-3 space-y-3.5 flex-1">
+<!-- 2. DELIVERY ADDRESS & INSTRUCTIONS CARD -->
+<section class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3">
+<!-- Top Row: ⚡ Express Delivery in 10-15 Mins Badge -->
+<div class="flex items-center justify-between">
+<div class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full border border-emerald-200/80 shadow-xs">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+<span class="text-xs">⚡</span>
+<span class="text-[11px] font-extrabold uppercase tracking-wide">Express Delivery in 10-15 Mins</span>
+</div>
+<span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md">Direct Hub</span>
+</div>
+<!-- Middle Row: Location Pin, Delivering to Home, Change Button -->
+<div class="flex items-center justify-between gap-2 pt-0.5">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-8 h-8 rounded-xl bg-blue-50 text-[#0052CC] flex items-center justify-center shrink-0 border border-blue-100">
+<span class="material-symbols-outlined text-[18px] material-symbols-fill">location_on</span>
+</div>
+<div class="min-w-0 pr-1">
+<div class="flex items-center gap-1.5">
+<span class="text-[13px] font-extrabold text-slate-900 leading-snug">Delivering to Home</span>
+<span class="text-[9px] font-extrabold bg-[#F5A623]/20 text-[#835500] px-1.5 py-0.5 rounded">PRIMARY</span>
+</div>
+<p class="text-xs text-slate-500 font-medium truncate">Flat 302, Green Meadows, Lawyerpet</p>
+</div>
+</div>
+<button onclick="window.location.href='tracking.html'" style="cursor:pointer;" class="shrink-0 text-xs font-extrabold text-[#0052CC] hover:text-blue-700 hover:bg-blue-50 px-2.5 py-1 rounded-lg border border-[#0052CC]/20 active:scale-95 transition-all" type="button">
+          Change
+        </button>
+</div>
+<!-- Bottom Row: Delivery Instructions Quick Chips -->
+<div class="border-t border-slate-100 pt-2.5 space-y-1.5">
+<span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Delivery Instructions</span>
+<div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5">
+<!-- Chip 1: Active/Selected (Deep Royal Navy) -->
+<button class="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0A1B3F] text-white font-extrabold text-xs shadow-xs active:scale-95 transition-transform" type="button">
+<span>🚪 Leave at door</span>
+<span class="material-symbols-outlined text-[14px]">check</span>
+</button>
+<!-- Chip 2: Outline -->
+<button class="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-50 active:scale-95 transition-all" type="button">
+<span>🔔 Don't ring bell</span>
+</button>
+<!-- Chip 3: Outline -->
+<button class="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-50 active:scale-95 transition-all" type="button">
+<span>📞 Avoid calling</span>
+</button>
+</div>
+</div>
+</section>
+<!-- 3. CART ITEMS LIST (CLOSE-UP APPETIZING THUMBNAILS & CRISP STEPPERS) -->
+<section class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3.5">
+<!-- Section Header -->
+<div class="flex items-center justify-between pb-2 border-b border-slate-100">
+<div class="flex items-center gap-1.5">
+<span class="text-[14px] font-extrabold text-slate-900">Items in Cart (3)</span>
+</div>
+<span class="text-[11px] font-semibold text-slate-500 flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          Fulfillment from Local Dark Store • 10-15m
+        </span>
+</div>
+<!-- Cart Item 1: Amul Taaza Homogenised Toned Milk -->
+<article class="flex items-center gap-3">
+<!-- Zoomed-in Close-Up Packshot Container -->
+<div class="w-18 h-18 w-[72px] h-[72px] rounded-xl bg-[#F8FAFD] p-1 flex items-center justify-center shrink-0 border border-slate-200/80 relative overflow-hidden shadow-xs">
+<img class="w-full h-full object-contain scale-110 drop-shadow-sm" data-alt="Amul Taaza Milk 500ml" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtb7hY35pcn7OcLcSgnzV1VL_itQwYY8h4qNEoDW1nhEH0Iy4Mh7jZQG83bTCaHyjiBnBWDITqtyh_qwfi6uQjuw2k5zvnmnbFLFRxgsiGDFwIX5_J8KkuGj6jXUE7-C9GuvXYg-d4HjcNwcDriWyLLeBGk1B1_Dl8yJfqmYjt3dMxbaTweMbdsL0kvr07bSMtdqrL22H1Urg2hA0c20SA7a7nu0MYFY0r-I3AdzFyLSZsvLIRmhdNYHWdhI7Majx6YvTklDySehA"/>
+<span class="absolute top-0 left-0 bg-blue-500 text-white text-[8px] font-extrabold px-1 py-0.2 rounded-br">CHILLED</span>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="text-[13px] font-extrabold text-slate-900 leading-snug truncate">
+            Amul Taaza Homogenised Toned Milk
+          </h3>
+<p class="text-[11px] text-slate-500 font-medium truncate mt-0.5">500 ml Pouch • Fresh Daily Batch</p>
+<div class="flex items-baseline gap-1.5 mt-1">
+<span class="text-[14px] font-extrabold text-slate-900 tnum">₹28</span>
+<span class="text-xs text-slate-400 line-through tnum">MRP ₹32</span>
+<span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-1 py-0.2 rounded">12% OFF</span>
+</div>
+</div>
+<!-- Tactile Golden Amber Stepper -->
+<div class="shrink-0 flex flex-col items-end gap-1">
+<div class="flex items-center bg-[#F5A623] hover:bg-[#E69818] text-slate-950 rounded-xl px-1.5 py-1 shadow-xs font-black transition-all">
+<button aria-label="Decrease quantity" class="w-5 h-5 flex items-center justify-center hover:opacity-75 active:scale-90" type="button">
+<span class="material-symbols-outlined text-xs font-black">remove</span>
+</button>
+<span class="text-xs px-2 tnum font-extrabold">1</span>
+<button aria-label="Increase quantity" class="w-5 h-5 flex items-center justify-center hover:opacity-75 active:scale-90" type="button">
+<span class="material-symbols-outlined text-xs font-black">add</span>
+</button>
+</div>
+<span class="text-xs font-black text-slate-800 tnum">₹28</span>
+</div>
+</article>
+<div class="h-px bg-slate-100"></div>
+<!-- Cart Item 2: Fortune Sunlite Refined Sunflower Oil -->
+<article class="flex items-center gap-3">
+<div class="w-[72px] h-[72px] rounded-xl bg-[#F8FAFD] p-1 flex items-center justify-center shrink-0 border border-slate-200/80 relative overflow-hidden shadow-xs">
+<img class="w-full h-full object-contain scale-110 drop-shadow-sm" data-alt="Fortune Sunlite Sunflower Oil" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4ywtcF-N6lG_mZ8xJlLUNwiYtcw2c5sut_YMQaWK_He79nb9ZWVOmNJitXHTUfMGWEMd80BGM-Ymcp9ud2JnGDQdDJbpAMJ8bJfRiNdL2rVJCl_EYTNgdT7AMqOtmSI9wenioB2fZr35ikwNgN53AtCzPSL8zVpvwkR5GKcCIAERi5hJwhBMqUIPZnMj_EzQ5lP-bXyVeT8KLEydzZgRF7u1PwoSvfiU4WyWoyezy0bF2l_8KjNVUA5Zx5zTcDlS69ozFkPPsHEU"/>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="text-[13px] font-extrabold text-slate-900 leading-snug truncate">
+            Fortune Sunlite Refined Sunflower Oil
+          </h3>
+<p class="text-[11px] text-slate-500 font-medium truncate mt-0.5">1 Litre Pouch • Fortified with Vit A&amp;D</p>
+<div class="flex items-baseline gap-1.5 mt-1">
+<span class="text-[14px] font-extrabold text-slate-900 tnum">₹138</span>
+<span class="text-xs text-slate-400 line-through tnum">MRP ₹165</span>
+<span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-1 py-0.2 rounded">16% OFF</span>
+</div>
+</div>
+<div class="shrink-0 flex flex-col items-end gap-1">
+<div class="flex items-center bg-[#F5A623] hover:bg-[#E69818] text-slate-950 rounded-xl px-1.5 py-1 shadow-xs font-black transition-all">
+<button aria-label="Decrease quantity" class="w-5 h-5 flex items-center justify-center hover:opacity-75 active:scale-90" type="button">
+<span class="material-symbols-outlined text-xs font-black">remove</span>
+</button>
+<span class="text-xs px-2 tnum font-extrabold">1</span>
+<button aria-label="Increase quantity" class="w-5 h-5 flex items-center justify-center hover:opacity-75 active:scale-90" type="button">
+<span class="material-symbols-outlined text-xs font-black">add</span>
+</button>
+</div>
+<span class="text-xs font-black text-slate-800 tnum">₹138</span>
+</div>
+</article>
+<div class="h-px bg-slate-100"></div>
+<!-- Cart Item 3: Britannia 100% Whole Wheat Bread -->
+<article class="flex items-center gap-3">
+<div class="w-[72px] h-[72px] rounded-xl bg-[#F8FAFD] p-1 flex items-center justify-center shrink-0 border border-slate-200/80 relative overflow-hidden shadow-xs">
+<img class="w-full h-full object-contain scale-110 drop-shadow-sm" data-alt="Britannia 100% Whole Wheat Bread" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3X399RwteW1dm7AdyWlgPqDrYSiy-mtpYLlWPsdxLxGpYeQ3vwdXVZaLAq3q92OLhi10eOZKYYM8eY7tG9gY5vUYNNPE_3-awgwRTCMyMrQ3QNvWbalX2W-3SSKqDM9npG8y1J0F8veiLWj5mJefd9Ugb_kDUWm1I-1drHzWdLpiZw7q1V1ZVIBEEg8_AavdbDdD7Yzf2_LOCx2s_DEwOPlQmJkQEDx0FQ-kzjP1yksJK6b6xCECV0z9VoDHZwFLpeUKNFwHIduE"/>
+<span class="absolute top-0 left-0 bg-amber-500 text-slate-950 text-[8px] font-black px-1 py-0.2 rounded-br">FRESH</span>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="text-[13px] font-extrabold text-slate-900 leading-snug truncate">
+            Britannia 100% Whole Wheat Bread
+          </h3>
+<p class="text-[11px] text-slate-500 font-medium truncate mt-0.5">400 g Pack • Zero Maida</p>
+<div class="flex items-baseline gap-1.5 mt-1">
+<span class="text-[14px] font-extrabold text-slate-900 tnum">₹39</span>
+<span class="text-xs text-slate-400 line-through tnum">MRP ₹45</span>
+<span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-1 py-0.2 rounded">13% OFF</span>
+</div>
+</div>
+<div class="shrink-0 flex flex-col items-end gap-1">
+<div class="flex items-center bg-[#F5A623] hover:bg-[#E69818] text-slate-950 rounded-xl px-1.5 py-1 shadow-xs font-black transition-all">
+<button aria-label="Decrease quantity" class="w-5 h-5 flex items-center justify-center hover:opacity-75 active:scale-90" type="button">
+<span class="material-symbols-outlined text-xs font-black">remove</span>
+</button>
+<span class="text-xs px-2 tnum font-extrabold">1</span>
+<button aria-label="Increase quantity" class="w-5 h-5 flex items-center justify-center hover:opacity-75 active:scale-90" type="button">
+<span class="material-symbols-outlined text-xs font-black">add</span>
+</button>
+</div>
+<span class="text-xs font-black text-slate-800 tnum">₹39</span>
+</div>
+</article>
+<!-- Add more items row -->
+<button class="w-full py-2.5 px-3 border border-dashed border-[#0052CC]/40 rounded-xl flex items-center justify-center gap-1.5 text-[#0052CC] hover:bg-blue-50/70 transition-colors active:scale-98" type="button">
+<span class="material-symbols-outlined text-[18px]">add_circle</span>
+<span class="text-xs font-extrabold">+ Add more items from aisles</span>
+</button>
+</section>
+<!-- 4. COUPON & OFFERS CARD -->
+<section class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-200/80 flex items-center justify-center text-emerald-600 shrink-0">
+<span class="material-symbols-outlined text-[20px] material-symbols-fill">local_offer</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="text-xs font-black tracking-tight text-slate-900 bg-emerald-100/70 text-emerald-800 px-1.5 py-0.5 rounded border border-emerald-200">🏷️ TANIZSAVE</span>
+<span class="text-[10px] font-black text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">APPLIED</span>
+</div>
+<p class="text-xs text-emerald-700 font-bold mt-0.5">₹20 instant discount applied!</p>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<button class="text-xs font-extrabold text-red-600 hover:text-red-700 active:scale-95 transition-all" type="button">
+          Remove
+        </button>
+<button class="text-[10px] font-bold text-[#0052CC] hover:underline mt-0.5" type="button">
+          View all coupons →
+        </button>
+</div>
+</section>
+<!-- 5. BILL DETAILS & TRANSPARENT PRICING -->
+<section class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-2.5">
+<div class="flex items-center justify-between pb-1 border-b border-slate-100">
+<h3 class="text-[14px] font-extrabold text-slate-900">Bill Details</h3>
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Prices in INR (₹)</span>
+</div>
+<div class="space-y-2 text-xs">
+<!-- Item Total -->
+<div class="flex justify-between items-center text-slate-600 font-medium">
+<span>Item Total (MRP)</span>
+<span class="font-bold text-slate-900 tnum">₹242</span>
+</div>
+<!-- Product Discount -->
+<div class="flex justify-between items-center text-emerald-600 font-medium">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">price_check</span>
+            Product Discount
+          </span>
+<span class="font-extrabold text-[#10B981] tnum">- ₹37</span>
+</div>
+<!-- Coupon Discount -->
+<div class="flex justify-between items-center text-emerald-600 font-medium">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">savings</span>
+            Coupon Discount (TANIZSAVE)
+          </span>
+<span class="font-extrabold text-[#10B981] tnum">- ₹20</span>
+</div>
+<!-- Delivery Partner Fee -->
+<div class="flex justify-between items-center text-slate-600 font-medium">
+<span class="flex items-center gap-1">
+            Delivery Partner Fee
+            <span class="material-symbols-outlined text-[13px] text-slate-400" title="Free on orders above ₹149">info</span>
+</span>
+<div class="flex items-center gap-1.5">
+<span class="line-through text-slate-400 tnum text-[11px]">₹25</span>
+<span class="font-extrabold text-[#10B981] uppercase text-[11px]">FREE</span>
+</div>
+</div>
+<!-- Handling & Packaging -->
+<div class="flex justify-between items-center text-slate-600 font-medium">
+<span>Handling &amp; Packaging</span>
+<span class="font-bold text-slate-900 tnum">₹2</span>
+</div>
+<!-- Divider Line -->
+<div class="h-px bg-slate-200/80 my-1"></div>
+<!-- Grand Total to Pay -->
+<div class="flex justify-between items-baseline pt-0.5">
+<div class="flex flex-col">
+<span class="text-[15px] font-black text-slate-900">Grand Total to Pay</span>
+<span class="text-[10px] text-slate-400 font-medium">Inclusive of all taxes &amp; hub fees</span>
+</div>
+<span class="text-[20px] font-black text-slate-950 tnum">₹187</span>
+</div>
+</div>
+<!-- Savings Highlight Bar at bottom of bill -->
+<div class="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200/80 rounded-xl p-2.5 flex items-center justify-between">
+<span class="text-xs font-black text-emerald-800 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] material-symbols-fill text-emerald-600">verified</span>
+          Total Savings ₹57 (24% OFF)
+        </span>
+<span class="text-[10px] font-extrabold text-emerald-700 bg-white/80 px-2 py-0.5 rounded-full border border-emerald-200">
+          Applied automatically
+        </span>
+</div>
+<!-- Trust Guarantee Strip -->
+<div class="pt-1 flex items-center justify-center gap-1 text-[11px] font-bold text-slate-600">
+<span>🛡️ 100% Contactless Delivery &amp; Instant Replacement Guarantee</span>
+</div>
+</section>
+<!-- 6. SELECT PAYMENT METHOD -->
+<section class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3">
+<div class="flex items-center justify-between">
+<h3 class="text-[14px] font-extrabold text-slate-900">Select Payment Method</h3>
+<span class="text-[10px] font-extrabold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">100% SECURE</span>
+</div>
+<div class="space-y-2">
+<!-- Option 1: Selected UPI (Instant 1-Click Pay) -->
+<label class="flex items-center justify-between p-3 rounded-xl border-2 border-[#0052CC] bg-blue-50/40 cursor-pointer transition-all">
+<div class="flex items-center gap-2.5">
+<!-- Filled Radio in Royal Blue -->
+<div class="w-5 h-5 rounded-full border-2 border-[#0052CC] flex items-center justify-center bg-white shrink-0">
+<div class="w-2.5 h-2.5 rounded-full bg-[#0052CC]"></div>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="text-xs font-black text-slate-900 leading-tight">UPI (Instant 1-Click Pay)</span>
+<span class="px-1.5 py-0.2 rounded text-[9px] font-black bg-[#F5A623] text-slate-950">FASTEST</span>
+</div>
+<p class="text-[11px] text-slate-500 font-medium mt-0.5">
+                Google Pay, PhonePe, Paytm, CRED &amp; UPI
+              </p>
+</div>
+</div>
+<span class="material-symbols-outlined text-[20px] text-[#0052CC]">account_balance_wallet</span>
+</label>
+<!-- Option 2: Cards -->
+<label class="flex items-center justify-between p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer transition-all">
+<div class="flex items-center gap-2.5">
+<div class="w-5 h-5 rounded-full border-2 border-slate-300 flex items-center justify-center shrink-0"></div>
+<div>
+<p class="text-xs font-bold text-slate-900 leading-tight">Credit / Debit Cards</p>
+<p class="text-[11px] text-slate-500 font-medium mt-0.5">Visa, Mastercard, RuPay &amp; Corporate</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-[20px] text-slate-400">credit_card</span>
+</label>
+<!-- Option 3: Pay on Delivery -->
+<label class="flex items-center justify-between p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer transition-all">
+<div class="flex items-center gap-2.5">
+<div class="w-5 h-5 rounded-full border-2 border-slate-300 flex items-center justify-center shrink-0"></div>
+<div>
+<p class="text-xs font-bold text-slate-900 leading-tight">Cash / Pay on Delivery (UPI at door)</p>
+<p class="text-[11px] text-slate-500 font-medium mt-0.5">Pay via QR scan or cash to delivery hero</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-[20px] text-slate-400">payments</span>
+</label>
+</div>
+</section>
+<!-- Space Buffer for sticky bottom action dock -->
+<div class="h-4"></div>
+</div>
+<!-- 7. STICKY PAY CTA FOOTER (ELEVATED DOCK) -->
+<!-- Deep Royal Navy #0A1B3F dock matching brand aesthetic of Screens 5, 4, 2 -->
+<div class="fixed bottom-0 max-w-[420px] w-full z-50 bg-[#0A1B3F] text-white px-4 py-3 shadow-[0_-8px_25px_rgba(10,27,63,0.35)] border-t border-blue-500/20">
+<div class="flex items-center justify-between gap-3">
+<!-- Left Column: Amount, Subtitle & Savings Badge -->
+<div class="flex flex-col">
+<div class="flex items-baseline gap-1.5">
+<span class="text-[22px] font-black text-white tracking-tight tnum leading-tight">₹187</span>
+<span class="text-xs text-slate-400 line-through tnum">₹242</span>
+</div>
+<div class="flex items-center gap-1.5 mt-0.5">
+<button class="text-[11px] font-bold text-[#F5A623] hover:underline flex items-center gap-0.5" type="button">
+<span>View Detailed Bill</span>
+<span class="material-symbols-outlined text-[13px]">expand_less</span>
+</button>
+<span class="text-[9px] font-black bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-1.5 py-0.2 rounded-full">
+            Saved ₹57
+          </span>
+</div>
+</div>
+<!-- Right Column: Primary High-Impact Vibrant Golden Amber Button -->
+<button onclick="window.location.href='tracking.html'" style="cursor:pointer;" class="flex-1 max-w-[210px] py-3 px-3 rounded-xl bg-[#F5A623] hover:bg-[#E69818] text-slate-950 font-black text-[14px] flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/30 hover:shadow-amber-500/50 transition-all active:scale-[0.98]" type="button">
+<span>Proceed to Pay ₹187</span>
+<span class="material-symbols-outlined text-[18px] font-black">arrow_forward</span>
+</button>
+</div>
+<!-- Safe Area Indicator Spacer -->
+<div class="h-1 w-24 bg-white/20 rounded-full mx-auto mt-2"></div>
+</div>
+</main>
+</body></html>

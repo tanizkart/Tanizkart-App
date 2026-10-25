@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tanizkart - My Account Hub</title>
+<!-- Plus Jakarta Sans Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-dim": "#d2d9f4",
+            "inverse-surface": "#283044",
+            "on-error": "#ffffff",
+            "tertiary": "#004e33",
+            "inverse-primary": "#b2c5ff",
+            "surface-tint": "#0c56d0",
+            "secondary": "#835500",
+            "on-tertiary-fixed-variant": "#005236",
+            "on-surface-variant": "#434654",
+            "tertiary-container": "#006846",
+            "primary-container": "#0052cc",
+            "on-secondary-container": "#6b4500",
+            "primary": "#003d9b",
+            "surface-container-highest": "#dae2fd",
+            "on-tertiary-container": "#5debaf",
+            "surface-container": "#eaedff",
+            "surface": "#faf8ff",
+            "secondary-fixed-dim": "#ffb955",
+            "surface-container-low": "#f2f3ff",
+            "outline": "#737685",
+            "on-primary": "#ffffff",
+            "inverse-on-surface": "#eef0ff",
+            "primary-fixed": "#dae2ff",
+            "tertiary-fixed-dim": "#4edea3",
+            "outline-variant": "#c3c6d6",
+            "on-primary-fixed": "#001848",
+            "on-tertiary-fixed": "#002113",
+            "on-secondary": "#ffffff",
+            "surface-bright": "#faf8ff",
+            "on-secondary-fixed": "#291800",
+            "surface-container-lowest": "#ffffff",
+            "on-surface": "#131b2e",
+            "secondary-container": "#feae2c",
+            "tertiary-fixed": "#6ffbbe",
+            "on-error-container": "#93000a",
+            "primary-fixed-dim": "#b2c5ff",
+            "on-primary-fixed-variant": "#0040a2",
+            "on-primary-container": "#c4d2ff",
+            "secondary-fixed": "#ffddb4",
+            "background": "#faf8ff",
+            "on-background": "#131b2e",
+            "error": "#ba1a1a",
+            "on-tertiary": "#ffffff",
+            "error-container": "#ffdad6",
+            "surface-container-high": "#e2e7ff",
+            "surface-variant": "#dae2fd",
+            "on-secondary-fixed-variant": "#633f00"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-xl": "1.5rem",
+            "margin": "1rem",
+            "space-xs": "0.25rem",
+            "space-sm": "0.5rem",
+            "space-lg": "1rem",
+            "space-md": "0.75rem",
+            "gutter": "0.75rem"
+          },
+          "fontFamily": {
+            "label-lg": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "display-lg": ["Plus Jakarta Sans"],
+            "price-md": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "price-lg": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "headline-lg-mobile": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "headline-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "display-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "800" }],
+            "price-md": ["15px", { "lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "price-lg": ["20px", { "lineHeight": "24px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 20px;
+      line-height: 1;
+      display: inline-block;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: 'liga';
+    }
+    
+    .gold-shimmer {
+      background: linear-gradient(135deg, #FEAE2C 0%, #F5A623 45%, #E08700 100%);
+    }
+
+    .navy-gradient {
+      background: radial-gradient(circle at top right, #1A3268 0%, #0A1B3F 75%, #050D24 100%);
+    }
+    
+    /* Subtle touch interaction */
+    .touch-lift {
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .touch-lift:active {
+      transform: scale(0.98);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body-md text-on-surface antialiased min-h-screen selection:bg-primary-fixed flex justify-center">
+<!-- Mobile Screen Canvas Wrapper (max-w-[420px] simulation on viewport) -->
+<div class="w-full max-w-[420px] bg-background min-h-screen flex flex-col relative pb-28 shadow-xl">
+<!-- Top Sticky Header -->
+<header class="bg-surface-container-lowest sticky top-0 z-40 shadow-sm flex items-center justify-between px-margin py-space-sm w-full">
+<div class="flex items-center gap-space-sm">
+<button onclick="window.location.href='home.html'" style="cursor:pointer;" aria-label="Go back" class="p-1.5 rounded-full hover:bg-surface-container-high transition-colors active:scale-95 text-on-surface flex items-center justify-center" type="button">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div>
+<h1 class="font-headline-sm text-headline-sm text-on-surface leading-tight">My Account</h1>
+<p class="font-label-sm text-label-sm text-outline">Tanizkart Quick-Commerce</p>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<button aria-label="QR Code &amp; Scanner" class="p-2 rounded-full hover:bg-surface-container-high transition-colors text-primary active:scale-95 flex items-center justify-center" type="button">
+<span class="material-symbols-outlined">qr_code_scanner</span>
+</button>
+<button aria-label="Edit Profile" class="p-2 rounded-full hover:bg-surface-container-high transition-colors text-primary active:scale-95 flex items-center justify-center" type="button">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</div>
+</header>
+<!-- Main Content Flow Container -->
+<main class="flex-1 px-margin pt-space-md space-y-space-md">
+<!-- ==============================================
+           PRIORITY 1: MY ACCOUNT HERO CARD (Navy #0A1B3F)
+           ============================================== -->
+<section class="navy-gradient rounded-3xl p-5 text-on-primary shadow-lg relative overflow-hidden">
+<!-- Ambient decorative glow -->
+<div class="absolute -top-12 -right-12 w-36 h-36 bg-primary-container rounded-full blur-2xl opacity-40 pointer-events-none"></div>
+<div class="absolute -bottom-10 -left-10 w-28 h-28 bg-secondary-container rounded-full blur-2xl opacity-20 pointer-events-none"></div>
+<!-- User Information Header Row -->
+<div class="relative z-10 flex items-center gap-space-md">
+<div class="relative">
+<div class="w-16 h-16 rounded-full overflow-hidden border-2 border-secondary-container shadow-md bg-surface-container-low flex items-center justify-center">
+<img class="w-full h-full object-cover" data-alt="Close-up professional portrait of Yaswanth, a friendly South Asian young man in a clean modern jacket with warm studio lighting, styled for a sleek mobile tech profile avatar on a deep royal blue background with sharp lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIGelXIOeXOIZX4LzKNgJ8ZVMENhHJuj7CajW0uS0FyEGo0Pd9ym1WXibHdtItq1Dxhn4400CD7516eaOQsBpifqc2H8iIK5b5-NnedJRleTyRfKf5M7Gqv1TFAmmcsgISgYgU4yb324onwqzF7FRYpp5HGYOBXkmN6VB9fRTZ0pwpdg-x3fzli0rhF7-HaugJFADfCc0LvckwLpyO0RQMj2R3_6Aun22ju0fOdmc3YI3s_cgqPEmH5sqUdiBf8xiayDwDzxy2Ce8"/>
+</div>
+<!-- Crown membership badge -->
+<div class="absolute -bottom-1 -right-1 bg-secondary-container text-on-secondary-fixed rounded-full p-1 shadow flex items-center justify-center border-2 border-inverse-surface">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-1.5 flex-wrap">
+<h2 class="font-headline-md text-headline-md text-surface-bright tracking-tight truncate">Hi, Yaswanth 👋</h2>
+</div>
+<p class="font-body-sm text-body-sm text-surface-container-highest mt-0.5 tracking-wide">+91 98480 22338</p>
+<div class="inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-full bg-secondary-container/20 border border-secondary-fixed-dim/40">
+<span class="material-symbols-outlined text-[13px] text-secondary-fixed-dim" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="font-label-sm text-label-sm text-secondary-fixed">Tanizkart Gold Member</span>
+</div>
+</div>
+</div>
+<!-- 3 Quick Account Stat Cards (Bento Sub-Grid) -->
+<div class="grid grid-cols-3 gap-2.5 mt-5 relative z-10">
+<!-- Stat 1: Orders -->
+<div class="bg-white/10 backdrop-blur-md rounded-2xl p-2.5 border border-white/15 text-center flex flex-col justify-between">
+<span class="font-label-sm text-label-sm text-surface-container-highest">Orders</span>
+<div class="my-1">
+<span class="font-price-lg text-price-lg text-surface-bright">12</span>
+</div>
+<span class="font-label-sm text-[9px] text-primary-fixed-dim leading-none">Deliveries</span>
+</div>
+<!-- Stat 2: Premium -->
+<div class="bg-white/10 backdrop-blur-md rounded-2xl p-2.5 border border-white/15 text-center flex flex-col justify-between">
+<span class="font-label-sm text-label-sm text-surface-container-highest">Premium</span>
+<div class="my-1 flex items-center justify-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed-dim"></span>
+<span class="font-headline-sm text-headline-sm text-tertiary-fixed-dim">Active</span>
+</div>
+<span class="font-label-sm text-[9px] text-surface-container-highest leading-none">Oct 2027</span>
+</div>
+<!-- Stat 3: Rewards -->
+<div class="bg-white/10 backdrop-blur-md rounded-2xl p-2.5 border border-white/15 text-center flex flex-col justify-between">
+<span class="font-label-sm text-label-sm text-surface-container-highest">Rewards</span>
+<div class="my-1">
+<span class="font-price-lg text-price-lg text-secondary-fixed-dim">₹2,400</span>
+</div>
+<span class="font-label-sm text-[9px] text-secondary-fixed leading-none">Taniz Cash</span>
+</div>
+</div>
+</section>
+<!-- ==============================================
+           PRIORITY 2: TANIZKART PREMIUM VIP CARD (Amber #F5A623)
+           ============================================== -->
+<section class="gold-shimmer rounded-3xl p-5 text-on-surface shadow-md relative overflow-hidden touch-lift">
+<!-- Geometric translucent badge background -->
+<div class="absolute -right-8 -top-8 w-32 h-32 rounded-full border-[8px] border-white/20 pointer-events-none"></div>
+<div class="absolute right-4 bottom-2 opacity-15 pointer-events-none">
+<span class="material-symbols-outlined text-[80px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div class="relative z-10 flex items-center justify-between">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-inverse-surface text-surface-bright shadow-sm">
+<span class="material-symbols-outlined text-[14px] text-secondary-fixed" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+<span class="font-label-sm text-label-sm font-bold tracking-wider">TANIZKART PREMIUM</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-white/40 text-on-surface font-label-sm text-label-sm font-bold">VIP CLUB</span>
+</div>
+<div class="mt-3 relative z-10">
+<p class="font-headline-sm text-headline-sm text-on-surface font-bold">Free delivery on all orders</p>
+<div class="flex items-center gap-1.5 text-on-surface/80 mt-0.5">
+<span class="material-symbols-outlined text-[16px] text-tertiary">check_circle</span>
+<span class="font-body-sm text-body-sm font-medium">Zero surge fees during rush hours</span>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-black/10 flex items-center justify-between gap-2 relative z-10">
+<div>
+<span class="font-label-sm text-[10px] text-on-surface/75 block">Member Privilege</span>
+<span class="font-price-md text-price-md text-on-surface font-extrabold">₹7,200 <span class="font-normal text-[11px] text-on-surface/80">/ year</span></span>
+</div>
+<button class="bg-inverse-surface text-surface-bright px-3.5 py-2 rounded-xl font-label-md text-label-md flex items-center gap-1 shadow-md hover:bg-on-surface active:scale-95 transition-all" type="button">
+<span>View Benefits</span>
+<span class="material-symbols-outlined text-[15px]">arrow_forward</span>
+</button>
+</div>
+</section>
+<!-- ==============================================
+           PRIORITY 3: PROMINENT REFER & EARN HUB
+           ============================================== -->
+<section class="bg-surface-container-lowest rounded-3xl p-5 border border-surface-container-high shadow-sm relative overflow-hidden">
+<div class="flex items-start justify-between gap-3">
+<div class="flex gap-3 items-center">
+<div class="w-11 h-11 rounded-2xl bg-tertiary-container/10 border border-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">redeem</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Refer &amp; Earn ₹1,200</h3>
+<span class="bg-tertiary-container text-on-tertiary-container text-[10px] font-bold px-1.5 py-0.5 rounded-full">INSTANT</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Invite friends to Tanizkart → both get ₹300 cash</p>
+</div>
+</div>
+</div>
+<!-- Milestone Progress Section -->
+<div class="mt-4 bg-surface-container-low rounded-2xl p-3 border border-outline-variant/30">
+<div class="flex justify-between items-center text-body-sm mb-1.5">
+<span class="font-label-md text-label-md text-on-surface font-bold">3 / 4 friends joined</span>
+<span class="font-label-sm text-label-sm text-tertiary font-bold">75% Complete</span>
+</div>
+<!-- Animated Progress Meter Bar in Fresh Emerald (#10B981) -->
+<div class="w-full h-2.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-container rounded-full relative transition-all duration-500" style="width: 75%;">
+<div class="absolute inset-0 bg-white/20 animate-pulse"></div>
+</div>
+</div>
+<p class="font-label-sm text-[11px] text-outline mt-1.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-secondary">bolt</span>
+            1 more invite unlocks the extra ₹1,000 cash bonus!
+          </p>
+</div>
+<!-- Referral Code and Conversion Action Row -->
+<div class="mt-3.5 flex items-center gap-2">
+<div class="flex-1 flex items-center justify-between bg-surface-container-low px-3 py-2 rounded-xl border border-dashed border-outline">
+<div class="flex flex-col">
+<span class="font-label-sm text-[9px] text-outline">YOUR CODE</span>
+<span class="font-headline-sm text-headline-sm font-extrabold tracking-wider text-primary">YASW772</span>
+</div>
+<button aria-label="Copy Code" class="p-1.5 rounded-lg hover:bg-surface-container-high text-primary flex items-center justify-center transition-colors active:scale-90" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+</div>
+<button class="bg-secondary-container text-on-secondary-container hover:bg-secondary-fixed-dim font-label-lg text-label-lg px-4 py-3 rounded-xl flex items-center gap-1 shadow-sm font-bold active:scale-95 transition-transform" type="button">
+<span>Refer Now</span>
+<span class="material-symbols-outlined text-[18px]">share</span>
+</button>
+</div>
+</section>
+<!-- ==============================================
+           SECONDARY ACCOUNT HUBS (Organized Cards)
+           ============================================== -->
+<!-- Group A: My Activity -->
+<section class="space-y-1.5">
+<h3 class="font-label-md text-label-md text-outline px-1">MY ACTIVITY</h3>
+<div class="bg-surface-container-lowest rounded-2xl border border-surface-container-high divide-y divide-surface-container-low overflow-hidden shadow-sm">
+<!-- Row 1: My Orders -->
+<a class="flex items-center justify-between p-3.5 hover:bg-surface-container-low transition-colors group" href="#">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">inventory_2</span>
+</div>
+<div>
+<p class="font-headline-sm text-headline-sm text-on-surface font-medium">My Orders</p>
+<p class="font-body-sm text-body-sm text-outline">Track active shipments &amp; re-order</p>
+</div>
+</div>
+<div class="flex items-center gap-1 text-outline group-hover:text-primary transition-colors">
+<span class="font-label-sm text-label-sm bg-tertiary-container/10 text-tertiary px-2 py-0.5 rounded-full">1 In Transit</span>
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</div>
+</a>
+<!-- Row 2: Wishlist -->
+<a class="flex items-center justify-between p-3.5 hover:bg-surface-container-low transition-colors group" href="#">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-error-container/40 flex items-center justify-center text-error">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<div>
+<p class="font-headline-sm text-headline-sm text-on-surface font-medium">Wishlist &amp; Favorites</p>
+<p class="font-body-sm text-body-sm text-outline">Quick restock for saved groceries</p>
+</div>
+</div>
+<div class="flex items-center gap-1 text-outline group-hover:text-primary transition-colors">
+<span class="font-label-sm text-label-sm text-outline">18 items</span>
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</div>
+</a>
+<!-- Row 3: Rewards & TanizCash -->
+<a class="flex items-center justify-between p-3.5 hover:bg-surface-container-low transition-colors group" href="#">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-secondary-fixed flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+</div>
+<div>
+<p class="font-headline-sm text-headline-sm text-on-surface font-medium">Rewards &amp; TanizCash</p>
+<p class="font-body-sm text-body-sm text-outline">Instant discounts on checkout</p>
+</div>
+</div>
+<div class="flex items-center gap-1 text-outline group-hover:text-primary transition-colors">
+<span class="font-price-md text-price-md text-secondary font-bold">₹2,400</span>
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</div>
+</a>
+</div>
+</section>
+<!-- Group B: Delivery & Payments -->
+<section class="space-y-1.5">
+<h3 class="font-label-md text-label-md text-outline px-1">DELIVERY &amp; PAYMENTS</h3>
+<div class="bg-surface-container-lowest rounded-2xl border border-surface-container-high divide-y divide-surface-container-low overflow-hidden shadow-sm">
+<!-- Row 1: Saved Addresses -->
+<a class="flex items-center justify-between p-3.5 hover:bg-surface-container-low transition-colors group" href="#">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">location_on</span>
+</div>
+<div class="max-w-[210px]">
+<p class="font-headline-sm text-headline-sm text-on-surface font-medium">Saved Addresses</p>
+<p class="font-body-sm text-body-sm text-outline truncate">Home • Flat 302, Lawyerpet, Ongole</p>
+</div>
+</div>
+<div class="flex items-center gap-1 text-outline group-hover:text-primary transition-colors">
+<span class="font-label-sm text-label-sm text-primary font-bold">Default</span>
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</div>
+</a>
+<!-- Row 2: Payment Methods -->
+<a class="flex items-center justify-between p-3.5 hover:bg-surface-container-low transition-colors group" href="#">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">credit_card</span>
+</div>
+<div>
+<p class="font-headline-sm text-headline-sm text-on-surface font-medium">Payment Methods</p>
+<p class="font-body-sm text-body-sm text-outline">UPI IDs, HDFC &amp; ICICI Cards</p>
+</div>
+</div>
+<div class="flex items-center gap-1 text-outline group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</div>
+</a>
+</div>
+</section>
+<!-- Group C: Support & Legal -->
+<section class="space-y-1.5">
+<h3 class="font-label-md text-label-md text-outline px-1">SUPPORT &amp; LEGAL</h3>
+<div class="bg-surface-container-lowest rounded-2xl border border-surface-container-high divide-y divide-surface-container-low overflow-hidden shadow-sm">
+<!-- Row 1: Live Chat -->
+<a class="flex items-center justify-between p-3.5 hover:bg-surface-container-low transition-colors group" href="#">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">support_agent</span>
+</div>
+<div>
+<p class="font-headline-sm text-headline-sm text-on-surface font-medium">24x7 Help &amp; Live Chat</p>
+<p class="font-body-sm text-body-sm text-outline">Order issues, refunds &amp; inquiries</p>
+</div>
+</div>
+<div class="flex items-center gap-1 text-outline group-hover:text-primary transition-colors">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</div>
+</a>
+<!-- Row 2: Dark Store Hub Call -->
+<a class="flex items-center justify-between p-3.5 hover:bg-surface-container-low transition-colors group" href="#">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">store</span>
+</div>
+<div>
+<p class="font-headline-sm text-headline-sm text-on-surface font-medium">Dark Store Hub (Ongole Central)</p>
+<p class="font-body-sm text-body-sm text-outline">Dispatched within 7 mins</p>
+</div>
+</div>
+<div class="flex items-center gap-1 text-outline group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">call</span>
+</div>
+</a>
+<!-- Row 3: Terms & Policies -->
+<a class="flex items-center justify-between p-3.5 hover:bg-surface-container-low transition-colors group" href="#">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-surface-container flex items-center justify-center text-outline">
+<span class="material-symbols-outlined">policy</span>
+</div>
+<div>
+<p class="font-headline-sm text-headline-sm text-on-surface font-medium">Terms of Service &amp; Privacy</p>
+<p class="font-body-sm text-body-sm text-outline">Compliance &amp; Quick-commerce safety</p>
+</div>
+</div>
+<div class="flex items-center gap-1 text-outline group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</div>
+</a>
+</div>
+</section>
+<!-- ==============================================
+           LOGOUT & FOOTER APP VERSION
+           ============================================== -->
+<section class="pt-2 pb-4 space-y-4">
+<button class="w-full bg-error-container/30 hover:bg-error-container/60 text-error font-label-lg text-label-lg py-3 rounded-2xl flex items-center justify-center gap-2 border border-error/20 active:scale-98 transition-all" type="button">
+<span class="material-symbols-outlined text-[20px]">logout</span>
+<span>Log Out of Tanizkart</span>
+</button>
+<div class="text-center space-y-1">
+<p class="font-label-sm text-[11px] text-outline tracking-wider font-semibold">TANIZKART EXPRESS</p>
+<p class="font-body-sm text-[11px] text-outline">v2.4.0 (Build 8920) • Dark Store #304 Ongole</p>
+<p class="font-body-sm text-[10px] text-outline-variant">Save money save time • Made with precision</p>
+</div>
+</section>
+</main>
+<!-- ==============================================
+         SHARED COMPONENT: BottomNavBar (Active: Profile)
+         ============================================== -->
+<!-- Executing JSON: BottomNavBar with destination_count 4, active Profile -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-margin py-space-xs max-w-screen-md mx-auto bg-surface-container-lowest shadow-lg">
+<!-- Nav Item 1: Home (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary py-space-xs active:scale-95 transition-transform duration-150" href="home.html">
+<span class="material-symbols-outlined text-[22px]">storefront</span>
+<span class="font-label-sm text-label-sm mt-0.5">Home</span>
+</a>
+<!-- Nav Item 2: Categories (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary py-space-xs active:scale-95 transition-transform duration-150" href="listing.html">
+<span class="material-symbols-outlined text-[22px]">grid_view</span>
+<span class="font-label-sm text-label-sm mt-0.5">Categories</span>
+</a>
+<!-- Nav Item 3: Orders (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary py-space-xs active:scale-95 transition-transform duration-150" href="tracking.html">
+<span class="material-symbols-outlined text-[22px]">receipt_long</span>
+<span class="font-label-sm text-label-sm mt-0.5">Orders</span>
+</a>
+<!-- Nav Item 4: Profile (ACTIVE matching JSON style_active_navigation) -->
+<a class="flex flex-col items-center justify-center text-secondary font-bold py-space-xs active:scale-95 transition-transform duration-150 relative" href="profile.html">
+<div class="relative flex items-center justify-center">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">person</span>
+<!-- Active tiny indicator dot -->
+<span class="absolute -top-1 -right-1.5 w-2 h-2 rounded-full bg-secondary-container"></span>
+</div>
+<span class="font-label-sm text-label-sm mt-0.5">Profile</span>
+</a>
+</nav>
+</div>
+</body></html>

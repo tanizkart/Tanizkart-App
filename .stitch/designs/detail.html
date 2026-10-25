@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tanizkart - Amul Taaza Homogenised Toned Milk 500ml</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Plus Jakarta Sans Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-error-container": "#93000a",
+            "surface": "#faf8ff",
+            "secondary": "#835500",
+            "tertiary-fixed": "#6ffbbe",
+            "surface-dim": "#d2d9f4",
+            "primary-container": "#0052cc",
+            "inverse-surface": "#283044",
+            "surface-bright": "#faf8ff",
+            "surface-container-high": "#e2e7ff",
+            "secondary-fixed-dim": "#ffb955",
+            "on-surface-variant": "#434654",
+            "primary-fixed-dim": "#b2c5ff",
+            "tertiary-container": "#006846",
+            "surface-container-low": "#f2f3ff",
+            "surface-container-highest": "#dae2fd",
+            "error": "#ba1a1a",
+            "tertiary-fixed-dim": "#4edea3",
+            "on-tertiary-fixed-variant": "#005236",
+            "inverse-on-surface": "#eef0ff",
+            "error-container": "#ffdad6",
+            "primary-fixed": "#dae2ff",
+            "on-secondary-fixed-variant": "#633f00",
+            "background": "#faf8ff",
+            "secondary-container": "#feae2c",
+            "on-primary-fixed-variant": "#0040a2",
+            "on-primary-container": "#c4d2ff",
+            "inverse-primary": "#b2c5ff",
+            "primary": "#003d9b",
+            "on-primary": "#ffffff",
+            "on-surface": "#131b2e",
+            "on-tertiary-container": "#5debaf",
+            "surface-variant": "#dae2fd",
+            "surface-container-lowest": "#ffffff",
+            "on-primary-fixed": "#001848",
+            "on-background": "#131b2e",
+            "surface-container": "#eaedff",
+            "on-error": "#ffffff",
+            "tertiary": "#004e33",
+            "on-secondary-container": "#6b4500",
+            "on-tertiary": "#ffffff",
+            "secondary-fixed": "#ffddb4",
+            "outline": "#737685",
+            "outline-variant": "#c3c6d6",
+            "on-tertiary-fixed": "#002113",
+            "on-secondary-fixed": "#291800",
+            "surface-tint": "#0c56d0",
+            "on-secondary": "#ffffff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-sm": "0.5rem",
+            "space-md": "0.75rem",
+            "margin": "1rem",
+            "space-lg": "1rem",
+            "space-xs": "0.25rem",
+            "space-xl": "1.5rem",
+            "gutter": "0.75rem"
+          },
+          "fontFamily": {
+            "price-lg": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "label-lg": ["Plus Jakarta Sans"],
+            "price-md": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "display-lg": ["Plus Jakarta Sans"],
+            "headline-lg-mobile": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "price-lg": ["20px", { "lineHeight": "24px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+            "headline-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "price-md": ["15px", { "lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "display-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "800" }],
+            "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-outlined.fill-icon {
+      font-variation-settings: 'FILL' 1;
+    }
+    /* Subtle touch interaction shadows */
+    .tactile-card {
+      box-shadow: 0 2px 10px -2px rgba(0, 82, 204, 0.06), 0 1px 4px -1px rgba(15, 23, 42, 0.03);
+    }
+    .hero-glow {
+      background: radial-gradient(circle at center, #eff4fc 0%, #ffffff 80%);
+    }
+    .dock-shadow {
+      box-shadow: 0 -8px 24px -4px rgba(0, 82, 204, 0.12), 0 -2px 6px -1px rgba(15, 23, 42, 0.04);
+    }
+    /* Hide scrollbars for smooth chips slider */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased font-body-md min-h-screen pb-32 selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- MAIN WRAPPER (Mobile-first viewport container max-w-screen-md) -->
+<div class="max-w-screen-md mx-auto relative bg-surface-container-lowest min-h-screen">
+<!-- 1. STICKY BRAND HEADER & DELIVERY BAR (Task-Focused PDP suppresses BottomNav) -->
+<header class="sticky top-0 z-40 bg-surface-container-lowest/95 backdrop-blur-md shadow-sm">
+<div class="flex justify-between items-center px-margin py-space-sm">
+<!-- Back Navigation Button -->
+<button onclick="window.location.href='listing.html'" style="cursor:pointer;" aria-label="Go back" class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-low text-on-surface hover:bg-surface-container-high transition-colors active:scale-95 duration-150" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="arrow_back">arrow_back</span>
+</button>
+<!-- Brand Identity Lockup -->
+<div class="flex items-center">
+<img src="assets/logo.png" alt="Tanizkart - Save money save time" class="h-8 w-auto max-h-8.5 object-contain" />
+</div>
+<!-- Action cluster: Search & Heart -->
+<div class="flex items-center gap-1.5">
+<button aria-label="Search items" class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-low text-on-surface hover:bg-surface-container-high transition-colors active:scale-95 duration-150" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="search">search</span>
+</button>
+<button aria-label="Add to wishlist" class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-low text-on-surface hover:text-error hover:bg-error-container/40 transition-colors active:scale-95 duration-150" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="favorite_border">favorite_border</span>
+</button>
+</div>
+</div>
+<!-- Quick Delivery SLA Banner Bar -->
+<div class="px-margin pb-space-sm pt-space-xs flex items-center justify-between bg-surface-container-low/60 border-t border-surface-container-high">
+<div class="flex items-center gap-2">
+<!-- 10 MINS Pill Badge -->
+<div class="inline-flex items-center gap-1 bg-tertiary-container text-on-tertiary px-2 py-0.5 rounded-full text-label-sm font-label-sm shadow-xs">
+<span class="material-symbols-outlined text-[13px] fill-icon" data-icon="bolt">bolt</span>
+<span>10 MINS</span>
+</div>
+<!-- Clean Delivery Address Switcher -->
+<button class="flex items-center gap-1 text-on-surface font-label-md text-label-md hover:text-primary transition-colors" type="button">
+<span class="font-bold truncate max-w-[210px] text-left">Deliver to Flat 302, Lawyerpet</span>
+<span class="material-symbols-outlined text-[16px] text-outline" data-icon="keyboard_arrow_down">keyboard_arrow_down</span>
+</button>
+</div>
+<div class="text-[11px] font-label-sm text-tertiary font-bold flex items-center gap-0.5">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse inline-block"></span>
+<span>Open Now</span>
+</div>
+</div>
+</header>
+<!-- MAIN PRODUCT CANVAS -->
+<main class="space-y-space-md">
+<!-- 2. HERO PRODUCT SHOWCASE -->
+<section class="relative px-margin pt-space-xs">
+<div class="hero-glow rounded-3xl p- space-sm relative flex flex-col items-center justify-center border border-surface-container-high min-h-[380px] overflow-hidden">
+<!-- Top Left Pill Badge: 10 MINS Express -->
+<div class="absolute top-4 left-4 z-20 flex items-center gap-1.5 bg-surface-container-lowest/90 backdrop-blur-md border border-tertiary-container/30 text-tertiary font-label-md text-label-md px-3 py-1 rounded-full shadow-sm">
+<span class="material-symbols-outlined text-[15px] fill-icon text-tertiary" data-icon="bolt">bolt</span>
+<span class="font-bold tracking-tight">10 MINS Express</span>
+</div>
+<!-- Top Right Badge: 12% OFF • SAVE ₹4 -->
+<div class="absolute top-4 right-4 z-20 bg-secondary-container text-on-secondary-container font-label-md text-label-md px-2.5 py-1 rounded-full font-extrabold shadow-sm tracking-tight flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="local_offer">local_offer</span>
+<span>12% OFF • SAVE ₹4</span>
+</div>
+<!-- Product Image Packshot (Appetizing, fills 85-90% frame) -->
+<div class="relative w-full h-[300px] flex items-center justify-center p-2 mt-4">
+<img class="max-h-[290px] w-auto object-contain drop-shadow-xl transition-transform duration-300 hover:scale-105" data-alt="Appetizing ultra-high-resolution studio commercial packshot of a chilled Amul Taaza Homogenised Toned Milk 500ml pouch filling eighty-five percent of the frame. Delicate glistening cold-chain condensation droplets rest on the pristine blue and white dairy packaging. Soft realistic studio drop shadow on a pale luminous cream-white surface with gentle ambient blue reflection. Commercial premium food delivery aesthetic with warm crisp high-key lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjIWWqkol9J-ZnIgNc_HhVpTl4qzaIydoLKcEXfu3QrqS71OAM08xeQKiQiq6O7un4Rtx6d5kTl6TDfc_ubVgl-B4D1CyCkpgKmLqJkWsxNm8tAcsuDkhKy0AYVs2DuEGznzCYCYFXD9VclRqHoRtXjKnqC9iuIL2Mi98V2JiUNOAI1mCCFZ8ogOKBSI-MF5HETvSfko2lYt889w4HQrUpU567MbAcI4GkCvXZE1T2b4Sld3_FNEKRR9uQrGBNd19Hxo5w4hbd3lg"/>
+</div>
+<!-- Bottom Left Badge: 100% Pure Milk verification chip -->
+<div class="absolute bottom-4 left-4 z-20 flex items-center gap-1.5 bg-surface-container-lowest/95 backdrop-blur-md border border-primary-container/20 text-primary font-label-md text-label-md px-3 py-1 rounded-full shadow-sm">
+<span class="material-symbols-outlined text-[15px] text-tertiary fill-icon" data-icon="verified">verified</span>
+<span class="font-bold">100% Pure Milk</span>
+</div>
+<!-- Bottom Carousel Indicators (3 dots with active amber pill) -->
+<div class="absolute bottom-4 right-4 z-20 flex items-center gap-1.5">
+<span class="w-6 h-2 rounded-full bg-secondary-container transition-all"></span>
+<span class="w-2 h-2 rounded-full bg-outline-variant/60"></span>
+<span class="w-2 h-2 rounded-full bg-outline-variant/60"></span>
+</div>
+</div>
+</section>
+<!-- 3. PRODUCT INFO & PRICING -->
+<section class="px-margin space-y-space-md">
+<!-- Category & Rating line -->
+<div class="flex items-center justify-between">
+<!-- Brand pill -->
+<div class="inline-flex items-center gap-1.5 bg-surface-container text-primary font-label-md text-label-md px-2.5 py-1 rounded-full font-bold">
+<span class="material-symbols-outlined text-[14px]" data-icon="water_drop">water_drop</span>
+<span>AMUL • Fresh Dairy</span>
+</div>
+<!-- Star Rating -->
+<div class="flex items-center gap-1 bg-surface-container-low border border-surface-container-high px-2.5 py-1 rounded-full">
+<span class="material-symbols-outlined text-[14px] text-secondary fill-icon" data-icon="star">star</span>
+<span class="font-bold text-on-surface text-label-md font-label-md">4.9</span>
+<span class="text-outline text-label-sm font-label-sm">(1.8k reviews)</span>
+</div>
+</div>
+<!-- Product Titles -->
+<div class="space-y-1">
+<h1 class="text-headline-lg-mobile font-headline-lg-mobile text-on-surface font-extrabold leading-tight">
+            Amul Taaza Homogenised Toned Milk (Pasteurised)
+          </h1>
+<p class="text-on-surface-variant font-body-md text-body-md flex items-center gap-1.5">
+<span>500 ml Pouch</span>
+<span class="inline-block w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="text-tertiary font-medium">Fresh Daily Batch (Long Shelf Life)</span>
+</p>
+</div>
+<!-- Pack Size Switcher Cards -->
+<div class="space-y-space-xs">
+<label class="block text-label-md font-label-md text-outline font-semibold tracking-wide">SELECT PACK SIZE</label>
+<div class="grid grid-cols-2 gap-space-md">
+<!-- 500 ml Active Card -->
+<button class="relative text-left p-3 rounded-2xl border-2 border-primary-container bg-surface-container-low/70 flex flex-col justify-between transition-all duration-200 shadow-sm active:scale-98" type="button">
+<div class="flex items-center justify-between w-full">
+<span class="font-headline-sm text-headline-sm text-primary font-bold">500 ml</span>
+<span class="w-4 h-4 rounded-full bg-primary-container text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[12px]" data-icon="check">check</span>
+</span>
+</div>
+<div class="mt-2 flex items-baseline gap-1.5">
+<span class="font-price-md text-price-md text-on-surface font-extrabold">₹28</span>
+<span class="font-body-sm text-body-sm text-outline line-through">₹32</span>
+<span class="text-label-sm font-label-sm text-tertiary font-bold ml-auto">12% OFF</span>
+</div>
+</button>
+<!-- 1 Litre Inactive Card -->
+<button class="relative text-left p-3 rounded-2xl border border-surface-container-high bg-surface-container-lowest flex flex-col justify-between hover:border-outline-variant transition-all duration-200 active:scale-98" type="button">
+<div class="flex items-center justify-between w-full">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">1 Litre</span>
+<span class="w-4 h-4 rounded-full border border-outline-variant"></span>
+</div>
+<div class="mt-2 flex items-baseline gap-1.5">
+<span class="font-price-md text-price-md text-on-surface font-extrabold">₹54</span>
+<span class="font-body-sm text-body-sm text-outline line-through">₹60</span>
+<span class="text-label-sm font-label-sm text-outline font-medium ml-auto">10% OFF</span>
+</div>
+</button>
+</div>
+</div>
+<!-- Pricing Stack & Highlight Promise -->
+<div class="p-3.5 bg-surface-container-low/90 rounded-2xl border border-surface-container-high flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+<div class="flex items-baseline gap-2.5">
+<span class="font-display-lg text-display-lg font-extrabold text-on-surface tracking-tight">₹28</span>
+<div class="flex flex-col">
+<span class="text-outline text-body-sm font-body-sm line-through leading-none">MRP ₹32</span>
+<span class="text-label-sm font-label-sm text-outline mt-0.5">(Inclusive of all taxes)</span>
+</div>
+<span class="bg-tertiary-container/15 text-tertiary font-label-md text-label-md px-2.5 py-0.5 rounded-full font-bold">
+              Save ₹4 (12% OFF)
+            </span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[18px] text-tertiary fill-icon" data-icon="bolt">bolt</span>
+<span>Delivered in <strong class="text-on-surface font-bold">10-15 mins</strong> from local hub</span>
+</div>
+</div>
+</section>
+<!-- 4. DRIBBBLE-STYLE NUTRITIONAL STAT CARDS & QUALITY ACCORDION -->
+<section class="px-margin space-y-space-md pt-space-xs">
+<div class="flex items-center justify-between">
+<h2 class="text-headline-sm font-headline-sm font-bold text-on-surface tracking-tight">Nutritional Highlights</h2>
+<span class="text-label-sm font-label-sm text-outline uppercase tracking-wider font-semibold">Per 100 ml serve</span>
+</div>
+<!-- 4 Pastel Stat Cards (Bento-style 4-column fluid mobile grid) -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-space-sm">
+<!-- Stat 1: Energy -->
+<div class="bg-surface-container-low/70 border border-surface-container-high rounded-2xl p-3 flex flex-col items-start tactile-card hover:border-primary-fixed duration-150">
+<div class="w-8 h-8 rounded-xl bg-secondary-fixed/40 text-secondary flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-[18px] fill-icon" data-icon="local_fire_department">local_fire_department</span>
+</div>
+<span class="text-outline text-label-sm font-label-sm font-bold uppercase tracking-wider">Energy</span>
+<div class="mt-0.5">
+<span class="font-price-lg text-price-lg font-extrabold text-on-surface">58</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant ml-0.5">kcal</span>
+</div>
+</div>
+<!-- Stat 2: Protein -->
+<div class="bg-surface-container-low/70 border border-surface-container-high rounded-2xl p-3 flex flex-col items-start tactile-card hover:border-primary-fixed duration-150">
+<div class="w-8 h-8 rounded-xl bg-tertiary-fixed/30 text-tertiary flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-[18px] fill-icon" data-icon="fitness_center">fitness_center</span>
+</div>
+<span class="text-outline text-label-sm font-label-sm font-bold uppercase tracking-wider">Protein</span>
+<div class="mt-0.5">
+<span class="font-price-lg text-price-lg font-extrabold text-on-surface">3.2</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant ml-0.5">g</span>
+</div>
+</div>
+<!-- Stat 3: Calcium -->
+<div class="bg-surface-container-low/70 border border-surface-container-high rounded-2xl p-3 flex flex-col items-start tactile-card hover:border-primary-fixed duration-150">
+<div class="w-8 h-8 rounded-xl bg-primary-fixed/40 text-primary flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-[18px] fill-icon" data-icon="shield">shield</span>
+</div>
+<span class="text-outline text-label-sm font-label-sm font-bold uppercase tracking-wider">Calcium</span>
+<div class="mt-0.5">
+<span class="font-price-lg text-price-lg font-extrabold text-on-surface">120</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant ml-0.5">mg</span>
+</div>
+</div>
+<!-- Stat 4: Fat -->
+<div class="bg-surface-container-low/70 border border-surface-container-high rounded-2xl p-3 flex flex-col items-start tactile-card hover:border-primary-fixed duration-150">
+<div class="w-8 h-8 rounded-xl bg-surface-container-highest text-on-surface-variant flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="opacity">opacity</span>
+</div>
+<span class="text-outline text-label-sm font-label-sm font-bold uppercase tracking-wider">Toned Fat</span>
+<div class="mt-0.5">
+<span class="font-price-lg text-price-lg font-extrabold text-on-surface">3.0</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant ml-0.5">g</span>
+</div>
+</div>
+</div>
+<!-- Quality & Cold-Chain Guarantee Banner -->
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-2xl p-3.5 tactile-card">
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 divide-y sm:divide-y-0 sm:divide-x divide-surface-container-high">
+<div class="flex items-start gap-3">
+<div class="w-9 h-9 rounded-xl bg-tertiary-container/15 text-tertiary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px] fill-icon" data-icon="ac_unit">ac_unit</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">Direct Cold-Chain</h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-0.5 leading-snug">
+                  Continuously maintained below 4°C at dark store to preserve natural vitamins and flavor.
+                </p>
+</div>
+</div>
+<div class="flex items-start gap-3 pt-3 sm:pt-0 sm:pl-3">
+<div class="w-9 h-9 rounded-xl bg-primary-container/10 text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px] fill-icon" data-icon="verified_user">verified_user</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">Purity &amp; Quality</h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-0.5 leading-snug">
+                  Zero adulteration, pasteurized and homogenized for velvety tea, coffee, and curds.
+                </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Clean Expandable Accordions -->
+<div class="space-y-space-xs pt-space-xs">
+<!-- Accordion Item 1 (Expanded) -->
+<div class="rounded-2xl border border-surface-container-high bg-surface-container-lowest overflow-hidden">
+<button class="w-full px-4 py-3 flex items-center justify-between text-left font-headline-sm text-headline-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors" type="button">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary" data-icon="info">info</span>
+<span>Product Information &amp; Storage</span>
+</span>
+<span class="material-symbols-outlined text-[20px] text-outline" data-icon="expand_less">expand_less</span>
+</button>
+<div class="px-4 pb-3.5 text-body-sm font-body-sm text-on-surface-variant space-y-1.5 border-t border-surface-container-high/60 pt-2.5">
+<p>• <strong>Storage:</strong> Keep refrigerated below 8°C. Once pouch is snipped, transfer to a clean container and consume within 2 days.</p>
+<p>• <strong>Ingredients:</strong> Toned Milk (Min. 3.0% Milk Fat, Min. 8.5% Milk Solids-not-fat).</p>
+<p>• <strong>Country of Origin:</strong> India (Gujarat Cooperative Milk Marketing Federation Ltd).</p>
+</div>
+</div>
+<!-- Accordion Item 2 -->
+<div class="rounded-2xl border border-surface-container-high bg-surface-container-lowest overflow-hidden">
+<button class="w-full px-4 py-3 flex items-center justify-between text-left font-headline-sm text-headline-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors" type="button">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-tertiary" data-icon="schedule">schedule</span>
+<span>Cold-Chain &amp; Freshness SLA</span>
+</span>
+<span class="material-symbols-outlined text-[20px] text-outline" data-icon="expand_more">expand_more</span>
+</button>
+</div>
+<!-- Accordion Item 3 -->
+<div class="rounded-2xl border border-surface-container-high bg-surface-container-lowest overflow-hidden">
+<button class="w-full px-4 py-3 flex items-center justify-between text-left font-headline-sm text-headline-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors" type="button">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary" data-icon="factory">factory</span>
+<span>Manufacturer &amp; FSSAI Details</span>
+</span>
+<span class="material-symbols-outlined text-[20px] text-outline" data-icon="expand_more">expand_more</span>
+</button>
+</div>
+</div>
+</section>
+<!-- 5. FREQUENTLY BOUGHT TOGETHER SHELF -->
+<section class="px-margin space-y-space-sm pt-space-md">
+<div class="flex items-center justify-between">
+<div>
+<h2 class="text-headline-sm font-headline-sm font-bold text-on-surface tracking-tight">Frequently Bought Together</h2>
+<p class="text-body-sm font-body-sm text-outline">Pair your daily morning milk with pantry essentials</p>
+</div>
+<span class="text-label-sm font-label-sm text-tertiary font-bold bg-tertiary-container/15 px-2 py-0.5 rounded-full">
+            Bundle Offer
+          </span>
+</div>
+<!-- 2 Grid Cards -->
+<div class="grid grid-cols-2 gap-space-sm">
+<!-- Item 1: Britannia Bread -->
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-2xl p-3 flex flex-col justify-between tactile-card hover:border-primary-fixed transition-all">
+<div class="relative bg-surface-container-low/60 rounded-xl p-2 flex items-center justify-center aspect-square mb-2 overflow-hidden">
+<span class="absolute top-1.5 left-1.5 bg-surface-container-lowest text-tertiary text-[9px] font-label-sm px-1.5 py-0.5 rounded-full font-bold shadow-xs">
+                10 MINS
+              </span>
+<img class="max-h-24 w-auto object-contain" data-alt="Appetizing studio photograph of Britannia hundred percent whole wheat bread 400g loaf sealed in crisp fresh green packaging on a neutral studio backdrop. Vibrant golden crust visible through packaging with warm breakfast lighting and soft ambient shadow in clean quick-commerce product photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlcIIp2NaiUzxWA6MGURypZo7JlEHMaB58cPT0u8fqRPEZkBpHU6FA1PfdXk-bIBejKfZHKDjjWxMPGQXfuAtxeWiCuLDtSuLmYHujwOP82j-_65mv6buaIwHwDNLEARw_wVVBcpxcKHGjhC-9gEPTrnXtqKCZ2dSL70McmDgxxcBFczY4Hz59C937nbJys9-zCFqzpUdThclWeNo0lzcHGNGDd7X7uF3-IWTHhuvt5EQRp7NbsImkrZiY2mPyt-qsZh2J_iE-XOI"/>
+</div>
+<div class="space-y-1">
+<h3 class="font-label-lg text-label-lg font-bold text-on-surface line-clamp-1 leading-snug">Britannia Whole Wheat Bread</h3>
+<p class="text-label-sm font-label-sm text-outline">400 g • 100% Atta</p>
+<div class="flex items-center justify-between pt-1">
+<div class="flex flex-col">
+<span class="font-price-md text-price-md font-extrabold text-on-surface">₹45</span>
+<span class="text-[10px] text-outline line-through leading-none">₹50</span>
+</div>
+<!-- ADD button in golden amber -->
+<button class="px-3 py-1 rounded-xl bg-secondary-container text-on-secondary-container font-label-md text-label-md font-extrabold hover:bg-secondary-fixed transition-colors active:scale-95 shadow-xs" type="button">
+                  + ADD
+                </button>
+</div>
+</div>
+</div>
+<!-- Item 2: Farm Fresh Brown Eggs -->
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-2xl p-3 flex flex-col justify-between tactile-card hover:border-primary-fixed transition-all">
+<div class="relative bg-surface-container-low/60 rounded-xl p-2 flex items-center justify-center aspect-square mb-2 overflow-hidden">
+<span class="absolute top-1.5 left-1.5 bg-surface-container-lowest text-tertiary text-[9px] font-label-sm px-1.5 py-0.5 rounded-full font-bold shadow-xs">
+                10 MINS
+              </span>
+<img class="max-h-24 w-auto object-contain" data-alt="Fresh farm brown eggs packed in an eco-friendly molded pulp carton pack of six sitting under warm gourmet lighting. Clean packshot with smooth eggshell textures, high definition studio composition, isolated on neutral soft white ground for high-conversion grocery retail interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfx_eDXJP3edS6Cw_tJl4KACJCBJZ7FCi-s-gqBOxNkC2KcLzk0sn_nTg7RL4TDWeIlYYldyX5FUxRB5kiISjmIZCIGeCDb6iME_dUHIa5OuxK8Dqs9IUzBCZGbX7yQprZkLCD2OBtNkUynT2T0pBFSiPJTaSY4I7bLuGYtdc8A0hfttVyyDrOKEkvYPv-3vjdg_vNo8jFh1Vrf-yKkzeyHLzSX5vwr-MsOpn-C8_4EHe0j0WCPzCTbA87epioTPutRxNr5CKCs4E"/>
+</div>
+<div class="space-y-1">
+<h3 class="font-label-lg text-label-lg font-bold text-on-surface line-clamp-1 leading-snug">Farm Fresh Brown Eggs</h3>
+<p class="text-label-sm font-label-sm text-outline">Pack of 6 • Protein Rich</p>
+<div class="flex items-center justify-between pt-1">
+<div class="flex flex-col">
+<span class="font-price-md text-price-md font-extrabold text-on-surface">₹46</span>
+<span class="text-[10px] text-outline line-through leading-none">₹55</span>
+</div>
+<!-- ADD button in golden amber -->
+<button class="px-3 py-1 rounded-xl bg-secondary-container text-on-secondary-container font-label-md text-label-md font-extrabold hover:bg-secondary-fixed transition-colors active:scale-95 shadow-xs" type="button">
+                  + ADD
+                </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Trust Badges Footer -->
+<section class="px-margin pt-space-sm pb-space-lg text-center space-y-2">
+<div class="flex items-center justify-center gap-6 text-outline text-label-sm font-label-sm">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-tertiary" data-icon="lock">lock</span>
+<span>100% Contactless Delivery</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="autorenew">autorenew</span>
+<span>Easy 1-Tap Replacement</span>
+</div>
+</div>
+</section>
+</main>
+<!-- 6. STICKY BOTTOM ACTION DOCK (Floating Above Viewport with Warm Honey Amber Velocity) -->
+<div class="fixed bottom-0 left-0 right-0 z-50 p-space-sm sm:p-margin pointer-events-none">
+<div class="max-w-screen-md mx-auto pointer-events-auto bg-surface-container-lowest/95 backdrop-blur-xl border border-surface-container-high rounded-3xl p-3 dock-shadow flex items-center justify-between gap-3">
+<!-- Left: Quantity Stepper & Price Indicator -->
+<div class="flex items-center gap-3">
+<!-- Tactile Quantity Stepper in Golden Amber -->
+<div class="flex items-center bg-secondary-fixed/50 border border-secondary-container rounded-2xl p-1 shadow-inner">
+<button aria-label="Decrease quantity" class="w-8 h-8 rounded-xl bg-surface-container-lowest text-on-surface font-extrabold flex items-center justify-center hover:bg-secondary-container hover:text-on-secondary-container transition-colors active:scale-90" id="btn-minus" type="button">
+<span class="material-symbols-outlined text-[16px]" data-icon="remove">remove</span>
+</button>
+<span class="font-price-md text-price-md font-extrabold text-on-surface w-7 text-center" id="qty-count">1</span>
+<button aria-label="Increase quantity" class="w-8 h-8 rounded-xl bg-secondary-container text-on-secondary-container font-extrabold flex items-center justify-center hover:bg-secondary-fixed transition-colors active:scale-90 shadow-xs" id="btn-plus" type="button">
+<span class="material-symbols-outlined text-[16px]" data-icon="add">add</span>
+</button>
+</div>
+<!-- Total Info -->
+<div class="hidden xs:flex flex-col">
+<span class="text-label-sm font-label-sm text-outline">Subtotal</span>
+<span class="font-price-md text-price-md font-extrabold text-on-surface" id="subtotal-label">₹28</span>
+</div>
+</div>
+<!-- Right: High-Impact Golden Amber CTA Button -->
+<button class="flex-1 max-w-[260px] h-12 rounded-2xl bg-secondary-container text-on-secondary-container px-4 flex items-center justify-between font-label-lg text-label-lg font-extrabold shadow-md hover:brightness-105 active:scale-95 duration-150 transition-all group" id="btn-cart-cta" type="button">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] group-hover:-translate-y-0.5 transition-transform" data-icon="shopping_basket">shopping_basket</span>
+<span id="cta-label">Add to Cart</span>
+</div>
+<div class="flex items-center gap-1 font-price-md text-price-md font-extrabold">
+<span id="cta-price">₹28</span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</button>
+</div>
+</div>
+</div>
+<!-- Micro-interactions JavaScript for Stepper & Feedback -->
+<script>
+    (function() {
+      let qty = 1;
+      const unitPrice = 28;
+      const countEl = document.getElementById('qty-count');
+      const subtotalEl = document.getElementById('subtotal-label');
+      const ctaPriceEl = document.getElementById('cta-price');
+      const ctaBtn = document.getElementById('btn-cart-cta');
+      const btnPlus = document.getElementById('btn-plus');
+      const btnMinus = document.getElementById('btn-minus');
+
+      function updateCartUI() {
+        countEl.textContent = qty;
+        const currentTotal = '₹' + (qty * unitPrice);
+        if (subtotalEl) subtotalEl.textContent = currentTotal;
+        if (ctaPriceEl) ctaPriceEl.textContent = currentTotal;
+      }
+
+      btnPlus.addEventListener('click', function() {
+        if (qty < 12) {
+          qty++;
+          updateCartUI();
+        }
+      });
+
+      btnMinus.addEventListener('click', function() {
+        if (qty > 1) {
+          qty--;
+          updateCartUI();
+        }
+      });
+
+      ctaBtn.addEventListener('click', function() {
+        ctaBtn.classList.add('scale-95');
+        setTimeout(() => {
+          ctaBtn.classList.remove('scale-95');
+          window.location.href = 'cart.html';
+        }, 150);
+      });
+    })();
+  </script>
+</body></html>

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Live Order Tracking - Tanizkart</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-surface-variant": "#434654",
+            "tertiary": "#004e33",
+            "on-error-container": "#93000a",
+            "error": "#ba1a1a",
+            "surface-container-low": "#f2f3ff",
+            "error-container": "#ffdad6",
+            "surface-container-lowest": "#ffffff",
+            "on-background": "#131b2e",
+            "inverse-surface": "#283044",
+            "on-tertiary-fixed": "#002113",
+            "surface-bright": "#faf8ff",
+            "tertiary-fixed-dim": "#4edea3",
+            "secondary-fixed": "#ffddb4",
+            "on-surface": "#131b2e",
+            "on-secondary-fixed": "#291800",
+            "on-primary-container": "#c4d2ff",
+            "surface-dim": "#d2d9f4",
+            "primary-fixed-dim": "#b2c5ff",
+            "on-secondary-container": "#6b4500",
+            "on-primary-fixed-variant": "#0040a2",
+            "primary-fixed": "#dae2ff",
+            "outline-variant": "#c3c6d6",
+            "background": "#faf8ff",
+            "on-secondary-fixed-variant": "#633f00",
+            "on-primary": "#ffffff",
+            "surface-variant": "#dae2fd",
+            "surface-tint": "#0c56d0",
+            "secondary": "#835500",
+            "on-primary-fixed": "#001848",
+            "on-tertiary-fixed-variant": "#005236",
+            "inverse-on-surface": "#eef0ff",
+            "surface-container": "#eaedff",
+            "surface": "#faf8ff",
+            "secondary-fixed-dim": "#ffb955",
+            "on-tertiary": "#ffffff",
+            "surface-container-highest": "#dae2fd",
+            "on-tertiary-container": "#5debaf",
+            "tertiary-fixed": "#6ffbbe",
+            "primary": "#003d9b",
+            "outline": "#737685",
+            "on-secondary": "#ffffff",
+            "tertiary-container": "#006846",
+            "secondary-container": "#feae2c",
+            "surface-container-high": "#e2e7ff",
+            "inverse-primary": "#b2c5ff",
+            "on-error": "#ffffff",
+            "primary-container": "#0052cc"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-sm": "0.5rem",
+            "space-xs": "0.25rem",
+            "space-xl": "1.5rem",
+            "space-lg": "1rem",
+            "margin": "1rem",
+            "space-md": "0.75rem",
+            "gutter": "0.75rem"
+          },
+          "fontFamily": {
+            "body-sm": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "display-lg": ["Plus Jakarta Sans"],
+            "price-md": ["Plus Jakarta Sans"],
+            "price-lg": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "label-lg": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "headline-lg-mobile": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "display-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "800" }],
+            "price-md": ["15px", { "lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "price-lg": ["20px", { "lineHeight": "24px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+            "headline-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700" }],
+            "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 20px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.35); opacity: 0.2; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+    .animate-pulse-ring {
+      animation: pulse-ring 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+    }
+    .animate-dash {
+      stroke-dashoffset: 60;
+      animation: dash 2.5s linear infinite;
+    }
+    @keyframes dash {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+    /* Hide scrollbar for smooth visual aesthetic */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased selection:bg-primary selection:text-on-primary font-body-md overflow-x-hidden min-h-screen flex justify-center">
+<!-- Mobile Viewport Container (Fluid 390px-max layout for crisp mobile execution) -->
+<main class="w-full max-w-[430px] min-h-screen relative flex flex-col bg-surface shadow-2xl overflow-hidden pb-12">
+<!-- 1. MAP BACKGROUND (Vector Style Street Map Simulation) -->
+<div class="absolute inset-0 z-0 h-[548px] w-full overflow-hidden select-none bg-[#f1f4f9]">
+<svg class="w-full h-full object-cover" fill="none" viewbox="0 0 400 520" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<lineargradient id="routeGradient" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#0052cc"></stop>
+<stop offset="60%" stop-color="#0c56d0"></stop>
+<stop offset="100%" stop-color="#10b981"></stop>
+</lineargradient>
+<filter height="140%" id="softGlow" width="140%" x="-20%" y="-20%">
+<fegaussianblur result="blur" stddeviation="3"></fegaussianblur>
+<fecomposite in="SourceGraphic" in2="blur" operator="over"></fecomposite>
+</filter>
+</defs>
+<!-- Water / Canal feature -->
+<path d="M-20,440 C80,430 180,480 420,450 L420,520 L-20,520 Z" fill="#dae8fc" opacity="0.6"></path>
+<text fill="#7ba2d9" font-size="9" font-weight="600" letter-spacing="1" x="210" y="475">KRISHNA CANAL</text>
+<!-- Green Parks -->
+<rect fill="#e2f5ea" height="90" rx="16" width="130" x="250" y="80"></rect>
+<text fill="#2d9d68" font-size="9" font-weight="600" opacity="0.8" x="280" y="130">CITY PARK</text>
+<circle cx="340" cy="110" fill="#cbf0da" r="14"></circle>
+<rect fill="#e2f5ea" height="60" rx="12" width="80" x="20" y="240"></rect>
+<text fill="#2d9d68" font-size="8" font-weight="600" opacity="0.7" x="32" y="275">GARDEN</text>
+<!-- Building blocks (footprints) -->
+<rect fill="#e7ebf3" height="40" rx="4" stroke="#d5dbe8" stroke-width="1" width="55" x="30" y="70"></rect>
+<rect fill="#e7ebf3" height="45" rx="4" stroke="#d5dbe8" stroke-width="1" width="40" x="95" y="65"></rect>
+<rect fill="#e7ebf3" height="35" rx="4" stroke="#d5dbe8" stroke-width="1" width="60" x="30" y="130"></rect>
+<rect fill="#e7ebf3" height="50" rx="4" stroke="#d5dbe8" stroke-width="1" width="65" x="155" y="80"></rect>
+<rect fill="#e7ebf3" height="45" rx="4" stroke="#d5dbe8" stroke-width="1" width="85" x="160" y="210"></rect>
+<rect fill="#e7ebf3" height="60" rx="4" stroke="#d5dbe8" stroke-width="1" width="90" x="270" y="230"></rect>
+<rect fill="#e7ebf3" height="70" rx="4" stroke="#d5dbe8" stroke-width="1" width="80" x="25" y="330"></rect>
+<rect fill="#e7ebf3" height="55" rx="4" stroke="#d5dbe8" stroke-width="1" width="90" x="135" y="320"></rect>
+<!-- Minor Streets -->
+<path d="M0,115 L400,115" stroke="#ffffff" stroke-linecap="round" stroke-width="12"></path>
+<path d="M0,115 L400,115" stroke="#d9e0ed" stroke-linecap="round" stroke-width="8"></path>
+<path d="M0,285 L400,285" stroke="#ffffff" stroke-linecap="round" stroke-width="14"></path>
+<path d="M0,285 L400,285" stroke="#d9e0ed" stroke-linecap="round" stroke-width="9"></path>
+<path d="M110,0 L110,480" stroke="#ffffff" stroke-linecap="round" stroke-width="14"></path>
+<path d="M110,0 L110,480" stroke="#d9e0ed" stroke-linecap="round" stroke-width="9"></path>
+<path d="M250,0 L250,480" stroke="#ffffff" stroke-linecap="round" stroke-width="14"></path>
+<path d="M250,0 L250,480" stroke="#d9e0ed" stroke-linecap="round" stroke-width="9"></path>
+<!-- Secondary Connecting Roads -->
+<path d="M110,180 L250,180" stroke="#ffffff" stroke-width="16"></path>
+<path d="M110,180 L250,180" stroke="#d0d9e8" stroke-width="10"></path>
+<path d="M250,380 L400,380" stroke="#ffffff" stroke-width="12"></path>
+<path d="M250,380 L400,380" stroke="#d9e0ed" stroke-width="8"></path>
+<!-- Road Labels -->
+<text fill="#8d94a5" font-size="8" font-weight="700" letter-spacing="0.5" x="125" y="176">LAWYERPET MAIN RD</text>
+<text fill="#8d94a5" font-size="8" font-weight="600" letter-spacing="0.5" x="118" y="278">PARK AVENUE</text>
+<text fill="#8d94a5" font-size="8" font-weight="600" letter-spacing="0.5" transform="rotate(90, 258, 340)" x="258" y="340">GREEN MEADOWS LN</text>
+<!-- ROUTE TRAJECTORY LINE -->
+<!-- Background route shadow -->
+<path d="M 68 90 L 110 90 L 110 180 L 250 180 L 250 310 L 315 310" stroke="#0052cc" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.2" stroke-width="8"></path>
+<!-- Active Pulsing Animated Route Path -->
+<path class="animate-dash" d="M 68 90 L 110 90 L 110 180 L 250 180 L 250 310 L 315 310" stroke="url(#routeGradient)" stroke-dasharray="8 6" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.5"></path>
+<!-- Completed Sub-Path -->
+<path d="M 68 90 L 110 90 L 110 180 L 180 180" stroke="#0052cc" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.5"></path>
+</svg>
+<!-- Interactive Waypoint 1: Dark Store Pin -->
+<div class="absolute left-[52px] top-[74px] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+<div class="px-2.5 py-1 rounded-full bg-primary-container text-on-primary shadow-md flex items-center gap-1.5 border border-white">
+<span class="material-symbols-outlined text-[13px] leading-none" data-icon="storefront">storefront</span>
+<span class="font-label-sm text-label-sm font-bold tracking-tight">Dark Store</span>
+</div>
+<div class="w-2.5 h-2.5 bg-primary rotate-45 -mt-1 shadow-sm"></div>
+</div>
+<!-- Interactive Waypoint 2: Delivery Partner (Rajesh) -->
+<div class="absolute left-[180px] top-[180px] -translate-x-1/2 -translate-y-1/2 z-10 flex flex-col items-center group cursor-pointer">
+<!-- Multi-layer Pulse Rings -->
+<div class="absolute w-14 h-14 rounded-full bg-primary-container/30 animate-pulse-ring pointer-events-none"></div>
+<div class="absolute w-10 h-10 rounded-full bg-primary-container/40 animate-ping pointer-events-none"></div>
+<!-- Tooltip Badge -->
+<div class="mb-1.5 px-2.5 py-0.5 rounded-full bg-surface-container-lowest text-primary shadow-lg border border-primary/20 flex items-center gap-1 whitespace-nowrap animate-bounce duration-1000">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-container animate-pulse"></span>
+<span class="font-label-sm text-label-sm font-bold">Rajesh is 1.2 km away</span>
+</div>
+<!-- Rider Avatar / Scooter Marker -->
+<div class="w-10 h-10 rounded-full bg-primary-container text-white flex items-center justify-center shadow-xl border-2 border-white ring-2 ring-primary/40 transform transition-transform group-active:scale-95">
+<span class="material-symbols-outlined text-[20px]" data-icon="two_wheeler">two_wheeler</span>
+</div>
+</div>
+<!-- Interactive Waypoint 3: Customer Location (Home) -->
+<div class="absolute left-[315px] top-[310px] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+<!-- Radar Ring -->
+<div class="absolute w-12 h-12 rounded-full bg-secondary-container/30 animate-pulse pointer-events-none"></div>
+<div class="w-9 h-9 rounded-full bg-secondary text-white flex items-center justify-center shadow-lg border-2 border-white z-10">
+<span class="material-symbols-outlined text-[18px]" data-icon="home">home</span>
+</div>
+<div class="mt-1 px-2 py-0.5 rounded-md bg-surface-container-lowest/90 backdrop-blur-sm text-on-surface shadow-sm border border-outline-variant/40 whitespace-nowrap">
+<span class="font-label-sm text-label-sm font-semibold">Flat 302</span>
+</div>
+</div>
+<!-- Map Floating Action Buttons (Right Margin Dock) -->
+<div class="absolute right-4 top-[148px] flex flex-col gap-2.5 z-20">
+<button aria-label="Recenter map" class="w-10 h-10 rounded-full bg-surface-container-lowest/95 backdrop-blur-md text-on-surface shadow-md border border-surface-container flex items-center justify-center hover:bg-surface-container-high active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-primary" data-icon="my_location">my_location</span>
+</button>
+<button aria-label="Toggle traffic layer" class="w-10 h-10 rounded-full bg-surface-container-lowest/95 backdrop-blur-md text-on-surface shadow-md border border-surface-container flex items-center justify-center hover:bg-surface-container-high active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-outline" data-icon="layers">layers</span>
+</button>
+<button aria-label="Safety &amp; SOS" class="w-10 h-10 rounded-full bg-surface-container-lowest/95 backdrop-blur-md text-error shadow-md border border-surface-container flex items-center justify-center hover:bg-error-container/20 active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-error font-bold" data-icon="emergency">emergency</span>
+</button>
+</div>
+</div>
+<!-- 2. TOP FLOATING APP BAR (Glassmorphic Floating Header) -->
+<header class="relative z-30 px-margin pt-4">
+<div class="w-full bg-surface-container-lowest/90 backdrop-blur-md rounded-2xl p-space-md shadow-md border border-white/60 flex items-center justify-between">
+<!-- Left: Back Button -->
+<button onclick="window.location.href='cart.html'" style="cursor:pointer;" aria-label="Go back to Home" class="w-9 h-9 rounded-full bg-surface-container-low hover:bg-surface-container flex items-center justify-center text-on-surface transition-colors active:scale-95 flex-shrink-0" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="arrow_back">arrow_back</span>
+</button>
+<!-- Center: Status & ETA -->
+<div class="flex-1 mx-3 min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary-fixed-dim opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-tertiary-container"></span>
+</span>
+<h1 class="font-headline-sm text-headline-sm text-on-surface font-bold truncate">Your order is on the way</h1>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate mt-0.5">
+            Estimated arrival in <span class="font-bold text-tertiary">12 mins</span> • 12:42 PM
+          </p>
+</div>
+<!-- Right: Help Button -->
+<button aria-label="Customer Support" class="px-2.5 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container-high border border-outline-variant/30 text-primary flex items-center gap-1 active:scale-95 transition-all flex-shrink-0" type="button">
+<span class="material-symbols-outlined text-[16px]" data-icon="support_agent">support_agent</span>
+<span class="font-label-md text-label-md font-bold">Help</span>
+</button>
+</div>
+</header>
+<!-- Spacer to let map breathe before overlay card starts -->
+<div class="h-[247px] pointer-events-none"></div>
+<!-- 3. FLOATING BOTTOM DELIVERY CARD (Interactive Sheet) -->
+<section class="relative z-20 px-margin flex-1 flex flex-col justify-end">
+<div class="w-full bg-surface-container-lowest rounded-3xl p-5 shadow-2xl border border-surface-container-high flex flex-col gap-4">
+<!-- Drag Handle / Grabber Indicator -->
+<div class="w-12 h-1 bg-surface-variant rounded-full mx-auto -mt-1 mb-1"></div>
+<!-- Section A: Delivery OTP Highlight Box -->
+<div class="w-full bg-secondary-fixed/30 border border-secondary-container/60 rounded-2xl p-3.5 flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5 text-secondary">
+<span class="material-symbols-outlined text-[18px]" data-icon="lock">lock</span>
+<span class="font-label-md text-label-md font-bold uppercase tracking-wider">Delivery OTP</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-secondary-fixed-variant bg-secondary-container/40 px-2 py-0.5 rounded-full font-semibold">
+              Share at doorstep
+            </span>
+</div>
+<div class="flex items-center justify-between gap-3 px-2 py-1">
+<div class="flex-1 flex justify-center py-2 rounded-xl bg-surface-container-lowest font-headline-lg text-headline-lg font-extrabold text-on-surface shadow-sm border border-secondary/20 font-mono tracking-widest">
+              4
+            </div>
+<div class="flex-1 flex justify-center py-2 rounded-xl bg-surface-container-lowest font-headline-lg text-headline-lg font-extrabold text-on-surface shadow-sm border border-secondary/20 font-mono tracking-widest">
+              8
+            </div>
+<div class="flex-1 flex justify-center py-2 rounded-xl bg-surface-container-lowest font-headline-lg text-headline-lg font-extrabold text-on-surface shadow-sm border border-secondary/20 font-mono tracking-widest">
+              2
+            </div>
+<div class="flex-1 flex justify-center py-2 rounded-xl bg-surface-container-lowest font-headline-lg text-headline-lg font-extrabold text-on-surface shadow-sm border border-secondary/20 font-mono tracking-widest">
+              1
+            </div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-center">
+            Share this code with your delivery partner after receiving your order.
+          </p>
+</div>
+<!-- Section B: Rider Profile Row -->
+<div class="flex items-center justify-between gap-3 pt-1">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img class="w-13 h-13 w-[52px] h-[52px] rounded-full object-cover ring-2 ring-primary-container" data-alt="Friendly Indian delivery executive in clean blue uniform polo and helmet smiling warmly against soft daylight urban background in modern lifestyle photography style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnhq8_3Q-kp_NAoPHGUszo_s7KsS8Z4o2gxyHI2fVz4a2WVIYssWGBGe6QwPeirjycpjvDqdP6TGTcX-RFgJOyPpoxNIkY8UWfGWncYxFZWxRlRhXB6jKBDWTLMj0lQSY2RuqYavxkLjooETzdgJI-R-XS-jb_GLKazYg4K9uc0tlxGW_uFeeJn4ThumZR_1nr1EvTeZBZ7Qv82KfPcPuJnecSnFY3avK5mk1yY5jtqJRIWPyK051LRI9bjEYCD8RuitzV3VBoOZQ"/>
+<div class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-tertiary-container text-white flex items-center justify-center border-2 border-white">
+<span class="material-symbols-outlined text-[13px] leading-none" data-icon="check">check</span>
+</div>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">Rajesh K.</span>
+<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-secondary-fixed/50 text-on-secondary-fixed font-label-sm text-label-sm font-bold">
+                  ★ 4.8
+                </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Tanizkart Express Rider • 850+ orders
+              </p>
+</div>
+</div>
+<!-- Quick Actions: Call & Message Pill Buttons -->
+<div class="flex items-center gap-2">
+<a aria-label="Call Rajesh" class="w-10 h-10 rounded-full border border-primary-container/40 text-primary-container hover:bg-primary-container/10 flex items-center justify-center active:scale-95 transition-all" href="tel:9876543210">
+<span class="material-symbols-outlined text-[20px]" data-icon="call">call</span>
+</a>
+<button aria-label="Chat with Rajesh" class="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center shadow-md hover:bg-primary active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="chat">chat</span>
+</button>
+</div>
+</div>
+<!-- Section C: Horizontal 4-Step Fulfillment Stepper -->
+<div class="w-full bg-surface-container-low rounded-2xl p-3.5">
+<div class="relative flex items-center justify-between mb-1">
+<!-- Connecting progress bar line -->
+<div class="absolute top-1/2 left-4 right-4 -translate-y-1/2 h-[3px] bg-outline-variant/40 -z-0"></div>
+<div class="absolute top-1/2 left-4 w-2/3 -translate-y-1/2 h-[3px] bg-tertiary-container -z-0"></div>
+<!-- Step 1: Confirmed -->
+<div class="flex flex-col items-center gap-1.5 z-10">
+<div class="w-6 h-6 rounded-full bg-tertiary-container text-on-tertiary flex items-center justify-center ring-4 ring-surface-container-low">
+<span class="material-symbols-outlined text-[13px] leading-none" data-icon="check">check</span>
+</div>
+<span class="font-label-sm text-label-sm font-semibold text-tertiary">Placed</span>
+</div>
+<!-- Step 2: Packed -->
+<div class="flex flex-col items-center gap-1.5 z-10">
+<div class="w-6 h-6 rounded-full bg-tertiary-container text-on-tertiary flex items-center justify-center ring-4 ring-surface-container-low">
+<span class="material-symbols-outlined text-[13px] leading-none" data-icon="inventory_2">inventory_2</span>
+</div>
+<span class="font-label-sm text-label-sm font-semibold text-tertiary">Packed</span>
+</div>
+<!-- Step 3: Out for Delivery (ACTIVE) -->
+<div class="flex flex-col items-center gap-1.5 z-10">
+<div class="w-6 h-6 rounded-full bg-primary-container text-on-primary flex items-center justify-center ring-4 ring-surface-container-low shadow-sm animate-pulse">
+<span class="material-symbols-outlined text-[13px] leading-none" data-icon="two_wheeler">two_wheeler</span>
+</div>
+<span class="font-label-sm text-label-sm font-bold text-primary-container">On the way</span>
+</div>
+<!-- Step 4: Delivered -->
+<div class="flex flex-col items-center gap-1.5 z-10">
+<div class="w-6 h-6 rounded-full bg-surface-container-highest text-outline flex items-center justify-center ring-4 ring-surface-container-low">
+<span class="material-symbols-outlined text-[13px] leading-none" data-icon="home">home</span>
+</div>
+<span class="font-label-sm text-label-sm font-medium text-outline">Delivered</span>
+</div>
+</div>
+</div>
+<!-- Section D: Order Summary & Item Thumbnails Preview -->
+<div class="flex items-center justify-between border-t border-surface-container-high pt-3">
+<div class="flex items-center gap-2">
+<!-- Overlapping item packshots -->
+<div class="flex -space-x-2 overflow-hidden py-1">
+<img class="inline-block h-8 w-8 rounded-lg object-cover ring-2 ring-surface-container-lowest bg-surface-container" data-alt="Pack of organic farm fresh toned milk pouch product packaging isolated on clean soft studio surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSZjU4PN_4pQdrDxoT3s8s72UILgJ57MslslYQ3PAM1j3zd7g4Lb_q6M7RyXhUmlW05vso_amiKB6XLiZZlI62CEZWnS9TkjXRkRbdWzC_b7Fp78Y1rZ9uCeqvU1xusoEkxcRCea9vGHXtnNDNkYhwlRyXHKbAj0REwx_MMbQ3a_mrs9-C-T-wi8Pu7KnnDXhVK-de7Fp-bWdcMD5bEdoGvudPLd92Et5wJO9FPd5QHhm8SH-hL0PZXBPdCnMUGdFjvk8UkAkUK_A"/>
+<img class="inline-block h-8 w-8 rounded-lg object-cover ring-2 ring-surface-container-lowest bg-surface-container" data-alt="Premium brown farm eggs in eco cardboard carton packshot front view in crisp modern studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4VEEWkjQDB3HKH_Zeya-aYNU_pibBACsrkHUup_-y4tMsKybiOcvnpLcKfESppsPmTfXM96o6Wse_mnDYkwvhNcgjo_Eyc_mES66Ph0plxHWYYF9a0hzNyfRZseTnmgDSI5pdRghktqPhgS36UtJNYCRI785mUnW3Mq8nHCy0puxcuL4QOV0wpmsUqLzTwg7pINkCpo_tLQ6VH2yqN_XG8KyyO8PJiFN05K4MZ_16hV9z2DmnUqT-CpEtdrcr6JGhg4inwK0sp34"/>
+<img class="inline-block h-8 w-8 rounded-lg object-cover ring-2 ring-surface-container-lowest bg-surface-container" data-alt="Ripe golden bananas bunch freshly harvested with vibrant yellow peel clean studio shot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDt_ebUtmtQFH4puJUkqH_8ROBiz7HAIH9yRF_wYbEQzqDju4u6ht23fOpSWzaBC_kjZMiQwLRJn6BQ5D1Cv5pPU_eBtbVIGdNBh_55KjgIXplaxbfFLoOL5w5TUDY2zzs4CKZv5Ab-epOE8XQZZZaU9wAW0UDT8zxl2lg6wu8Wxauf9kTW1YgA9e3IluPJ-YgcYl6OujwZcQaLXM5yILj7PJ2n1_oYWOW8GJ61oJC0E71_KMOdHHJKZ3cmsEz6EtZuxwlPX5Umw40"/>
+</div>
+<div class="leading-tight">
+<span class="font-label-md text-label-md font-bold text-on-surface">3 Items in bag</span>
+<span class="block font-body-sm text-body-sm text-on-surface-variant font-price-md">₹428 • Paid via UPI</span>
+</div>
+</div>
+<button class="text-primary hover:text-primary-container font-label-md text-label-md font-bold flex items-center gap-0.5 active:scale-95 transition-transform" type="button">
+<span>View Receipt</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+<!-- Section E: Safety & Hygiene Guarantee Badge -->
+<div class="bg-surface-container-high/60 rounded-xl px-3 py-2 flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-tertiary text-[18px]" data-icon="verified_user">verified_user</span>
+<p class="font-body-sm text-body-sm">
+            Hygienic insulated bag • Hand sanitization verified at dispatch
+          </p>
+</div>
+</div>
+</section>
+</main>
+</body></html>

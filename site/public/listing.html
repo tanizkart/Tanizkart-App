@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dairy, Bread &amp; Eggs - Tanizkart Ongole</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-secondary-container": "#6b4500",
+            "on-secondary-fixed-variant": "#633f00",
+            "on-error": "#ffffff",
+            "on-tertiary-fixed": "#002113",
+            "primary-fixed": "#dce2f6",
+            "inverse-surface": "#283044",
+            "on-tertiary-fixed-variant": "#005236",
+            "on-tertiary": "#ffffff",
+            "surface-dim": "#d2d9f4",
+            "tertiary-fixed-dim": "#4edea3",
+            "on-error-container": "#93000a",
+            "error": "#ba1a1a",
+            "surface-container-lowest": "#ffffff",
+            "background": "#faf8ff",
+            "surface-tint": "#585e6f",
+            "secondary-fixed": "#ffddb4",
+            "surface-container": "#eaedff",
+            "surface-variant": "#dae2fd",
+            "on-surface": "#131b2e",
+            "on-primary-container": "#7d8496",
+            "on-primary-fixed": "#151b2a",
+            "outline": "#76777d",
+            "on-tertiary-container": "#009668",
+            "surface": "#faf8ff",
+            "surface-bright": "#faf8ff",
+            "primary-fixed-dim": "#c0c6da",
+            "primary": "#000000",
+            "on-secondary-fixed": "#291800",
+            "on-primary-fixed-variant": "#404757",
+            "inverse-on-surface": "#eef0ff",
+            "secondary-container": "#feae2c",
+            "on-background": "#131b2e",
+            "surface-container-high": "#e2e7ff",
+            "outline-variant": "#c6c6cc",
+            "error-container": "#ffdad6",
+            "secondary": "#835500",
+            "tertiary-container": "#002113",
+            "surface-container-highest": "#dae2fd",
+            "on-surface-variant": "#45474c",
+            "on-primary": "#ffffff",
+            "on-secondary": "#ffffff",
+            "primary-container": "#151b2a",
+            "tertiary": "#000000",
+            "inverse-primary": "#c0c6da",
+            "tertiary-fixed": "#6ffbbe",
+            "surface-container-low": "#f2f3ff",
+            "secondary-fixed-dim": "#ffb955"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "gutter": "0.75rem",
+            "space-xl": "1.5rem",
+            "space-xs": "0.25rem",
+            "space-lg": "1rem",
+            "space-md": "0.75rem",
+            "space-sm": "0.5rem",
+            "margin": "1rem"
+          },
+          "fontFamily": {
+            "label-sm": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"],
+            "price-md": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "headline-lg-mobile": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "price-lg": ["Plus Jakarta Sans"],
+            "label-lg": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "display-lg": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "price-md": ["15px", { "lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "price-lg": ["20px", { "lineHeight": "24px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "display-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "800" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "headline-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+    }
+    .material-symbols-fill {
+      font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-[#F8FAFC] text-on-surface antialiased selection:bg-secondary-container selection:text-on-secondary-fixed">
+<div class="max-w-screen-md mx-auto min-h-screen flex flex-col relative pb-36">
+<!-- Top Sticky Midnight Navy Bar -->
+<header class="sticky top-0 z-40 bg-white border-b border-slate-100 shadow-[0_2px_12px_rgba(0,45,120,0.06)]">
+<!-- Top Brand Navigation Row -->
+<div class="px-4 py-2.5 flex items-center justify-between gap-3">
+<div class="flex items-center gap-2">
+<button onclick="window.location.href='home.html'" style="cursor:pointer;" aria-label="Go Back" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-slate-100 active:scale-95 text-slate-700 transition-colors shrink-0">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<!-- Tanizkart Brand Logo -->
+<div class="flex items-center gap-2">
+<img src="assets/logo.png" alt="Tanizkart - Save money save time" class="h-8 w-auto max-h-8.5 object-contain" />
+</div>
+</div>
+<!-- Right Actions: Search & Cart -->
+<div class="flex items-center gap-2">
+<button aria-label="Search items" class="w-9 h-9 rounded-full bg-slate-50 hover:bg-slate-100 border border-slate-200/60 flex items-center justify-center text-slate-700 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-xl">search</span>
+</button>
+<button onclick="window.location.href='cart.html'" style="cursor:pointer;" aria-label="Cart 3 items" class="relative w-9 h-9 rounded-full bg-blue-50 hover:bg-blue-100 border border-blue-200/60 flex items-center justify-center text-[#0052cc] active:scale-95 transition-all">
+<span class="material-symbols-outlined text-xl">shopping_bag</span>
+<span class="absolute -top-1 -right-1 bg-[#f5a623] text-slate-950 text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-black shadow-xs ring-1 ring-white">
+          3
+        </span>
+</button>
+</div>
+</div>
+<!-- Consumer-Friendly Delivery Address & ETA Strip -->
+<div class="px-4 py-1.5 bg-slate-50/80 border-t border-b border-slate-100 flex items-center justify-between">
+<div class="flex items-center gap-2 min-w-0">
+<div class="flex items-center gap-1 bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full border border-emerald-200 shadow-xs shrink-0">
+<span class="text-xs">⚡</span>
+<span class="text-[10px] font-black uppercase tracking-wide">10 MINS</span>
+</div>
+<button class="flex items-center gap-1 min-w-0 text-left">
+<span class="text-xs font-bold text-slate-800 truncate">Deliver to Flat 302, Lawyerpet</span>
+<span class="material-symbols-outlined text-sm text-[#0052cc] shrink-0">expand_more</span>
+</button>
+</div>
+<span class="text-[11px] font-bold text-[#0052cc] shrink-0">Change</span>
+</div>
+<!-- Subcategory Pill Rail -->
+<nav aria-label="Dairy Subcategories" class="px-4 py-2.5 overflow-x-auto no-scrollbar flex items-center gap-2 bg-white">
+<button class="shrink-0 px-3.5 py-1.5 rounded-full text-xs font-extrabold bg-[#0052cc] text-white shadow-sm transition-all">
+      All Dairy
+    </button>
+<button class="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors">
+      Milk (Toned &amp; Full Cream)
+    </button>
+<button class="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors">
+      Curd &amp; Yogurt
+    </button>
+<button class="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors">
+      Butter &amp; Cheese
+    </button>
+<button class="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors">
+      Paneer &amp; Tofu
+    </button>
+<button class="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors">
+      Eggs &amp; Bread
+    </button>
+</nav>
+</header>
+<!-- Secondary Filter Bar & Dark Store Status -->
+<section class="bg-white border-b border-slate-100 px-4 py-2 shadow-xs sticky top-[138px] z-30">
+<div class="flex items-center justify-between gap-2">
+<div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+<button class="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-full border border-slate-200 bg-white text-slate-700 text-xs font-semibold active:scale-95 transition-transform">
+<span>Sort by</span>
+<span class="material-symbols-outlined text-[14px]">arrow_drop_down</span>
+</button>
+<button class="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold active:scale-95 transition-transform">
+<span>⚡ Under 10 Mins</span>
+</button>
+<button class="shrink-0 px-2.5 py-1 rounded-full border border-slate-200 bg-white text-slate-700 text-xs font-semibold active:scale-95 transition-transform">
+        Discount &gt; 15%
+      </button>
+<button class="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-full border border-slate-200 bg-white text-slate-700 text-xs font-semibold active:scale-95 transition-transform">
+<span>Pack Size</span>
+<span class="material-symbols-outlined text-[14px]">arrow_drop_down</span>
+</button>
+</div>
+<span class="text-[11px] font-bold text-slate-400 shrink-0 pl-1">24 items</span>
+</div>
+</section>
+<!-- Product Bento 2-Column Shelf -->
+<main class="px-margin py-space-md"><div class="grid grid-cols-2 gap-3 p-3 bg-slate-50 min-h-screen pb-32">
+<!-- Product 1: Amul Taaza Milk (Active Stepper) -->
+<article onclick="window.location.href='detail.html'" style="cursor:pointer;" class="bg-white rounded-2xl border border-slate-200/80 p-2.5 flex flex-col justify-between shadow-[0_4px_14px_rgba(0,82,204,0.05)] relative group hover:border-[#0052cc]/40 transition-all">
+<div>
+<!-- Image Visual Box -->
+<div class="relative bg-[#f8fafc] rounded-xl h-36 flex items-center justify-center p-1 mb-2 overflow-hidden">
+<span class="absolute top-1.5 left-1.5 bg-emerald-50 text-emerald-700 font-extrabold text-[10px] px-1.5 py-0.5 rounded-md border border-emerald-200/80 shadow-xs z-10">
+          ⚡ 10 MINS
+        </span>
+<span class="absolute top-1.5 right-1.5 bg-[#f5a623] text-slate-950 font-black text-[10px] px-1.5 py-0.5 rounded-md shadow-xs z-10">
+          12% OFF
+        </span>
+<img class="w-full h-full object-contain scale-110 group-hover:scale-125 transition-transform duration-300 drop-shadow-sm" data-alt="Amul Taaza Milk" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtb7hY35pcn7OcLcSgnzV1VL_itQwYY8h4qNEoDW1nhEH0Iy4Mh7jZQG83bTCaHyjiBnBWDITqtyh_qwfi6uQjuw2k5zvnmnbFLFRxgsiGDFwIX5_J8KkuGj6jXUE7-C9GuvXYg-d4HjcNwcDriWyLLeBGk1B1_Dl8yJfqmYjt3dMxbaTweMbdsL0kvr07bSMtdqrL22H1Urg2hA0c20SA7a7nu0MYFY0r-I3AdzFyLSZsvLIRmhdNYHWdhI7Majx6YvTklDySehA"/>
+</div>
+<div>
+<span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">AMUL</span>
+<h3 class="text-[13px] text-slate-800 font-bold line-clamp-2 leading-snug mt-0.5">
+          Amul Taaza Homogenised Toned Milk
+        </h3>
+<span class="text-[11px] text-slate-500 font-medium mt-1 block">500 ml Pouch</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2 mt-2 border-t border-slate-100">
+<div class="flex flex-col">
+<span class="text-[15px] font-extrabold text-slate-900">₹28</span>
+<span class="text-[11px] text-slate-400 line-through">₹32</span>
+</div>
+<!-- Tactile Amber Stepper -->
+<div class="flex items-center bg-[#f5a623] text-slate-950 rounded-xl px-1.5 py-1 shadow-sm font-black">
+<button aria-label="Decrease quantity" class="w-5 h-5 flex items-center justify-center hover:opacity-80 active:scale-90">
+<span class="material-symbols-outlined text-xs font-black">remove</span>
+</button>
+<span class="text-xs px-1.5 font-extrabold">1</span>
+<button aria-label="Increase quantity" class="w-5 h-5 flex items-center justify-center hover:opacity-80 active:scale-90">
+<span class="material-symbols-outlined text-xs font-black">add</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Product 2: Country Brown Eggs -->
+<article onclick="window.location.href='detail.html'" style="cursor:pointer;" class="bg-white rounded-2xl border border-slate-200/80 p-2.5 flex flex-col justify-between shadow-[0_4px_14px_rgba(0,82,204,0.05)] relative group hover:border-[#0052cc]/40 transition-all">
+<div>
+<div class="relative bg-[#f8fafc] rounded-xl h-36 flex items-center justify-center p-1 mb-2 overflow-hidden">
+<span class="absolute top-1.5 left-1.5 bg-emerald-50 text-emerald-700 font-extrabold text-[10px] px-1.5 py-0.5 rounded-md border border-emerald-200/80 shadow-xs z-10">
+          ⚡ 10 MINS
+        </span>
+<span class="absolute top-1.5 right-1.5 bg-[#f5a623] text-slate-950 font-black text-[10px] px-1.5 py-0.5 rounded-md shadow-xs z-10">
+          23% OFF
+        </span>
+<img class="w-full h-full object-contain scale-110 group-hover:scale-125 transition-transform duration-300 drop-shadow-sm" data-alt="Country Fresh Eggs" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAU9YiVdYAbKY0nJ8HqVfs8-nF7qU6qsCGCGrLhx0Ri2qZwVDzw29O9Yp4i1SCGJP5tXNTcvNrWecoS902HdBHbc9IInME1S0VbbdX4UlZ0MAg-D6jhLsJ4PEGqdpskUrfVhXN42Q76Fwh3OrS1jWXiV3i9yzUI0VDgOnCqZgo4EvKSlyKGDoi5voPXFpEDWxGZcw67WTUD6vYoCsY-Ixc6JNbDUfBHmrIkohERLDBioMEfOTCbNtKnCBbENEyHApYGyl-tXILNU94"/>
+</div>
+<div>
+<span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">FARM FRESH</span>
+<h3 class="text-[13px] text-slate-800 font-bold line-clamp-2 leading-snug mt-0.5">
+          Farm Fresh Brown Eggs
+        </h3>
+<span class="text-[11px] text-slate-500 font-medium mt-1 block">Pack of 6</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2 mt-2 border-t border-slate-100">
+<div class="flex flex-col">
+<span class="text-[15px] font-extrabold text-slate-900">₹46</span>
+<span class="text-[11px] text-slate-400 line-through">₹60</span>
+</div>
+<button class="bg-[#f5a623] hover:bg-[#e69818] active:scale-95 text-slate-950 font-black text-xs px-3.5 py-1.5 rounded-xl shadow-xs transition-all">
+        + ADD
+      </button>
+</div>
+</article>
+<!-- Product 3: Britannia Whole Wheat Bread -->
+<article onclick="window.location.href='detail.html'" style="cursor:pointer;" class="bg-white rounded-2xl border border-slate-200/80 p-2.5 flex flex-col justify-between shadow-[0_4px_14px_rgba(0,82,204,0.05)] relative group hover:border-[#0052cc]/40 transition-all">
+<div>
+<div class="relative bg-[#f8fafc] rounded-xl h-36 flex items-center justify-center p-1 mb-2 overflow-hidden">
+<span class="absolute top-1.5 left-1.5 bg-emerald-50 text-emerald-700 font-extrabold text-[10px] px-1.5 py-0.5 rounded-md border border-emerald-200/80 shadow-xs z-10">
+          ⚡ 10 MINS
+        </span>
+<span class="absolute top-1.5 right-1.5 bg-[#f5a623] text-slate-950 font-black text-[10px] px-1.5 py-0.5 rounded-md shadow-xs z-10">
+          18% OFF
+        </span>
+<img class="w-full h-full object-contain scale-110 group-hover:scale-125 transition-transform duration-300 drop-shadow-sm" data-alt="Britannia 100% Whole Wheat Bread" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDw7Wew96N_kcB4fI8Ib6zb2AMnbLoC-Gsv-3a71aj5zPF_YZW28pIhARLQVbRe-SdlIBcEK5R2JWH49ZoLYH_jn9WL0kcL-3_f0zuHEyvYm_nLwtUQiRnQwVyxCKJ2ihVz_Dm_mJ3Spmgaj-HOPiy0TvwUSejy8wpj_vkn0Bmd-5XXogDf5FigET5s_mXz3L5Eyz-a1AHtzKf6QkRTSTWEdD1XZVzsxs8iqMp1ZV6v3MZFCCEuPukB828LWuEg72LXvY98edvrxjc"/>
+</div>
+<div>
+<span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">BRITANNIA</span>
+<h3 class="text-[13px] text-slate-800 font-bold line-clamp-2 leading-snug mt-0.5">
+          Britannia 100% Whole Wheat Bread
+        </h3>
+<span class="text-[11px] text-slate-500 font-medium mt-1 block">400g Pack</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2 mt-2 border-t border-slate-100">
+<div class="flex flex-col">
+<span class="text-[15px] font-extrabold text-slate-900">₹45</span>
+<span class="text-[11px] text-slate-400 line-through">₹55</span>
+</div>
+<button class="bg-[#f5a623] hover:bg-[#e69818] active:scale-95 text-slate-950 font-black text-xs px-3.5 py-1.5 rounded-xl shadow-xs transition-all">
+        + ADD
+      </button>
+</div>
+</article>
+<!-- Product 4: Nandini Pure Cow Ghee -->
+<article onclick="window.location.href='detail.html'" style="cursor:pointer;" class="bg-white rounded-2xl border border-slate-200/80 p-2.5 flex flex-col justify-between shadow-[0_4px_14px_rgba(0,82,204,0.05)] relative group hover:border-[#0052cc]/40 transition-all">
+<div>
+<div class="relative bg-[#f8fafc] rounded-xl h-36 flex items-center justify-center p-1 mb-2 overflow-hidden">
+<span class="absolute top-1.5 left-1.5 bg-emerald-50 text-emerald-700 font-extrabold text-[10px] px-1.5 py-0.5 rounded-md border border-emerald-200/80 shadow-xs z-10">
+          ⚡ 10 MINS
+        </span>
+<span class="absolute top-1.5 right-1.5 bg-[#f5a623] text-slate-950 font-black text-[10px] px-1.5 py-0.5 rounded-md shadow-xs z-10">
+          SAVE ₹25
+        </span>
+<img class="w-full h-full object-contain scale-110 group-hover:scale-125 transition-transform duration-300 drop-shadow-sm" data-alt="Nandini Pure Cow Ghee" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhbu-D2n356183KDtBVNBlHVTYryfKLXvIY0c4dZlPvBOXS_26iQ4BlYmjPa5xIC6hAOfULLn5jzHfQtInoaGVSXlidRwXZg-iB2526wK-eYTzHeG6wO7XWuBypCZIP_2zwlubzkUIDhGdpLN3Kswhe4A3U-E8ys2Id1KaCLLq4AQXKlNHiLiiYYzNa93p2TJiZrmA0WIthti6FfPXJ6EnY-XJUR5oD8CwQgs7b0GHhQdZpakrwzY7ziwLOS5M9w5KOBY0PKpkOak"/>
+</div>
+<div>
+<span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">NANDINI</span>
+<h3 class="text-[13px] text-slate-800 font-bold line-clamp-2 leading-snug mt-0.5">
+          Nandini Pure Cow Ghee Jar
+        </h3>
+<span class="text-[11px] text-slate-500 font-medium mt-1 block">200 ml Jar</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2 mt-2 border-t border-slate-100">
+<div class="flex flex-col">
+<span class="text-[15px] font-extrabold text-slate-900">₹135</span>
+<span class="text-[11px] text-slate-400 line-through">₹160</span>
+</div>
+<button class="bg-[#f5a623] hover:bg-[#e69818] active:scale-95 text-slate-950 font-black text-xs px-3.5 py-1.5 rounded-xl shadow-xs transition-all">
+        + ADD
+      </button>
+</div>
+</article>
+<!-- Product 5: Milky Mist Malai Paneer (Active Stepper: 2) -->
+<article onclick="window.location.href='detail.html'" style="cursor:pointer;" class="bg-white rounded-2xl border border-slate-200/80 p-2.5 flex flex-col justify-between shadow-[0_4px_14px_rgba(0,82,204,0.05)] relative group hover:border-[#0052cc]/40 transition-all">
+<div>
+<div class="relative bg-[#f8fafc] rounded-xl h-36 flex items-center justify-center p-1 mb-2 overflow-hidden">
+<span class="absolute top-1.5 left-1.5 bg-emerald-50 text-emerald-700 font-extrabold text-[10px] px-1.5 py-0.5 rounded-md border border-emerald-200/80 shadow-xs z-10">
+          ⚡ 10 MINS
+        </span>
+<span class="absolute top-1.5 right-1.5 bg-[#f5a623] text-slate-950 font-black text-[10px] px-1.5 py-0.5 rounded-md shadow-xs z-10">
+          20% OFF
+        </span>
+<img class="w-full h-full object-contain scale-110 group-hover:scale-125 transition-transform duration-300 drop-shadow-sm" data-alt="Milky Mist Fresh Malai Paneer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD37vOwftSh_ESD0bUnYGDA4qzq3yxBYG_IKGkc6siG7EQ4sAuLq6MUqg6JqAkkFDiqPe-SP3YWmBZOcqU5gvmZuFvc1Dq08iQJ0fpkDsK5QFilfG_5wPW5yl_p5qyTj74thG9-4Q4eLy7InetkEkilBA3qVTCoqH-04xo8EJL6F8p5KZntZRf-U0y8aKuTPzDMbvyubjW6d1d5GQ4w9QPVcKzyiREK76bME6HoXQ3oik5Dfj6YR6Zy-Dw05hOu2tH840KuI0UrvRs"/>
+</div>
+<div>
+<span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">MILKY MIST</span>
+<h3 class="text-[13px] text-slate-800 font-bold line-clamp-2 leading-snug mt-0.5">
+          Fresh Malai Paneer
+        </h3>
+<span class="text-[11px] text-slate-500 font-medium mt-1 block">200g Pack</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2 mt-2 border-t border-slate-100">
+<div class="flex flex-col">
+<span class="text-[15px] font-extrabold text-slate-900">₹88</span>
+<span class="text-[11px] text-slate-400 line-through">₹110</span>
+</div>
+<!-- Tactile Amber Stepper for 2 -->
+<div class="flex items-center bg-[#f5a623] text-slate-950 rounded-xl px-1.5 py-1 shadow-sm font-black">
+<button aria-label="Decrease quantity" class="w-5 h-5 flex items-center justify-center hover:opacity-80 active:scale-90">
+<span class="material-symbols-outlined text-xs font-black">remove</span>
+</button>
+<span class="text-xs px-1.5 font-extrabold">2</span>
+<button aria-label="Increase quantity" class="w-5 h-5 flex items-center justify-center hover:opacity-80 active:scale-90">
+<span class="material-symbols-outlined text-xs font-black">add</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Product 6: Epigamia Strawberry Greek Yogurt -->
+<article onclick="window.location.href='detail.html'" style="cursor:pointer;" class="bg-white rounded-2xl border border-slate-200/80 p-2.5 flex flex-col justify-between shadow-[0_4px_14px_rgba(0,82,204,0.05)] relative group hover:border-[#0052cc]/40 transition-all">
+<div>
+<div class="relative bg-[#f8fafc] rounded-xl h-36 flex items-center justify-center p-1 mb-2 overflow-hidden">
+<span class="absolute top-1.5 left-1.5 bg-emerald-50 text-emerald-700 font-extrabold text-[10px] px-1.5 py-0.5 rounded-md border border-emerald-200/80 shadow-xs z-10">
+          ⚡ 10 MINS
+        </span>
+<span class="absolute top-1.5 right-1.5 bg-[#f5a623] text-slate-950 font-black text-[10px] px-1.5 py-0.5 rounded-md shadow-xs z-10">
+          20% OFF
+        </span>
+<img class="w-full h-full object-contain scale-110 group-hover:scale-125 transition-transform duration-300 drop-shadow-sm" data-alt="Epigamia Strawberry Greek Yogurt" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqUEkysMYAlRdTDRBPPk_UNyEHh0lfDJRFjp5YrPs1V9cTEO5INVJ9SRH-_y5njXMRCHNWgNITUA7O--EZFTWnUdAldklA3mJwvUoI_s7n0RWyJXo4kuwnjtQ9X-b_maGJuWp0OV08oegJQt8Hp3RhZSyTSClEH-cHy2nku09kuvdCghiyh6u5eNrp7AugfNxfw5uzjJ5-fcKEjwvlfa67J2kTwn_g_XaEvl4syVDvnJvmyVaqGjx0NopA5Ikbe25pCCZQf58MXdA"/>
+</div>
+<div>
+<span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">EPIGAMIA</span>
+<h3 class="text-[13px] text-slate-800 font-bold line-clamp-2 leading-snug mt-0.5">
+          Greek Yogurt Strawberry
+        </h3>
+<span class="text-[11px] text-slate-500 font-medium mt-1 block">100g Cup</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2 mt-2 border-t border-slate-100">
+<div class="flex flex-col">
+<span class="text-[15px] font-extrabold text-slate-900">₹48</span>
+<span class="text-[11px] text-slate-400 line-through">₹60</span>
+</div>
+<button class="bg-[#f5a623] hover:bg-[#e69818] active:scale-95 text-slate-950 font-black text-xs px-3.5 py-1.5 rounded-xl shadow-xs transition-all">
+        + ADD
+      </button>
+</div>
+</article>
+</div></main>
+<!-- Persistent Floating Mini Cart Pill -->
+<div class="fixed bottom-16 left-0 right-0 z-40 px-4 pointer-events-none">
+<div class="max-w-screen-md mx-auto pointer-events-auto bg-[#0a1b3f] text-white rounded-2xl p-2.5 px-3.5 shadow-[0_8px_25px_rgba(10,27,63,0.4)] border border-blue-500/20 flex items-center justify-between transition-transform active:scale-[0.99]">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#0052cc] to-[#1e70eb] flex items-center justify-center text-white shadow-inner">
+<span class="material-symbols-outlined text-xl">shopping_bag</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="text-xs font-bold text-slate-200">3 Items</span>
+<span class="text-slate-400 text-xs">•</span>
+<span class="text-sm font-extrabold text-[#f5a623]">₹245</span>
+</div>
+<div class="flex items-center gap-1 text-[11px] text-emerald-400 font-bold">
+<span>⚡ 10 Mins to Lawyerpet</span>
+</div>
+</div>
+</div>
+<button onclick="window.location.href='cart.html'" style="cursor:pointer;" class="bg-[#f5a623] hover:bg-[#e69818] active:scale-95 text-slate-950 font-black text-xs px-4 py-2 rounded-xl flex items-center gap-1 shadow-md transition-all">
+<span>View Cart</span>
+<span class="material-symbols-outlined text-base font-bold">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Bottom Navigation Bar (Shared Component Blueprint) -->
+<!-- Matches BottomNavBar from shared components with Categories active -->
+<nav aria-label="Main Navigation" class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 max-w-screen-md mx-auto bg-white/95 backdrop-blur-md border-t border-slate-200/80 shadow-[0_-4px_16px_rgba(0,0,0,0.04)]">
+<!-- 1: Home (Inactive) -->
+<a class="flex flex-col items-center justify-center text-slate-500 hover:text-[#0052cc] py-1 transition-colors active:scale-95" href="home.html">
+<span class="material-symbols-outlined text-[23px]">storefront</span>
+<span class="text-[10.5px] mt-0.5 tracking-tight font-semibold">Home</span>
+</a>
+<!-- 2: Categories (ACTIVE in Royal Blue) -->
+<a class="flex flex-col items-center justify-center text-[#0052cc] font-bold py-1 active:scale-95 transition-all" href="listing.html">
+<span class="material-symbols-outlined text-[23px]" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+<span class="text-[10.5px] mt-0.5 tracking-tight font-extrabold">Categories</span>
+</a>
+<!-- 3: Orders (Inactive) -->
+<a class="flex flex-col items-center justify-center text-slate-500 hover:text-[#0052cc] py-1 transition-colors active:scale-95" href="tracking.html">
+<span class="material-symbols-outlined text-[23px]">receipt_long</span>
+<span class="text-[10.5px] mt-0.5 tracking-tight font-semibold">Orders</span>
+</a>
+<!-- 4: Profile (Inactive) -->
+<a class="flex flex-col items-center justify-center text-slate-500 hover:text-[#0052cc] py-1 transition-colors active:scale-95" href="profile.html">
+<span class="material-symbols-outlined text-[23px]">person</span>
+<span class="text-[10.5px] mt-0.5 tracking-tight font-semibold">Profile</span>
+</a>
+</nav>
+</div>
+</body></html>
