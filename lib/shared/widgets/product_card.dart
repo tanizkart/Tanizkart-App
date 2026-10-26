@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:provider/provider.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/typography.dart';
 import '../../core/theme/motion.dart';
 import '../../core/utils/currency_formatter.dart';
 import '../../data/models/product_model.dart';
+import '../../state/wishlist_state.dart';
+import '../../state/auth_state.dart';
+import '../../features/auth/screens/login_sheet.dart';
 import 'add_to_cart_stepper.dart';
 
 class ProductCard extends StatelessWidget {
@@ -142,6 +146,58 @@ class ProductCard extends StatelessWidget {
                         ),
                       ),
                     ),
+
+                  // Top Right: Accessible Wishlist Save Button with immediate visual feedback
+                  Positioned(
+                    top: 6,
+                    right: 6,
+                    child: Consumer2<WishlistState, AuthState>(
+                      builder: (context, wishlist, auth, _) {
+                        final isSaved = wishlist.isWishlisted(product.id);
+                        return Semantics(
+                          button: true,
+                          label: isSaved ? 'Remove from wishlist' : 'Save to wishlist',
+                          child: TanizTappable(
+                            onTap: () {
+                              wishlist.toggleWishlist(
+                                product,
+                                isAuthenticated: auth.isAuthenticated,
+                                onRequireLogin: () => LoginSheet.show(context),
+                              );
+                            },
+                            borderRadius: BorderRadius.circular(999),
+                            child: Container(
+                              width: 32,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.92),
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.12),
+                                    blurRadius: 6,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Center(
+                                child: AnimatedSwitcher(
+                                  duration: const Duration(milliseconds: 200),
+                                  transitionBuilder: (child, anim) => ScaleTransition(scale: anim, child: child),
+                                  child: Icon(
+                                    isSaved ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                                    key: ValueKey<bool>(isSaved),
+                                    size: 18,
+                                    color: isSaved ? TanizColors.errorRed : TanizColors.textSecondary,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),

@@ -9,6 +9,7 @@ import '../../../shared/widgets/add_to_cart_stepper.dart';
 import '../../../shared/widgets/address_bottom_sheet.dart';
 import '../../../state/cart_state.dart';
 import '../../../state/location_state.dart';
+import '../../../state/payment_state.dart';
 import '../../tracking/screens/live_tracking_screen.dart';
 
 class CartCheckoutScreen extends StatefulWidget {
@@ -29,6 +30,12 @@ class _CartCheckoutScreenState extends State<CartCheckoutScreen> {
     'Call Upon Arrival',
     'Avoid Calling',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedPaymentMethod = context.read<PaymentState>().selectedMethodIndex;
+  }
 
   @override
   void dispose() {
@@ -675,6 +682,7 @@ class _CartCheckoutScreenState extends State<CartCheckoutScreen> {
         setState(() {
           _selectedPaymentMethod = index;
         });
+        context.read<PaymentState>().setDefaultMethod(index);
       },
       child: Container(
         padding: const EdgeInsets.all(12),

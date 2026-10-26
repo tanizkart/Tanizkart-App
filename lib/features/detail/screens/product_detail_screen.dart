@@ -9,7 +9,13 @@ import '../../../data/models/product_model.dart';
 import '../../../data/repositories/mock_product_repository.dart';
 import '../../../shared/widgets/product_card.dart';
 import '../../../state/cart_state.dart';
-import '../../cart/screens/cart_checkout_screen.dart';
+import '../../../core/utils/cart_navigation.dart';
+import '../../search/screens/product_search_screen.dart';
+
+import '../../../state/wishlist_state.dart';
+import '../../../state/auth_state.dart';
+import '../../auth/screens/login_sheet.dart';
+import '../../profile/screens/wishlist_screen.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final Product product;
@@ -27,7 +33,6 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   int _selectedPackIndex = 0;
-  bool _isWishlisted = false;
 
   @override
   Widget build(BuildContext context) {
@@ -62,25 +67,70 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ),
                           Row(
                             children: [
-                              IconButton(
-                                icon: Icon(
-                                  _isWishlisted
-                                      ? Icons.favorite_rounded
-                                      : Icons.favorite_border_rounded,
-                                  color: _isWishlisted
-                                      ? TanizColors.errorRed
-                                      : TanizColors.textPrimary,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _isWishlisted = !_isWishlisted;
-                                  });
+                              Consumer2<WishlistState, AuthState>(
+                                builder: (context, wishlistState, authState, _) {
+                                  final isSaved = wishlistState.isWishlisted(product.id);
+                                  return IconButton(
+                                    tooltip: isSaved ? 'Remove from Wishlist' : 'Add to Wishlist',
+                                    icon: AnimatedSwitcher(
+                                      duration: const Duration(milliseconds: 250),
+                                      transitionBuilder: (child, anim) => ScaleTransition(scale: anim, child: child),
+                                      child: Icon(
+                                        isSaved ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                                        key: ValueKey(isSaved),
+                                        color: isSaved ? TanizColors.errorRed : TanizColors.textPrimary,
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      if (!authState.isAuthenticated) {
+                                        LoginSheet.show(context);
+                                        return;
+                                      }
+                                      final added = await wishlistState.toggleWishlist(product);
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              added
+                                                  ? '${product.name} saved to Wishlist'
+                                                  : '${product.name} removed from Wishlist',
+                                            ),
+                                            backgroundColor: TanizColors.navyDark,
+                                            duration: const Duration(seconds: 2),
+                                            behavior: SnackBarBehavior.floating,
+                                            action: added
+                                                ? SnackBarAction(
+                                                    label: 'VIEW',
+                                                    textColor: TanizColors.primaryGold,
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (_) => const WishlistScreen(),
+                                                        ),
+                                                      );
+                                                    },
+                                                  )
+                                                : null,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  );
                                 },
                               ),
                               IconButton(
                                 icon: const Icon(Icons.search_rounded),
                                 color: TanizColors.textPrimary,
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => const ProductSearchScreen(),
+                                    ),
+                                  );
+                                },
                               ),
                               IconButton(
                                 icon: const Icon(Icons.share_outlined),
@@ -609,12 +659,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               if (qty == 0) {
                                 cart.addItem(product);
                               }
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const CartCheckoutScreen(),
-                                ),
-                              );
+                              CartNavigation.openCart(context);
                             },
                             child: Container(
                               padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),

@@ -18,8 +18,9 @@ import '../../listing/screens/product_listing_screen.dart';
 import '../../detail/screens/product_detail_screen.dart';
 import '../../../shared/widgets/address_bottom_sheet.dart';
 import '../../../shared/widgets/live_motion_banner.dart';
-import '../../cart/screens/cart_checkout_screen.dart';
 import '../../../state/navigation_state.dart';
+import '../../../core/utils/cart_navigation.dart';
+import '../../search/screens/product_search_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -94,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => const ProductListingScreen(),
+                          builder: (_) => const ProductSearchScreen(),
                         ),
                       );
                     },
@@ -510,12 +511,7 @@ class _HomeScreenState extends State<HomeScreen> {
             right: 0,
             bottom: 0,
             child: FloatingCartBar(
-              onViewCart: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const CartCheckoutScreen()),
-                );
-              },
+              onViewCart: () => CartNavigation.openCart(context),
             ),
           ),
         ],

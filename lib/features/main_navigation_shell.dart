@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../state/navigation_state.dart';
 import '../shared/widgets/bottom_nav_bar.dart';
 import 'home/screens/home_screen.dart';
-import 'listing/screens/product_listing_screen.dart';
+import 'categories/screens/categories_overview_screen.dart';
 import 'tracking/screens/live_tracking_screen.dart';
 import 'profile/screens/profile_screen.dart';
 
@@ -19,7 +19,7 @@ class MainNavigationShell extends StatelessWidget {
             index: navState.currentIndex,
             children: const [
               HomeScreen(),
-              ProductListingScreen(),
+              CategoriesOverviewScreen(),
               LiveTrackingScreen(),
               ProfileScreen(),
             ],

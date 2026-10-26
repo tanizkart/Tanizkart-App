@@ -17,6 +17,7 @@ class TanizColors {
   static const Color goldenAmberLight = Color(0xFFFFBE3B);
   static const Color amberContainer = Color(0xFFFFF7ED);
   static const Color amberBadgeBg = Color(0xFFFFF4D6);
+  static const Color primaryGold = Color(0xFFFFAA00);
 
   // Speed & SLA
   static const Color rapidGreen = Color(0xFF0C831F);
@@ -27,7 +28,15 @@ class TanizColors {
   // Midnight Quick-Commerce Docks & Cards
   static const Color midnightNavy = Color(0xFF003F7F);
   static const Color deepNavy = Color(0xFF00224A);
+  static const Color navyDark = Color(0xFF0F2552);
   static const Color navyCard = Color(0xFF003F7F);
+  static const Color redContainer = Color(0xFFFEE2E2);
+
+  static const LinearGradient primaryGradient = LinearGradient(
+    colors: [primaryBlue, primaryDeep],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
 
   // Neutral Canvas & Surfaces
   static const Color canvasBackground = Color(0xFFF8FAFC);

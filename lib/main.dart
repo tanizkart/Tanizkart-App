@@ -6,6 +6,8 @@ import 'state/cart_state.dart';
 import 'state/navigation_state.dart';
 import 'state/location_state.dart';
 import 'state/auth_state.dart';
+import 'state/wishlist_state.dart';
+import 'state/payment_state.dart';
 import 'features/splash/screens/splash_screen.dart';
 
 void main() {
@@ -30,6 +32,8 @@ class TanizkartApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => NavigationState()),
         ChangeNotifierProvider(create: (_) => LocationState()),
         ChangeNotifierProvider(create: (_) => AuthState()),
+        ChangeNotifierProvider(create: (_) => WishlistState()),
+        ChangeNotifierProvider(create: (_) => PaymentState()),
       ],
       child: MaterialApp(
         title: 'Tanizkart - Save money save time',
