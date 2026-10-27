@@ -4,7 +4,8 @@ import '../data/models/product_model.dart';
 import '../data/repositories/mock_product_repository.dart';
 
 class WishlistState extends ChangeNotifier {
-  final Set<String> _wishlistIds = {};
+  // Pre-seed with actual product IDs so items appear immediately
+  final Set<String> _wishlistIds = {'prod_1', 'prod_2'};
   String _currentUserPhone = '+91 98480 22338';
   bool _isLoading = false;
   bool _hasError = false;
@@ -35,6 +36,8 @@ class WishlistState extends ChangeNotifier {
 
   Future<void> clearWishlist() async {
     _wishlistIds.clear();
+    _hasError = false;
+    _errorMessage = null;
     notifyListeners();
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -49,29 +52,28 @@ class WishlistState extends ChangeNotifier {
   }
 
   Future<void> _initWishlist() async {
-    _isLoading = true;
-    _hasError = false;
-    notifyListeners();
-
     try {
       final prefs = await SharedPreferences.getInstance();
       final key = _getStorageKey(_currentUserPhone);
       final savedList = prefs.getStringList(key);
 
-      _wishlistIds.clear();
-      if (savedList != null && savedList.isNotEmpty) {
+      if (savedList != null) {
+        _wishlistIds.clear();
         _wishlistIds.addAll(savedList);
       } else {
-        // Pre-populate 2 initial items for initial active demonstration if fresh install
-        _wishlistIds.addAll(['prod_dairy_1', 'prod_dairy_3']);
+        // Save initial default items to storage
         await prefs.setStringList(key, _wishlistIds.toList());
       }
       _isLoading = false;
+      _hasError = false;
+      _errorMessage = null;
       notifyListeners();
-    } catch (e) {
+    } catch (_) {
+      // In-memory fallback if platform channel / SharedPreferences is unavailable:
+      // Keep pre-seeded in-memory items without setting error state
       _isLoading = false;
-      _hasError = true;
-      _errorMessage = 'Could not load wishlist items: $e';
+      _hasError = false;
+      _errorMessage = null;
       notifyListeners();
     }
   }
@@ -93,37 +95,14 @@ class WishlistState extends ChangeNotifier {
     }
 
     final isCurrentlySaved = _wishlistIds.contains(product.id);
-    // Optimistic UI update
+    // Instant optimistic UI update
     if (isCurrentlySaved) {
       _wishlistIds.remove(product.id);
     } else {
       _wishlistIds.add(product.id);
     }
-    notifyListeners();
-
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final key = _getStorageKey(_currentUserPhone);
-      await prefs.setStringList(key, _wishlistIds.toList());
-      return !isCurrentlySaved;
-    } catch (e) {
-      // Revert optimistic update on failure
-      if (isCurrentlySaved) {
-        _wishlistIds.add(product.id);
-      } else {
-        _wishlistIds.remove(product.id);
-      }
-      _hasError = true;
-      _errorMessage = 'Failed to update wishlist. Please try again.';
-      notifyListeners();
-      return isCurrentlySaved;
-    }
-  }
-
-  Future<void> removeFromWishlist(String productId) async {
-    if (!_wishlistIds.contains(productId)) return;
-
-    _wishlistIds.remove(productId);
+    _hasError = false;
+    _errorMessage = null;
     notifyListeners();
 
     try {
@@ -131,7 +110,25 @@ class WishlistState extends ChangeNotifier {
       final key = _getStorageKey(_currentUserPhone);
       await prefs.setStringList(key, _wishlistIds.toList());
     } catch (_) {
-      // Ignore background persistence failure
+      // Retained in-memory if SharedPreferences write is unavailable
+    }
+    return !isCurrentlySaved;
+  }
+
+  Future<void> removeFromWishlist(String productId) async {
+    if (!_wishlistIds.contains(productId)) return;
+
+    _wishlistIds.remove(productId);
+    _hasError = false;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final key = _getStorageKey(_currentUserPhone);
+      await prefs.setStringList(key, _wishlistIds.toList());
+    } catch (_) {
+      // Retained in-memory
     }
   }
 

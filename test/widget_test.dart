@@ -320,5 +320,45 @@ void main() {
       expect(find.byType(TextField), findsNothing);
       expect(find.text('Dairy, Bread & Eggs'), findsWidgets);
     });
+
+    test('WishlistState management and resilient operations test', () async {
+      final wishlist = WishlistState();
+      expect(wishlist.itemCount, 2);
+      expect(wishlist.isWishlisted('prod_1'), true);
+      expect(wishlist.isWishlisted('prod_2'), true);
+      expect(wishlist.isWishlisted('prod_3'), false);
+      expect(wishlist.savedProducts.length, 2);
+      expect(wishlist.error, isNull);
+
+      final p3 = MockProductRepository.getAllProducts().firstWhere((p) => p.id == 'prod_3');
+      final added = await wishlist.toggleWishlist(p3);
+      expect(added, true);
+      expect(wishlist.itemCount, 3);
+      expect(wishlist.isWishlisted('prod_3'), true);
+
+      await wishlist.removeFromWishlist('prod_1');
+      expect(wishlist.itemCount, 2);
+      expect(wishlist.isWishlisted('prod_1'), false);
+    });
+
+    testWidgets('WishlistScreen renders saved products grid without error', (WidgetTester tester) async {
+      await tester.pumpWidget(_wrap(const WishlistScreen()));
+      await tester.pump(const Duration(milliseconds: 200));
+
+      expect(find.text('Wishlist'), findsOneWidget);
+      expect(find.textContaining('Amul Taaza'), findsWidgets);
+      expect(find.textContaining('Could not load wishlist items'), findsNothing);
+    });
+
+    testWidgets('ProfileScreen renders Wishlist row without inline items', (WidgetTester tester) async {
+      await tester.pumpWidget(_wrap(const ProfileScreen()));
+      await tester.pump(const Duration(milliseconds: 200));
+
+      expect(find.text('My Profile'), findsOneWidget);
+      expect(find.text('Wishlist / Saved Products'), findsOneWidget);
+      expect(find.text('2 saved items'), findsOneWidget);
+      // Saved item preview should NOT appear on ProfileScreen
+      expect(find.textContaining('Saved Items'), findsNothing);
+    });
   });
 }

@@ -515,7 +515,6 @@ class ProfileScreen extends StatelessWidget {
                 wishlistState.itemCount > 0
                     ? '${wishlistState.itemCount} saved item${wishlistState.itemCount > 1 ? 's' : ''}'
                     : 'Quick-order your favorites',
-                badgeText: wishlistState.itemCount > 0 ? '${wishlistState.itemCount}' : null,
                 onTap: () {
                   Navigator.push(
                     context,

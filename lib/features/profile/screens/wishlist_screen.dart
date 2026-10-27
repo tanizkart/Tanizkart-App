@@ -91,13 +91,13 @@ class WishlistScreen extends StatelessWidget {
           ),
           body: Stack(
             children: [
-              if (wishlistState.isLoading)
+              if (wishlistState.isLoading && products.isEmpty)
                 const Center(
                   child: CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation<Color>(TanizColors.primaryBlue),
                   ),
                 )
-              else if (wishlistState.error != null)
+              else if (products.isEmpty && wishlistState.error != null)
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.all(24.0),
