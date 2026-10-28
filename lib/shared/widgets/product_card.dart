@@ -125,11 +125,11 @@ class ProductCard extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: TanizColors.primaryBlue,
+                          color: TanizColors.royalBlue,
                           borderRadius: BorderRadius.circular(999), // 999px pill badge
                           boxShadow: [
                             BoxShadow(
-                              color: TanizColors.primaryBlue.withValues(alpha: 0.25),
+                              color: TanizColors.royalBlue.withValues(alpha: 0.25),
                               blurRadius: 6,
                               offset: const Offset(0, 2),
                             ),

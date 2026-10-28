@@ -66,6 +66,8 @@ flutter:
 
   assets:
     - assets/logo.png
+    - assets/canopy_header.jpg
+    - assets/farm_fresh_hero.jpg
     - assets/
 
   # An image asset can refer to one or more resolution-specific "variants", see

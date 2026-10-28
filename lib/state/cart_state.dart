@@ -2,88 +2,54 @@ import 'package:flutter/foundation.dart';
 import '../data/models/product_model.dart';
 import '../data/models/cart_item_model.dart';
 import '../data/models/order_model.dart';
+import '../data/models/coupon_model.dart';
 import '../data/repositories/mock_product_repository.dart';
+import '../data/repositories/order_repository.dart';
+import '../core/pricing/pricing_engine.dart';
 
 class CartState extends ChangeNotifier {
   final Map<String, CartItem> _items = {};
+  Coupon? _appliedCoupon;
 
   CartState() {
     // Seed with initial items for instant interactive feel
     final allProducts = MockProductRepository.getAllProducts();
     if (allProducts.isNotEmpty) {
-      _items[allProducts[0].id] = CartItem(product: allProducts[0], quantity: 1); // Amul Taaza ₹28
+      _items[allProducts[0].id] = CartItem(product: allProducts[0], quantity: 1); // Butter ₹58
     }
     if (allProducts.length > 1) {
-      _items[allProducts[1].id] = CartItem(product: allProducts[1], quantity: 1); // Eggs ₹58
+      _items[allProducts[1].id] = CartItem(product: allProducts[1], quantity: 1); // Milk ₹34
     }
     if (allProducts.length > 2) {
-      _items[allProducts[2].id] = CartItem(product: allProducts[2], quantity: 1); // Bread ₹45
+      _items[allProducts[2].id] = CartItem(product: allProducts[2], quantity: 1); // Bread/Noodles
     }
   }
 
   Map<String, CartItem> get items => Map.unmodifiable(_items);
-
   List<CartItem> get itemsList => _items.values.toList();
-
   List<Product> get distinctProducts => _items.values.map((i) => i.product).toList();
 
-  int get totalItemCount => _items.values.fold(0, (sum, i) => sum + i.quantity);
+  // Authoritative bill summary computed on the fly
+  BillSummary get billSummary => PricingEngine.calculate(
+        items: itemsList,
+        coupon: _appliedCoupon,
+      );
 
-  double get subtotal => _items.values.fold(0.0, (sum, i) => sum + i.totalPrice);
+  int get totalItemCount => billSummary.totalItems;
+  double get subtotal => billSummary.itemsSubtotal;
+  double get originalSubtotal => billSummary.mrpSubtotal;
+  double get totalSavings => billSummary.totalSavings;
+  double get handlingFee => billSummary.handlingFee;
+  double get deliveryFee => billSummary.deliveryFee;
 
-  double get originalSubtotal => _items.values.fold(0.0, (sum, i) => sum + i.totalOriginalPrice);
+  bool get hasCoupon => billSummary.hasCoupon;
+  Coupon? get appliedCoupon => _appliedCoupon;
+  String get appliedCouponCode => _appliedCoupon?.code ?? '';
+  double get appliedCouponDiscount => billSummary.couponDiscount;
+  String? get couponIneligibilityReason => billSummary.couponIneligibilityReason;
 
-  double get totalSavings => originalSubtotal - subtotal;
-
-  final double handlingFee = 5.0;
-  final double deliveryFee = 0.0; // Free delivery
-
-  String _appliedCouponCode = 'SAVE40';
-  double _appliedCouponDiscount = 40.0;
-  bool _hasCoupon = true;
-
-  bool get hasCoupon => _hasCoupon;
-  String get appliedCouponCode => _appliedCouponCode;
-  double get appliedCouponDiscount => _hasCoupon ? _appliedCouponDiscount : 0.0;
-
-  double get grandTotal {
-    final computed = subtotal + handlingFee + deliveryFee - appliedCouponDiscount;
-    return computed > 0 ? computed : 0;
-  }
-
-  void toggleCoupon() {
-    _hasCoupon = !_hasCoupon;
-    notifyListeners();
-  }
-
-  bool applyCoupon(String code) {
-    final clean = code.trim().toUpperCase();
-    if (clean == 'SAVE40') {
-      _appliedCouponCode = 'SAVE40';
-      _appliedCouponDiscount = 40.0;
-      _hasCoupon = true;
-      notifyListeners();
-      return true;
-    } else if (clean == 'WELCOME50') {
-      _appliedCouponCode = 'WELCOME50';
-      _appliedCouponDiscount = 50.0;
-      _hasCoupon = true;
-      notifyListeners();
-      return true;
-    } else if (clean == 'TANIZ100') {
-      _appliedCouponCode = 'TANIZ100';
-      _appliedCouponDiscount = 100.0;
-      _hasCoupon = true;
-      notifyListeners();
-      return true;
-    }
-    return false;
-  }
-
-  void removeCoupon() {
-    _hasCoupon = false;
-    notifyListeners();
-  }
+  double get grandTotal => billSummary.totalPayable;
+  bool get isLegitimatelyFree => billSummary.isLegitimatelyFree;
 
   bool get isEmpty => _items.isEmpty;
   bool get isNotEmpty => _items.isNotEmpty;
@@ -127,31 +93,97 @@ class CartState extends ChangeNotifier {
 
   void clearCart() {
     _items.clear();
+    _appliedCoupon = null;
     notifyListeners();
   }
 
-  Order placeOrder({required String deliveryAddress}) {
-    final newOrder = Order(
-      id: 'OD-${DateTime.now().millisecondsSinceEpoch % 100000}',
-      items: List.from(_items.values),
-      subtotal: subtotal,
-      deliveryFee: deliveryFee,
-      handlingFee: handlingFee,
-      discount: appliedCouponDiscount,
-      total: grandTotal,
-      deliveryOtp: '4821',
-      deliveryPartner: const DeliveryPartner(
-        name: 'Rajesh K.',
-        rating: 4.8,
-        totalDeliveries: 1420,
-        phone: '+91 98491 88210',
-        currentDistance: '1.2 km away',
+  /// Applies coupon with strict eligibility validation
+  CouponApplyResult applyCoupon(String code) {
+    final clean = code.trim().toUpperCase();
+    final match = Coupon.availableCoupons.firstWhere(
+      (c) => c.code.toUpperCase() == clean,
+      orElse: () => const Coupon(
+        code: '',
+        title: '',
+        description: '',
+        discountAmount: 0,
+        minOrderAmount: 0,
       ),
+    );
+
+    if (match.code.isEmpty) {
+      return CouponApplyResult(
+        isSuccess: false,
+        message: 'Invalid coupon code "$clean". Please check the offer code.',
+      );
+    }
+
+    _appliedCoupon = match;
+    notifyListeners();
+
+    final summary = billSummary;
+    if (summary.couponDiscount > 0) {
+      return CouponApplyResult(
+        isSuccess: true,
+        message: '🎉 Coupon "${match.code}" applied! You saved ₹${summary.couponDiscount.toInt()}',
+      );
+    } else {
+      return CouponApplyResult(
+        isSuccess: false,
+        message: summary.couponIneligibilityReason ??
+            'Cart subtotal must be at least ₹${match.minOrderAmount.toInt()} for this offer.',
+      );
+    }
+  }
+
+  void toggleCoupon() {
+    if (_appliedCoupon != null) {
+      _appliedCoupon = null;
+    } else {
+      _appliedCoupon = Coupon.availableCoupons.first;
+    }
+    notifyListeners();
+  }
+
+  void removeCoupon() {
+    _appliedCoupon = null;
+    notifyListeners();
+  }
+
+  /// Places an order via authoritative OrderRepository
+  Future<Order> placeOrder({
+    required String idempotencyKey,
+    required String deliveryAddress,
+    required List<String> deliveryInstructions,
+    String? customInstruction,
+    required PaymentMethod paymentMethod,
+    required PaymentStatus paymentStatus,
+    String? transactionId,
+  }) async {
+    final summary = billSummary;
+    final order = await OrderRepository().createOrder(
+      idempotencyKey: idempotencyKey,
+      items: itemsList,
+      billSummary: summary,
       deliveryAddress: deliveryAddress,
-      orderTime: DateTime.now(),
+      deliveryInstructions: deliveryInstructions,
+      customInstruction: customInstruction,
+      paymentMethod: paymentMethod,
+      paymentStatus: paymentStatus,
+      transactionId: transactionId,
     );
 
     clearCart();
-    return newOrder;
+    return order;
   }
+}
+
+class CouponApplyResult {
+  final bool isSuccess;
+  final String message;
+
+  const CouponApplyResult({
+    required this.isSuccess,
+    required this.message,
+  });
 }

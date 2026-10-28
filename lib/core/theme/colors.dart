@@ -4,19 +4,23 @@ import 'package:flutter/material.dart';
 /// Strict palette: Primary Blue #0055AA, Primary Deep #003F7F, Accent Gold #FFAA00, Accent Deep #FF7F00
 class TanizColors {
   // Brand Core Colors
-  static const Color primaryBlue = Color(0xFF0055AA);
-  static const Color primaryDeep = Color(0xFF003F7F);
-  static const Color primaryBlueDark = Color(0xFF003F7F);
-  static const Color primaryBlueLight = Color(0xFF2E7BDB);
+  static const Color royalBlue = Color(0xFF1746A0);
+  static const Color metallicGold = Color(0xFFFFD700);
+  static const Color brightYellow = Color(0xFFFFEA00);
+
+  static const Color primaryBlue = Color(0xFF1746A0); // Deep Royal Blue #1746A0 per design direction
+  static const Color primaryDeep = Color(0xFF0D2D6C);
+  static const Color primaryBlueDark = Color(0xFF0D2D6C);
+  static const Color primaryBlueLight = Color(0xFF2E6BDB);
   static const Color blueContainer = Color(0xFFEBF3FF);
 
-  static const Color accentGold = Color(0xFFFFAA00);
-  static const Color accentDeep = Color(0xFFFF7F00);
-  static const Color goldenAmber = Color(0xFFFFAA00);
-  static const Color goldenAmberDark = Color(0xFFFF7F00);
-  static const Color goldenAmberLight = Color(0xFFFFBE3B);
-  static const Color amberContainer = Color(0xFFFFF7ED);
-  static const Color amberBadgeBg = Color(0xFFFFF4D6);
+  static const Color accentGold = Color(0xFFFFD700); // Metallic Gold #FFD700
+  static const Color accentDeep = Color(0xFFE5A100);
+  static const Color goldenAmber = Color(0xFFFFD700);
+  static const Color goldenAmberDark = Color(0xFFD97706);
+  static const Color goldenAmberLight = Color(0xFFFFEA00); // Bright Yellow #FFEA00
+  static const Color amberContainer = Color(0xFFFFFBEB);
+  static const Color amberBadgeBg = Color(0xFFFEF3C7);
   static const Color primaryGold = Color(0xFFFFAA00);
 
   // Speed & SLA

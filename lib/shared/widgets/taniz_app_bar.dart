@@ -44,41 +44,28 @@ class TanizAppBar extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Logo container (Explicit white container with 12px radius)
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.12),
-                          blurRadius: 8,
+                  // Logo (Transparent background, no white container/box)
+                  Image.asset(
+                    'assets/logo.png',
+                    height: 28,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) => Row(
+                      children: [
+                        Text(
+                          'TANIZ',
+                          style: TanizTypography.titleMedium.copyWith(
+                            color: TanizColors.primaryBlue,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Text(
+                          'KART',
+                          style: TanizTypography.titleMedium.copyWith(
+                            color: TanizColors.accentGold,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ],
-                    ),
-                    child: Image.asset(
-                      'assets/logo.png',
-                      height: 24,
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) => Row(
-                        children: [
-                          Text(
-                            'TANIZ',
-                            style: TanizTypography.titleMedium.copyWith(
-                              color: TanizColors.primaryBlue,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          Text(
-                            'KART',
-                            style: TanizTypography.titleMedium.copyWith(
-                              color: TanizColors.accentGold,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
                   ),
 

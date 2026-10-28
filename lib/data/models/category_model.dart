@@ -5,6 +5,8 @@ class Category {
   final List<String> subcategories;
   final int itemCount;
   final int backgroundColorValue;
+  final String? emoji;
+  final String? badge;
 
   const Category({
     required this.id,
@@ -13,5 +15,8 @@ class Category {
     required this.subcategories,
     required this.itemCount,
     this.backgroundColorValue = 0xFFFFFBEB, // default amber tint
+    this.emoji,
+    this.badge,
   });
 }
+

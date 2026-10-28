@@ -1,44 +1,91 @@
 import '../models/order_model.dart';
 import '../models/cart_item_model.dart';
 import 'mock_product_repository.dart';
+import '../../core/pricing/pricing_engine.dart';
+import 'order_repository.dart';
 
 class MockOrderRepository {
   static Order getActiveOrder() {
+    // If order repository already has an active order, return it
+    final repo = OrderRepository();
     final products = MockProductRepository.getAllProducts();
     final items = [
-      CartItem(product: products[0], quantity: 1), // Amul Taaza ₹28
-      CartItem(product: products[1], quantity: 1), // Country Eggs ₹58
-      CartItem(product: products[2], quantity: 1), // Britannia Bread ₹45
+      CartItem(product: products[0], quantity: 1), // Amul Butter ₹58
+      CartItem(product: products[1], quantity: 1), // Amul Milk ₹34
+      CartItem(product: products[2], quantity: 2), // Fortune Oil or Veg
     ];
 
-    final subtotal = items.fold(0.0, (sum, i) => sum + i.totalPrice);
-    const handlingFee = 5.0;
-    const deliveryFee = 0.0; // Free for Tanizkart Member
-    const discount = 20.0; // Coupon TANIZSAVE
-    final total = subtotal + handlingFee + deliveryFee - discount;
+    final summary = PricingEngine.calculate(items: items);
+    const hubLocation = OrderLocation(
+      latitude: 15.5057,
+      longitude: 80.0499,
+      label: 'Tanizkart Lawyerpet Dark Store #304',
+    );
+    const customerLocation = OrderLocation(
+      latitude: 15.5120,
+      longitude: 80.0580,
+      label: 'Flat 302, Green Meadows, Lawyerpet, Ongole',
+    );
 
-    return Order(
+    final now = DateTime.now();
+
+    final order = Order(
       id: 'TK-89421',
+      idempotencyKey: 'idemp-initial-active',
       items: items,
-      subtotal: subtotal,
-      deliveryFee: deliveryFee,
-      handlingFee: handlingFee,
-      discount: discount,
-      total: total > 0 ? total : subtotal,
+      billSummary: summary,
+      deliveryAddress: 'Flat 302, Green Meadows, Lawyerpet, Ongole',
+      deliveryInstructions: const ['Leave at Door', 'Call Upon Arrival'],
+      paymentStatus: PaymentStatus.paid,
+      paymentMethod: PaymentMethod.upi,
+      transactionId: 'UPI-TXN-884920',
+      status: OrderStatus.partnerAssigned,
+      orderTime: now.subtract(const Duration(minutes: 6)),
+      estimatedDeliveryTime: now.add(const Duration(minutes: 6)),
       deliveryOtp: '4821',
       deliveryPartner: const DeliveryPartner(
-        name: 'Rajesh K.',
-        rating: 4.8,
+        id: 'partner_rajesh',
+        name: 'K. Rajesh',
+        rating: 4.88,
         totalDeliveries: 1420,
         phone: '+91 98480 12345',
-        currentDistance: '1.2 km away',
-        vehicleType: 'Electric Scooter',
-        isThermalBagVerified: true,
+        vehicleType: 'Electric Scooter • Eco Green',
+        currentLocation: OrderLocation(
+          latitude: 15.5080,
+          longitude: 80.0530,
+          label: 'Near Lawyerpet Main Road',
+        ),
       ),
-      status: OrderStatus.outForDelivery,
-      estimatedArrival: '12 mins • 12:42 PM',
-      deliveryAddress: 'Flat 302, Green Meadows, Lawyerpet, Ongole',
-      orderTime: DateTime.now().subtract(const Duration(minutes: 8)),
+      hubLocation: hubLocation,
+      customerLocation: customerLocation,
+      timeline: [
+        OrderTimelineEvent(
+          status: OrderStatus.placed,
+          title: 'Order Placed',
+          subtitle: 'Payment verified via UPI',
+          timestamp: now.subtract(const Duration(minutes: 6)),
+        ),
+        OrderTimelineEvent(
+          status: OrderStatus.accepted,
+          title: 'Order Accepted',
+          subtitle: 'Dark Store #304 accepted your basket.',
+          timestamp: now.subtract(const Duration(minutes: 5)),
+        ),
+        OrderTimelineEvent(
+          status: OrderStatus.packing,
+          title: 'Packing Items',
+          subtitle: 'Warehouse team packed all items.',
+          timestamp: now.subtract(const Duration(minutes: 3)),
+        ),
+        OrderTimelineEvent(
+          status: OrderStatus.partnerAssigned,
+          title: 'Delivery Hero Assigned',
+          subtitle: 'K. Rajesh on the way to pickup location.',
+          timestamp: now.subtract(const Duration(minutes: 1)),
+        ),
+      ],
     );
+
+    return repo.getOrder('TK-89421') ?? order;
   }
 }
