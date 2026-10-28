@@ -19,7 +19,6 @@ import '../../listing/screens/product_listing_screen.dart';
 import '../../cart/screens/cart_checkout_screen.dart';
 import '../../detail/screens/product_detail_screen.dart';
 import '../../../shared/widgets/address_bottom_sheet.dart';
-import '../../search/screens/product_search_screen.dart';
 
 /// Classy & High-End Home Screen for Tanizkart
 /// Designed to match the modern iOS reference design:

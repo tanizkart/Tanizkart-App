@@ -412,7 +412,8 @@ void main() {
       await tester.enterText(headerSearchField, '');
       await tester.pump(const Duration(milliseconds: 200));
 
-      expect(find.text('6 items in Dairy, Bread & Eggs'), findsOneWidget);
+      final dairyItemsCount = MockProductRepository.getProductsByCategory('cat_dairy').length;
+      expect(find.text('$dairyItemsCount items in Dairy, Bread & Eggs'), findsOneWidget);
 
       final backButton = find.byIcon(Icons.arrow_back_rounded);
       await tester.tap(backButton);
@@ -425,21 +426,21 @@ void main() {
     test('WishlistState management and resilient operations test', () async {
       final wishlist = WishlistState();
       expect(wishlist.itemCount, 2);
-      expect(wishlist.isWishlisted('prod_1'), true);
-      expect(wishlist.isWishlisted('prod_2'), true);
-      expect(wishlist.isWishlisted('prod_3'), false);
+      expect(wishlist.isWishlisted('prod_amul_butter'), true);
+      expect(wishlist.isWishlisted('prod_farm_eggs'), true);
+      expect(wishlist.isWishlisted('prod_britannia_bread'), false);
       expect(wishlist.savedProducts.length, 2);
       expect(wishlist.error, isNull);
 
-      final p3 = MockProductRepository.getAllProducts().firstWhere((p) => p.id == 'prod_3');
+      final p3 = MockProductRepository.getAllProducts().firstWhere((p) => p.id == 'prod_britannia_bread');
       final added = await wishlist.toggleWishlist(p3);
       expect(added, true);
       expect(wishlist.itemCount, 3);
-      expect(wishlist.isWishlisted('prod_3'), true);
+      expect(wishlist.isWishlisted('prod_britannia_bread'), true);
 
-      await wishlist.removeFromWishlist('prod_1');
+      await wishlist.removeFromWishlist('prod_amul_butter');
       expect(wishlist.itemCount, 2);
-      expect(wishlist.isWishlisted('prod_1'), false);
+      expect(wishlist.isWishlisted('prod_amul_butter'), false);
     });
 
     testWidgets('WishlistScreen renders saved products grid without error', (WidgetTester tester) async {
@@ -447,7 +448,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 200));
 
       expect(find.text('Wishlist'), findsOneWidget);
-      expect(find.textContaining('Amul Taaza'), findsWidgets);
+      expect(find.textContaining('Amul Salted Butter'), findsWidgets);
       expect(find.textContaining('Could not load wishlist items'), findsNothing);
     });
 

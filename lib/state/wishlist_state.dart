@@ -5,7 +5,7 @@ import '../data/repositories/mock_product_repository.dart';
 
 class WishlistState extends ChangeNotifier {
   // Pre-seed with actual product IDs so items appear immediately
-  final Set<String> _wishlistIds = {'prod_1', 'prod_2'};
+  final Set<String> _wishlistIds = {'prod_amul_butter', 'prod_farm_eggs'};
   String _currentUserPhone = '+91 98480 22338';
   bool _isLoading = false;
   bool _hasError = false;
