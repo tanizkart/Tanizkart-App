@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'taniz_image.dart';
 import '../../core/theme/typography.dart';
 import '../../core/theme/motion.dart';
 import '../../core/utils/currency_formatter.dart';
@@ -130,21 +130,13 @@ class _FloatingCartBarState extends State<FloatingCartBar> with SingleTickerProv
                                             ),
                                           ],
                                         ),
-                                        child: ClipOval(
-                                          child: CachedNetworkImage(
-                                            imageUrl: previewItems[index].imageUrl,
-                                            fit: BoxFit.cover,
-                                            placeholder: (c, u) => const TanizShimmerBox(
-                                              width: 40,
-                                              height: 40,
-                                              borderRadius: 20,
-                                            ),
-                                            errorWidget: (c, u, e) => const Icon(
-                                              Icons.shopping_bag_outlined,
-                                              size: 20,
-                                              color: Color(0xFF0C831F),
-                                            ),
-                                          ),
+                                        child: TanizImage(
+                                          imageUrl: previewItems[index].imageUrl,
+                                          width: 40,
+                                          height: 40,
+                                          fit: BoxFit.cover,
+                                          borderRadius: BorderRadius.circular(20),
+                                          fallbackEmoji: '🛒',
                                         ),
                                       ),
                                     );

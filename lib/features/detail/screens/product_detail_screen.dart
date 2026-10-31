@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import '../../../shared/widgets/taniz_image.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/motion.dart';
 import '../../../core/theme/typography.dart';
@@ -201,52 +201,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         Padding(
                           padding: const EdgeInsets.all(24),
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: SizedBox(
+                            child: TanizImage(
+                              imageUrl: product.imageUrl,
                               width: 220,
                               height: 220,
-                              child: widget.heroTag != null
-                                  ? Hero(
-                                      tag: widget.heroTag!,
-                                      child: CachedNetworkImage(
-                                        imageUrl: product.imageUrl,
-                                        fit: BoxFit.cover,
-                                        placeholder: (_, _) => const TanizShimmerBox(
-                                          width: 220,
-                                          height: 220,
-                                          borderRadius: 16,
-                                        ),
-                                        errorWidget: (_, _, _) => Container(
-                                          color: TanizColors.canvasBackground,
-                                          child: Center(
-                                            child: Icon(
-                                              Icons.shopping_bag_outlined,
-                                              size: 64,
-                                              color: TanizColors.primaryBlue.withValues(alpha: 0.4),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : CachedNetworkImage(
-                                      imageUrl: product.imageUrl,
-                                      fit: BoxFit.cover,
-                                      placeholder: (_, _) => const TanizShimmerBox(
-                                        width: 220,
-                                        height: 220,
-                                        borderRadius: 16,
-                                      ),
-                                      errorWidget: (_, _, _) => Container(
-                                        color: TanizColors.canvasBackground,
-                                        child: Center(
-                                          child: Icon(
-                                            Icons.shopping_bag_outlined,
-                                            size: 64,
-                                            color: TanizColors.primaryBlue.withValues(alpha: 0.4),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                              fit: BoxFit.cover,
+                              borderRadius: BorderRadius.circular(16),
+                              heroTag: widget.heroTag,
+                              fallbackLabel: product.name,
+                              fallbackEmoji: '🛒',
                             ),
                           ),
                         ),

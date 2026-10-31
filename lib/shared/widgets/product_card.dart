@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/typography.dart';
@@ -10,6 +9,7 @@ import '../../state/wishlist_state.dart';
 import '../../state/auth_state.dart';
 import '../../features/auth/screens/login_sheet.dart';
 import 'add_to_cart_stepper.dart';
+import 'taniz_image.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -71,50 +71,13 @@ class ProductCard extends StatelessWidget {
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  ClipRRect(
+                  TanizImage(
+                    imageUrl: product.imageUrl,
+                    fit: BoxFit.cover,
                     borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
-                    child: heroTag != null
-                        ? Hero(
-                            tag: heroTag!,
-                            child: CachedNetworkImage(
-                              imageUrl: product.imageUrl,
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) => const TanizShimmerBox(
-                                width: double.infinity,
-                                height: double.infinity,
-                                borderRadius: 15,
-                              ),
-                              errorWidget: (context, url, error) => Container(
-                                color: TanizColors.surfaceLow,
-                                child: const Center(
-                                  child: Icon(
-                                    Icons.local_grocery_store_outlined,
-                                    size: 36,
-                                    color: TanizColors.primaryBlue,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
-                        : CachedNetworkImage(
-                            imageUrl: product.imageUrl,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => const TanizShimmerBox(
-                              width: double.infinity,
-                              height: double.infinity,
-                              borderRadius: 15,
-                            ),
-                            errorWidget: (context, url, error) => Container(
-                              color: TanizColors.surfaceLow,
-                              child: const Center(
-                                child: Icon(
-                                  Icons.local_grocery_store_outlined,
-                                  size: 36,
-                                  color: TanizColors.primaryBlue,
-                                ),
-                              ),
-                            ),
-                          ),
+                    heroTag: heroTag,
+                    fallbackLabel: product.name,
+                    fallbackEmoji: '🛒',
                   ),
 
                   // Top Left: High-Impact Discount Tag (e.g. 23% OFF)

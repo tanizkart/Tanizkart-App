@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/theme/typography.dart';
 import '../../core/theme/motion.dart';
 import '../../data/models/category_model.dart';
+import 'taniz_image.dart';
 
 /// Ultra-Modern Blinkit-Style Category Card
 /// Features rounded pastel squircle container, specular glass border,
@@ -61,30 +61,12 @@ class CategoryCard extends StatelessWidget {
                 fit: StackFit.expand,
                 children: [
                   // High-Res Image
-                  ClipRRect(
+                  TanizImage(
+                    imageUrl: category.iconUrl,
+                    fit: BoxFit.cover,
                     borderRadius: BorderRadius.circular(19),
-                    child: CachedNetworkImage(
-                      imageUrl: category.iconUrl,
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) => Container(
-                        color: Color(category.backgroundColorValue),
-                        child: Center(
-                          child: Text(
-                            category.emoji ?? '🛒',
-                            style: const TextStyle(fontSize: 32),
-                          ),
-                        ),
-                      ),
-                      errorWidget: (context, url, error) => Container(
-                        color: Color(category.backgroundColorValue),
-                        child: Center(
-                          child: Text(
-                            category.emoji ?? '🛒',
-                            style: const TextStyle(fontSize: 32),
-                          ),
-                        ),
-                      ),
-                    ),
+                    fallbackEmoji: category.emoji ?? '🛒',
+                    fallbackLabel: category.name,
                   ),
 
                   // Top-Right Unique Emoji Badge

@@ -71,27 +71,40 @@ class TanizBottomNavBar extends StatelessWidget {
     return TanizTappable(
       scaleTo: 0.94,
       borderRadius: BorderRadius.circular(12),
-      onTap: () => onTap(index),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              isActive ? activeIcon : icon,
-              color: isActive ? TanizColors.primaryBlue : TanizColors.textSecondary,
-              size: 24,
+      onTap: () {
+        if (!isActive) {
+          onTap(index);
+        }
+      },
+      child: Semantics(
+        label: '$label tab',
+        selected: isActive,
+        button: true,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minWidth: 54, minHeight: 48),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  isActive ? activeIcon : icon,
+                  color: isActive ? TanizColors.primaryBlue : TanizColors.textSecondary,
+                  size: 24,
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  label,
+                  style: TanizTypography.labelSmall.copyWith(
+                    color: isActive ? TanizColors.primaryBlue : TanizColors.textSecondary,
+                    fontWeight: isActive ? FontWeight.w800 : FontWeight.w500,
+                    fontSize: 10.5,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 3),
-            Text(
-              label,
-              style: TanizTypography.labelSmall.copyWith(
-                color: isActive ? TanizColors.primaryBlue : TanizColors.textSecondary,
-                fontWeight: isActive ? FontWeight.w800 : FontWeight.w500,
-                fontSize: 10.5,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

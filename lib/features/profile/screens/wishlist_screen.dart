@@ -7,6 +7,7 @@ import '../../../shared/widgets/product_card.dart';
 import '../../../shared/widgets/floating_cart_bar.dart';
 import '../../../state/wishlist_state.dart';
 import '../../../state/cart_state.dart';
+import '../../../state/navigation_state.dart';
 import '../../../core/utils/cart_navigation.dart';
 import '../../../features/detail/screens/product_detail_screen.dart';
 
@@ -225,7 +226,10 @@ class WishlistScreen extends StatelessWidget {
             ),
             const SizedBox(height: 28),
             TanizTappable(
-              onTap: () => Navigator.pop(context),
+              onTap: () {
+                Provider.of<NavigationState>(context, listen: false).setIndex(1);
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
               borderRadius: BorderRadius.circular(14),
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),

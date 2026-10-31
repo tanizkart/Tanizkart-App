@@ -202,7 +202,7 @@ void main() {
       expect(products.any((p) => p.name.contains('Amul')), true);
 
       final categories = MockCategoryRepository.getAllCategories();
-      expect(categories.length, 10);
+      expect(categories.length, 6);
 
       final order = MockOrderRepository.getActiveOrder();
       expect(order.deliveryPartner?.name, 'K. Rajesh');
@@ -368,7 +368,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 200));
 
       expect(find.text('Grocery & Kitchen'), findsOneWidget);
-      expect(find.text('Dairy, Bread & Eggs'), findsOneWidget);
+      expect(find.text('Dairy'), findsOneWidget);
 
       final searchField = find.byType(TextField);
       expect(searchField, findsOneWidget);
@@ -385,7 +385,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 200));
 
       expect(find.text('Grocery & Kitchen'), findsOneWidget);
-      expect(find.text('Dairy, Bread & Eggs'), findsOneWidget);
+      expect(find.text('Dairy'), findsOneWidget);
     });
 
     testWidgets('ProductListingScreen inline header search filters within category & restores', (WidgetTester tester) async {
@@ -393,8 +393,8 @@ void main() {
       await tester.pumpWidget(_wrap(ProductListingScreen(selectedCategory: dairyCat)));
       await tester.pump(const Duration(milliseconds: 200));
 
-      expect(find.text('Dairy, Bread & Eggs'), findsWidgets);
-      expect(find.text('Milk & Curd'), findsOneWidget);
+      expect(find.text('Dairy'), findsWidgets);
+      expect(find.text('Milk & Cream'), findsOneWidget);
 
       final searchIcon = find.byIcon(Icons.search_rounded);
       expect(searchIcon, findsOneWidget);
@@ -407,20 +407,20 @@ void main() {
       await tester.enterText(headerSearchField, 'nandini');
       await tester.pump(const Duration(milliseconds: 200));
 
-      expect(find.textContaining('Dairy, Bread & Eggs'), findsWidgets);
+      expect(find.textContaining('Dairy'), findsWidgets);
 
       await tester.enterText(headerSearchField, '');
       await tester.pump(const Duration(milliseconds: 200));
 
       final dairyItemsCount = MockProductRepository.getProductsByCategory('cat_dairy').length;
-      expect(find.text('$dairyItemsCount items in Dairy, Bread & Eggs'), findsOneWidget);
+      expect(find.text('$dairyItemsCount items in Dairy'), findsOneWidget);
 
       final backButton = find.byIcon(Icons.arrow_back_rounded);
       await tester.tap(backButton);
       await tester.pump(const Duration(milliseconds: 200));
 
       expect(find.byType(TextField), findsNothing);
-      expect(find.text('Dairy, Bread & Eggs'), findsWidgets);
+      expect(find.text('Dairy'), findsWidgets);
     });
 
     test('WishlistState management and resilient operations test', () async {

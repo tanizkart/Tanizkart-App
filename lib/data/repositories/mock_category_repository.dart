@@ -3,113 +3,127 @@ import '../models/category_model.dart';
 class MockCategoryRepository {
   static final List<Category> _categories = [
     const Category(
-      id: 'cat_dairy',
-      name: 'Dairy, Bread & Eggs',
-      emoji: '🥛',
-      badge: 'Daily',
-      iconUrl: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=400&q=80',
-      subcategories: ['All', 'Milk & Curd', 'Farm Eggs', 'Bread & Pav', 'Butter & Ghee', 'Cheese & Paneer'],
-      itemCount: 48,
-      backgroundColorValue: 0xFFEFF6FF, // Soft Ice Blue
-    ),
-    const Category(
-      id: 'cat_produce',
-      name: 'Fruits & Vegetables',
-      emoji: '🥦',
-      badge: 'Farm Direct',
-      iconUrl: 'https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?auto=format&fit=crop&w=400&q=80',
-      subcategories: ['All', 'Fresh Vegetables', 'Daily Fruits', 'Organic Herbs', 'Exotics & Cut'],
-      itemCount: 64,
-      backgroundColorValue: 0xFFECFDF5, // Emerald Mist
-    ),
-    const Category(
-      id: 'cat_snacks',
-      name: 'Munchies & Chips',
-      emoji: '🍿',
-      badge: 'Party',
-      iconUrl: 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?auto=format&fit=crop&w=400&q=80',
-      subcategories: ['All', 'Chips & Crisps', 'Bhujia & Namkeen', 'Biscuits & Cookies', 'Popcorn'],
-      itemCount: 52,
-      backgroundColorValue: 0xFFFFF7ED, // Warm Orange
-    ),
-    const Category(
-      id: 'cat_drinks',
-      name: 'Cold Drinks & Juices',
-      emoji: '🥤',
-      badge: 'Chilled',
-      iconUrl: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=400&q=80',
-      subcategories: ['All', 'Soft Drinks', 'Real Fruit Juices', 'Energy Drinks', 'Mineral Water'],
-      itemCount: 36,
-      backgroundColorValue: 0xFFF0FDF4, // Mint Soda
-    ),
-    const Category(
-      id: 'cat_instant',
-      name: 'Instant & Frozen',
-      emoji: '🍜',
-      badge: 'Ready in 2m',
-      iconUrl: 'https://images.unsplash.com/photo-1612927601601-6638404737ce?auto=format&fit=crop&w=400&q=80',
-      subcategories: ['All', 'Maggi & Noodles', 'Pasta & Sauces', 'Frozen Snacks & Peas', 'Ready Meals'],
+      id: 'cat_baby_care',
+      name: 'Baby care',
+      emoji: '👶',
+      badge: 'Gentle Care',
+      iconUrl: 'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?auto=format&fit=crop&w=400&q=80',
+      subcategories: [
+        'All',
+        'Diapers & Wipes',
+        'Baby Food & Formula',
+        'Baby Bath & Skin',
+        'Baby Feeding',
+      ],
       itemCount: 42,
-      backgroundColorValue: 0xFFFEF3C7, // Warm Amber
+      backgroundColorValue: 0xFFFDF2F8, // Soft Blossom Pink
     ),
     const Category(
-      id: 'cat_staples',
-      name: 'Atta, Rice & Dals',
+      id: 'cat_personal_care',
+      name: 'Personal care',
+      emoji: '🧴',
+      badge: 'Self Care',
+      iconUrl: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=400&q=80',
+      subcategories: [
+        'All',
+        'Bath & Body',
+        'Hair Care',
+        'Skin Care',
+        'Oral Care',
+        'Men\'s Grooming',
+      ],
+      itemCount: 50,
+      backgroundColorValue: 0xFFF5F3FF, // Soft Lavender
+    ),
+    const Category(
+      id: 'cat_groceries',
+      name: 'Groceries',
       emoji: '🌾',
-      badge: 'Wholesale',
+      badge: 'Kitchen Staples',
       iconUrl: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=400&q=80',
-      subcategories: ['All', 'Wheat Atta', 'Basmati Rice', 'Toor & Moong Dal', 'Cooking Oils', 'Spices & Salt'],
-      itemCount: 78,
+      subcategories: [
+        'All',
+        'Atta & Flours',
+        'Rice & Grains',
+        'Dals & Pulses',
+        'Oils & Ghee',
+        'Masalas & Spices',
+        'Instant & Noodles',
+      ],
+      itemCount: 68,
       backgroundColorValue: 0xFFFEF9C3, // Pale Gold
     ),
     const Category(
-      id: 'cat_sweets',
-      name: 'Chocolates & Sweets',
-      emoji: '🍫',
-      badge: 'Sweet Tooth',
-      iconUrl: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=400&q=80',
-      subcategories: ['All', 'Chocolates', 'Ice Creams', 'Traditional Mithai', 'Dessert Syrups'],
-      itemCount: 30,
-      backgroundColorValue: 0xFFFCE7F3, // Soft Pink
-    ),
-    const Category(
-      id: 'cat_tea_coffee',
-      name: 'Tea, Coffee & More',
-      emoji: '☕',
-      badge: 'Morning',
-      iconUrl: 'https://images.unsplash.com/photo-1559561853-08451507cbe7?auto=format&fit=crop&w=400&q=80',
-      subcategories: ['All', 'Leaf Tea', 'Instant Coffee', 'Green Tea', 'Health Drinks'],
-      itemCount: 28,
-      backgroundColorValue: 0xFFF5F3FF, // Lavender
-    ),
-    const Category(
-      id: 'cat_cleaning',
-      name: 'Cleaning & Home',
+      id: 'cat_home_essentials',
+      name: 'Home essentials',
       emoji: '🧼',
-      badge: 'Essential',
-      iconUrl: 'https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?auto=format&fit=crop&w=400&q=80',
-      subcategories: ['All', 'Detergents & Powders', 'Floor Cleaners', 'Dishwashers', 'Tissues & Wipes'],
+      badge: 'Sparkle Clean',
+      iconUrl: 'https://images.unsplash.com/photo-1585421514738-01798e348b17?auto=format&fit=crop&w=400&q=80',
+      subcategories: [
+        'All',
+        'Detergents & Laundry',
+        'Surface Cleaners',
+        'Dishwashing',
+        'Tissues & Disposables',
+        'Pooja Essentials',
+      ],
       itemCount: 45,
-      backgroundColorValue: 0xFFF1F5F9, // Slate White
+      backgroundColorValue: 0xFFF1F5F9, // Fresh Slate
     ),
     const Category(
-      id: 'cat_care',
-      name: 'Personal Care',
-      emoji: '🧴',
-      badge: 'Self Care',
-      iconUrl: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=400&q=80',
-      subcategories: ['All', 'Soaps & Body Wash', 'Hair Care', 'Oral Care & Toothpaste', 'Skincare'],
-      itemCount: 50,
-      backgroundColorValue: 0xFFFDF4FF, // Soft Violet
+      id: 'cat_dairy',
+      name: 'Dairy',
+      emoji: '🥛',
+      badge: 'Farm Fresh',
+      iconUrl: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=400&q=80',
+      subcategories: [
+        'All',
+        'Milk & Cream',
+        'Farm Eggs',
+        'Bread & Pav',
+        'Butter & Ghee',
+        'Curd & Paneer',
+      ],
+      itemCount: 56,
+      backgroundColorValue: 0xFFEFF6FF, // Soft Ice Sky Blue
+    ),
+    const Category(
+      id: 'cat_vegetables',
+      name: 'Vegetables',
+      emoji: '🥦',
+      badge: 'Farm Direct',
+      iconUrl: 'https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?auto=format&fit=crop&w=400&q=80',
+      subcategories: [
+        'All',
+        'Daily Vegetables',
+        'Leafy Greens',
+        'Root Vegetables',
+        'Exotic & Salads',
+        'Cooking Bases',
+      ],
+      itemCount: 60,
+      backgroundColorValue: 0xFFECFDF5, // Emerald Mist
     ),
   ];
 
   static List<Category> getAllCategories() => List.unmodifiable(_categories);
 
   static Category getCategoryById(String id) {
-    return _categories.firstWhere(
-      (c) => c.id == id,
-      orElse: () => _categories.first,
-    );
+    for (final c in _categories) {
+      if (c.id == id) return c;
+    }
+    // Graceful aliases for legacy IDs
+    if (id == 'cat_produce') return getCategoryById('cat_vegetables');
+    if (id == 'cat_care') return getCategoryById('cat_personal_care');
+    if (id == 'cat_cleaning') return getCategoryById('cat_home_essentials');
+    if (id == 'cat_staples' ||
+        id == 'cat_snacks' ||
+        id == 'cat_drinks' ||
+        id == 'cat_instant' ||
+        id == 'cat_sweets' ||
+        id == 'cat_tea_coffee') {
+      return getCategoryById('cat_groceries');
+    }
+    return _categories.first;
   }
 }

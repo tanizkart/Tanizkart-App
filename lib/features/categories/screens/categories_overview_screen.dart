@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:provider/provider.dart';
+import '../../../shared/widgets/taniz_image.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/typography.dart';
 import '../../../core/theme/motion.dart';
@@ -140,17 +140,13 @@ class _CategoriesOverviewScreenState extends State<CategoriesOverviewScreen> {
   Widget build(BuildContext context) {
     final allCategories = MockCategoryRepository.getAllCategories();
 
-    // Group categories matching Image 5 structure
+    // Group categories matching the 6 main categories
     final groceryAndKitchen = allCategories.where((c) =>
-      c.id == 'cat_produce' || c.id == 'cat_staples' || c.id == 'cat_dairy' || c.id == 'cat_instant'
-    ).toList();
-
-    final snacksAndDrinks = allCategories.where((c) =>
-      c.id == 'cat_snacks' || c.id == 'cat_drinks'
+      c.id == 'cat_vegetables' || c.id == 'cat_dairy' || c.id == 'cat_groceries'
     ).toList();
 
     final householdAndCare = allCategories.where((c) =>
-      c.id == 'cat_cleaning' || c.id == 'cat_care'
+      c.id == 'cat_baby_care' || c.id == 'cat_personal_care' || c.id == 'cat_home_essentials'
     ).toList();
 
     final isQueryActive = _isSearchActive && _searchController.text.trim().isNotEmpty;
@@ -191,7 +187,7 @@ class _CategoriesOverviewScreenState extends State<CategoriesOverviewScreen> {
                     child: SafeArea(
                       bottom: false,
                       child: Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                        padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -266,21 +262,69 @@ class _CategoriesOverviewScreenState extends State<CategoriesOverviewScreen> {
                                       ),
                                     ],
                                   ),
-                                  TanizTappable(
-                                    onTap: () => CartNavigation.openCart(context),
-                                    borderRadius: BorderRadius.circular(999),
-                                    child: Container(
-                                      padding: const EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        shape: BoxShape.circle,
-                                        border: Border.all(color: TanizColors.borderSubtle),
-                                        boxShadow: [TanizColors.cardShadow],
-                                      ),
-                                      child: const Icon(
-                                        Icons.shopping_bag_outlined,
-                                        color: TanizColors.primaryBlue,
-                                        size: 20,
+                                  Consumer<CartState>(
+                                    builder: (context, cart, _) => TanizTappable(
+                                      onTap: () => CartNavigation.openCart(context),
+                                      child: SizedBox(
+                                        width: 52,
+                                        height: 48,
+                                        child: Stack(
+                                          clipBehavior: Clip.none,
+                                          alignment: Alignment.center,
+                                          children: [
+                                            Container(
+                                              width: 44,
+                                              height: 44,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                shape: BoxShape.circle,
+                                                border: Border.all(color: TanizColors.borderSubtle, width: 1.2),
+                                                boxShadow: [TanizColors.cardShadow],
+                                              ),
+                                              child: const Center(
+                                                child: Icon(
+                                                  Icons.shopping_bag_outlined,
+                                                  color: TanizColors.primaryBlue,
+                                                  size: 22,
+                                                ),
+                                              ),
+                                            ),
+                                            if (cart.isNotEmpty)
+                                              Positioned(
+                                                top: 0,
+                                                right: 1,
+                                                child: Container(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                                                  constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
+                                                  decoration: BoxDecoration(
+                                                    color: TanizColors.primaryBlue,
+                                                    borderRadius: BorderRadius.circular(10),
+                                                    border: Border.all(color: Colors.white, width: 2),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.black.withValues(alpha: 0.18),
+                                                        blurRadius: 4,
+                                                        offset: const Offset(0, 1),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  child: Center(
+                                                    child: Text(
+                                                      '${cart.totalItemCount}',
+                                                      style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 10.5,
+                                                        fontWeight: FontWeight.w900,
+                                                        height: 1.1,
+                                                        letterSpacing: -0.2,
+                                                      ),
+                                                      textAlign: TextAlign.center,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -684,10 +728,10 @@ class _CategoriesOverviewScreenState extends State<CategoriesOverviewScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     sliver: SliverGrid(
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
-                        mainAxisSpacing: 14,
+                        crossAxisCount: 3,
+                        mainAxisSpacing: 12,
                         crossAxisSpacing: 10,
-                        childAspectRatio: 0.72,
+                        childAspectRatio: 0.76,
                       ),
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
@@ -699,40 +743,7 @@ class _CategoriesOverviewScreenState extends State<CategoriesOverviewScreen> {
                     ),
                   ),
 
-                  // Section 2: Snacks & Drinks
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
-                      child: Text(
-                        'Snacks & Drinks',
-                        style: TanizTypography.titleMedium.copyWith(
-                          fontWeight: FontWeight.w800,
-                          color: TanizColors.textPrimary,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    sliver: SliverGrid(
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
-                        mainAxisSpacing: 14,
-                        crossAxisSpacing: 10,
-                        childAspectRatio: 0.72,
-                      ),
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          final category = snacksAndDrinks[index];
-                          return _buildCategoryGridTile(context, category);
-                        },
-                        childCount: snacksAndDrinks.length,
-                      ),
-                    ),
-                  ),
-
-                  // Section 3: Household & Personal Care
+                  // Section 2: Household & Personal Care
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
@@ -750,10 +761,10 @@ class _CategoriesOverviewScreenState extends State<CategoriesOverviewScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     sliver: SliverGrid(
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
-                        mainAxisSpacing: 14,
+                        crossAxisCount: 3,
+                        mainAxisSpacing: 12,
                         crossAxisSpacing: 10,
-                        childAspectRatio: 0.72,
+                        childAspectRatio: 0.76,
                       ),
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
@@ -801,57 +812,65 @@ class _CategoriesOverviewScreenState extends State<CategoriesOverviewScreen> {
       },
       borderRadius: BorderRadius.circular(16),
       scaleTo: 0.95,
-      child: Column(
-        children: [
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color(category.backgroundColorValue).withValues(alpha: 0.5),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: Color(category.backgroundColorValue),
-                  width: 1,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: Color(category.backgroundColorValue),
+            width: 1.5,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color(category.backgroundColorValue).withValues(alpha: 0.5),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.03),
-                    blurRadius: 6,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.all(8),
-              child: Center(
-                child: ClipRRect(
+                padding: const EdgeInsets.all(4),
+                child: TanizImage(
+                  imageUrl: category.iconUrl,
+                  fit: BoxFit.cover,
                   borderRadius: BorderRadius.circular(10),
-                  child: CachedNetworkImage(
-                    imageUrl: category.iconUrl,
-                    fit: BoxFit.contain,
-                    placeholder: (c, u) => Container(color: Colors.white.withValues(alpha: 0.5)),
-                    errorWidget: (c, u, e) => const Icon(
-                      Icons.category_rounded,
-                      color: TanizColors.primaryBlue,
-                      size: 28,
-                    ),
-                  ),
+                  fallbackEmoji: category.emoji ?? '🛒',
+                  fallbackLabel: category.name,
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            category.name,
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: TanizTypography.caption.copyWith(
-              color: TanizColors.textPrimary,
-              fontWeight: FontWeight.w700,
-              fontSize: 10.5,
-              height: 1.15,
+            const SizedBox(height: 6),
+            Text(
+              category.name,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TanizTypography.caption.copyWith(
+                color: TanizColors.textPrimary,
+                fontWeight: FontWeight.w800,
+                fontSize: 11.5,
+                height: 1.15,
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 2),
+            Text(
+              '${category.itemCount}+ items',
+              style: TanizTypography.caption.copyWith(
+                color: TanizColors.textSecondary,
+                fontWeight: FontWeight.w600,
+                fontSize: 9.5,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

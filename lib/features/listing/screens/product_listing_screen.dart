@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/typography.dart';
 import '../../../core/theme/motion.dart';
@@ -659,46 +658,34 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
                         padding: const EdgeInsets.all(10),
                         sliver: Consumer<CartState>(
                           builder: (context, cart, _) {
-                            return AnimationLimiter(
-                              child: SliverGrid(
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  mainAxisSpacing: 10,
-                                  crossAxisSpacing: 10,
-                                  childAspectRatio: 0.65,
-                                ),
-                                delegate: SliverChildBuilderDelegate(
-                                  (context, index) {
-                                    final product = displayProducts[index];
-                                    return AnimationConfiguration.staggeredGrid(
-                                      position: index,
-                                      duration: TanizMotion.entranceDuration,
-                                      columnCount: 2,
-                                      child: ScaleAnimation(
-                                        curve: TanizMotion.entranceCurve,
-                                        child: FadeInAnimation(
-                                          curve: TanizMotion.entranceCurve,
-                                          child: ProductCard(
-                                            product: product,
-                                            quantity: cart.getQuantity(product.id),
-                                            onTap: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (_) => ProductDetailScreen(product: product),
-                                                ),
-                                              );
-                                            },
-                                            onAdd: () => cart.addItem(product),
-                                            onIncrement: () => cart.addItem(product),
-                                            onDecrement: () => cart.removeItem(product),
-                                          ),
+                            return SliverGrid(
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 10,
+                                crossAxisSpacing: 10,
+                                childAspectRatio: 0.65,
+                              ),
+                              delegate: SliverChildBuilderDelegate(
+                                (context, index) {
+                                  final product = displayProducts[index];
+                                  return ProductCard(
+                                    key: ValueKey(product.id),
+                                    product: product,
+                                    quantity: cart.getQuantity(product.id),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => ProductDetailScreen(product: product),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                  childCount: displayProducts.length,
-                                ),
+                                      );
+                                    },
+                                    onAdd: () => cart.addItem(product),
+                                    onIncrement: () => cart.addItem(product),
+                                    onDecrement: () => cart.removeItem(product),
+                                  );
+                                },
+                                childCount: displayProducts.length,
                               ),
                             );
                           },

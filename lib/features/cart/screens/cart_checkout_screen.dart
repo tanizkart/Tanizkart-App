@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import '../../../shared/widgets/taniz_image.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/motion.dart';
 import '../../../core/theme/typography.dart';
@@ -328,27 +328,14 @@ class _CartCheckoutScreenState extends State<CartCheckoutScreen> {
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(color: TanizColors.borderSubtle),
                     ),
-                    child: ClipRRect(
+                    child: TanizImage(
+                      imageUrl: p.imageUrl,
+                      width: 60,
+                      height: 60,
+                      fit: BoxFit.cover,
                       borderRadius: BorderRadius.circular(14),
-                      child: CachedNetworkImage(
-                        imageUrl: p.imageUrl,
-                        fit: BoxFit.cover,
-                        placeholder: (c, u) => const TanizShimmerBox(
-                          width: 60,
-                          height: 60,
-                          borderRadius: 14,
-                        ),
-                        errorWidget: (c, u, e) => Container(
-                          color: TanizColors.surfaceLow,
-                          child: Center(
-                            child: Icon(
-                              Icons.shopping_bag_outlined,
-                              size: 24,
-                              color: TanizColors.primaryBlue.withValues(alpha: 0.4),
-                            ),
-                          ),
-                        ),
-                      ),
+                      fallbackLabel: p.name,
+                      fallbackEmoji: '🛒',
                     ),
                   ),
                   const SizedBox(width: 12),

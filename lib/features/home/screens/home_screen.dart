@@ -1,6 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/typography.dart';
 import '../../../core/theme/motion.dart';
@@ -13,12 +13,13 @@ import '../../../shared/widgets/farm_fresh_hero_banner.dart';
 import '../../../shared/widgets/product_card.dart';
 import '../../../shared/widgets/floating_cart_bar.dart';
 import '../../../shared/widgets/lightning_countdown_badge.dart';
+import '../../../shared/widgets/taniz_image.dart';
 import '../../../state/cart_state.dart';
 import '../../../state/navigation_state.dart';
 import '../../listing/screens/product_listing_screen.dart';
-import '../../cart/screens/cart_checkout_screen.dart';
 import '../../detail/screens/product_detail_screen.dart';
 import '../../../shared/widgets/address_bottom_sheet.dart';
+import '../../../core/utils/cart_navigation.dart';
 
 /// Classy & High-End Home Screen for Tanizkart
 /// Designed to match the modern iOS reference design:
@@ -41,73 +42,106 @@ class _HomeScreenState extends State<HomeScreen> {
   late final List<Product> _allProducts;
   late final List<Product> _bestsellers;
   late final List<Product> _freshProduce;
-  late final List<Product> _munchies;
+  late final List<Product> _dairyProducts;
+  late final List<Product> _groceries;
   late final List<Product> _lightningDeals;
 
   String _selectedFilter = 'All';
-  final List<String> _filterTabs = const ['All', 'Fruits', 'Vegetables', 'Snacks', 'Meat', 'Bakery'];
+  final List<String> _filterTabs = const [
+    'All',
+    'Baby care',
+    'Personal care',
+    'Groceries',
+    'Home essentials',
+    'Dairy',
+    'Vegetables',
+  ];
 
-  // Showcase Cards matching the user's reference mockup
+  // Inline Search State
+  bool _isSearchActive = false;
+  final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
+  String _searchQuery = '';
+  List<Product> _searchResults = [];
+  Timer? _searchDebounceTimer;
+  int _searchRequestId = 0;
+
+  static const List<String> _searchSuggestions = [
+    'Milk',
+    'Butter',
+    'Eggs',
+    'Bread',
+    'Atta',
+    'Chips',
+    'Cola',
+    'Tomato',
+    'Apple',
+    'Paneer',
+    'Rice',
+    'Ghee',
+  ];
+
+  // Showcase Cards matching the 6 main categories
   final List<Map<String, dynamic>> _showcaseItems = const [
-    {
-      'id': 'showcase_snacks',
-      'title': 'Tasty Snacks',
-      'subtitle': 'Crispy, fresh, and ready to enjoy',
-      'price': 99.0,
-      'category': 'Snacks',
-      'imageUrl': 'https://images.unsplash.com/photo-1578849278619-e73505e9610f?auto=format&fit=crop&w=500&q=80',
-      'emoji': '🍿',
-      'productId': 'prod_lays_chips',
-    },
-    {
-      'id': 'showcase_meat',
-      'title': 'Quality Meat',
-      'subtitle': 'Premium meat cuts, fresh and ready to cook',
-      'price': 249.0,
-      'category': 'Meat',
-      'imageUrl': 'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=500&q=80',
-      'emoji': '🥩',
-      'productId': 'prod_farm_eggs',
-    },
     {
       'id': 'showcase_veggies',
       'title': 'Garden Fresh',
       'subtitle': 'Healthy vegetables picked fresh every day',
-      'price': 79.0,
+      'price': 38.0,
       'category': 'Vegetables',
-      'imageUrl': 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=500&q=80',
+      'imageUrl': 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=500&q=80',
       'emoji': '🥦',
-      'productId': 'prod_fresh_tomato',
+      'productId': 'prod_tomato',
     },
     {
-      'id': 'showcase_bakery',
-      'title': 'Sweet Bakery',
-      'subtitle': 'Delicious baked treats, fresh from our oven',
-      'price': 129.0,
-      'category': 'Bakery',
-      'imageUrl': 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=500&q=80',
-      'emoji': '🍩',
-      'productId': 'prod_britannia_bread',
+      'id': 'showcase_dairy',
+      'title': 'Dairy Fresh',
+      'subtitle': 'Pure butter, rich milk & farm eggs',
+      'price': 58.0,
+      'category': 'Dairy',
+      'imageUrl': 'https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?auto=format&fit=crop&w=500&q=80',
+      'emoji': '🧈',
+      'productId': 'prod_amul_butter',
     },
     {
-      'id': 'showcase_seafood',
-      'title': 'Fresh Seafood',
-      'subtitle': 'Fresh seafood for delicious home-cooked meals',
-      'price': 349.0,
-      'category': 'Meat',
-      'imageUrl': 'https://images.unsplash.com/photo-1534483509719-3feaee7c30da?auto=format&fit=crop&w=500&q=80',
-      'emoji': '🐟',
-      'productId': 'prod_farm_eggs',
+      'id': 'showcase_groceries',
+      'title': 'Chakki Atta',
+      'subtitle': '100% whole wheat grains from MP fields',
+      'price': 245.0,
+      'category': 'Groceries',
+      'imageUrl': 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=500&q=80',
+      'emoji': '🌾',
+      'productId': 'prod_aashirvaad_atta',
     },
     {
-      'id': 'showcase_fruits',
-      'title': 'Fresh & Juicy',
-      'subtitle': 'Fresh, juicy fruits for every occasion',
-      'price': 149.0,
-      'category': 'Fruits',
-      'imageUrl': 'https://images.unsplash.com/photo-1619566636858-adf3ef46400b?auto=format&fit=crop&w=500&q=80',
-      'emoji': '🍎',
-      'productId': 'prod_fresh_apple',
+      'id': 'showcase_baby_care',
+      'title': 'Baby Dry Pants',
+      'subtitle': 'Aloe vera gentle anti-rash protection',
+      'price': 549.0,
+      'category': 'Baby care',
+      'imageUrl': 'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?auto=format&fit=crop&w=500&q=80',
+      'emoji': '👶',
+      'productId': 'prod_pampers_pants',
+    },
+    {
+      'id': 'showcase_personal_care',
+      'title': 'Deep Moisture',
+      'subtitle': 'Dove nourishing body wash for soft skin',
+      'price': 199.0,
+      'category': 'Personal care',
+      'imageUrl': 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=500&q=80',
+      'emoji': '🧴',
+      'productId': 'prod_dove_bodywash',
+    },
+    {
+      'id': 'showcase_home_essentials',
+      'title': 'Floor & Surface',
+      'subtitle': 'Lizol citrus fresh germ protection',
+      'price': 185.0,
+      'category': 'Home essentials',
+      'imageUrl': 'https://images.unsplash.com/photo-1585421514738-01798e348b17?auto=format&fit=crop&w=500&q=80',
+      'emoji': '🧼',
+      'productId': 'prod_lizol_cleaner',
     },
   ];
 
@@ -117,9 +151,10 @@ class _HomeScreenState extends State<HomeScreen> {
     _categories = MockCategoryRepository.getAllCategories();
     _allProducts = MockProductRepository.getAllProducts();
 
-    _bestsellers = _allProducts.where((p) => p.ratingCount >= 5000).toList();
-    _freshProduce = _allProducts.where((p) => p.categoryId == 'cat_produce').toList();
-    _munchies = _allProducts.where((p) => p.categoryId == 'cat_snacks' || p.categoryId == 'cat_instant').toList();
+    _bestsellers = _allProducts.where((p) => p.ratingCount >= 10000).toList();
+    _freshProduce = _allProducts.where((p) => p.categoryId == 'cat_vegetables').toList();
+    _dairyProducts = _allProducts.where((p) => p.categoryId == 'cat_dairy').toList();
+    _groceries = _allProducts.where((p) => p.categoryId == 'cat_groceries').toList();
     _lightningDeals = _allProducts.where((p) => p.discountPercent >= 15).toList();
   }
 
@@ -241,128 +276,453 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: TanizColors.canvasBackground,
-      body: Stack(
-        children: [
-          CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              // 1. Shaded Blurry Gradient Header (No leaves, realistic ambient blur, greeting, cart, search & circular categories)
-              SliverToBoxAdapter(
-                child: RepaintBoundary(
-                  child: TanizLeafyHeader(
-                    onProfileTap: () {
-                      Provider.of<NavigationState>(context, listen: false).setIndex(3);
-                    },
-                    onNotificationTap: () {},
-                    onLocationTap: () {
-                      AddressBottomSheet.show(context);
-                    },
-                    onSearchTap: _navigateToAllProducts,
-                    onCategoryTap: (categoryName) {
-                      final match = _categories.firstWhere(
-                        (c) => c.name.toLowerCase().contains(categoryName.toLowerCase()),
-                        orElse: () => _categories.first,
-                      );
-                      _navigateToCategory(match);
-                    },
+  void dispose() {
+    _searchDebounceTimer?.cancel();
+    _searchController.dispose();
+    _searchFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _activateSearch() {
+    if (!_isSearchActive) {
+      setState(() {
+        _isSearchActive = true;
+      });
+    }
+    _searchFocusNode.requestFocus();
+  }
+
+  void _closeSearch() {
+    _searchDebounceTimer?.cancel();
+    _searchFocusNode.unfocus();
+    setState(() {
+      _isSearchActive = false;
+      _searchQuery = '';
+      _searchResults = [];
+      _searchController.clear();
+    });
+  }
+
+  void _clearSearch() {
+    _searchDebounceTimer?.cancel();
+    _searchController.clear();
+    setState(() {
+      _searchQuery = '';
+      _searchResults = [];
+    });
+    _searchFocusNode.requestFocus();
+  }
+
+  void _onSearchChanged(String query) {
+    final clean = query.trim();
+    _searchDebounceTimer?.cancel();
+    final currentId = ++_searchRequestId;
+
+    if (clean.isEmpty) {
+      setState(() {
+        _searchQuery = '';
+        _searchResults = [];
+      });
+      return;
+    }
+
+    _searchDebounceTimer = Timer(const Duration(milliseconds: 200), () {
+      if (currentId != _searchRequestId) return;
+      if (!mounted) return;
+
+      final results = MockProductRepository.searchProducts(clean);
+      setState(() {
+        _searchQuery = clean;
+        _searchResults = results;
+      });
+    });
+  }
+
+  List<Widget> _buildInlineSearchResults() {
+    final cart = Provider.of<CartState>(context);
+    final count = _searchResults.length;
+
+    return [
+      // Quick search suggestions chips
+      SliverToBoxAdapter(
+        child: Container(
+          color: Colors.white,
+          padding: const EdgeInsets.fromLTRB(16, 6, 16, 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.trending_up_rounded, size: 16, color: TanizColors.primaryBlue),
+                  const SizedBox(width: 6),
+                  Text(
+                    'Popular Searches',
+                    style: TanizTypography.caption.copyWith(
+                      color: TanizColors.textSecondary,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 11.5,
+                    ),
                   ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                child: Row(
+                  children: _searchSuggestions.map((s) {
+                    final isCurrent = _searchQuery.toLowerCase() == s.toLowerCase();
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: TanizTappable(
+                        onTap: () {
+                          _searchController.text = s;
+                          _onSearchChanged(s);
+                        },
+                        borderRadius: BorderRadius.circular(20),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                          decoration: BoxDecoration(
+                            color: isCurrent ? TanizColors.primaryBlue : TanizColors.surfaceLow,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: isCurrent ? TanizColors.primaryBlue : TanizColors.borderSubtle,
+                            ),
+                          ),
+                          child: Text(
+                            s,
+                            style: TanizTypography.caption.copyWith(
+                              color: isCurrent ? Colors.white : TanizColors.textPrimary,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
                 ),
-              ),
-
-              // 2. Exactly 3 Full-Bleed Watermark-Free Product Banners (Auto-playing with 3 dots)
-              SliverToBoxAdapter(
-                child: FarmFreshHeroBanner(
-                  onShopNow: _navigateToAllProducts,
-                ),
-              ),
-
-              // 3. "Smart Combo Picks" Asymmetric Bento Layout (From Reference Image 1)
-              SliverToBoxAdapter(
-                child: _buildSmartComboPicksSection(),
-              ),
-
-              // 4. Category Filter Tabs & 2-Column Classy Showcase Grid (From Reference Image 2)
-              SliverToBoxAdapter(
-                child: _buildCategoryFilterShowcaseSection(),
-              ),
-
-              // 5. ⚡ Bestsellers in 10 Mins (Express)
-              SliverToBoxAdapter(
-                child: _buildProductSection(
-                  title: 'Bestsellers in 10m',
-                  badgeText: '⚡ Express',
-                  badgeBg: const Color(0xFFDCFCE7),
-                  badgeBorder: const Color(0xFF86EFAC),
-                  badgeColor: const Color(0xFF166534),
-                  products: _bestsellers,
-                ),
-              ),
-
-              // 6. 🌿 Fresh Fruits & Vegetables
-              SliverToBoxAdapter(
-                child: _buildProductSection(
-                  title: 'Fresh Fruits & Veggies',
-                  badgeText: '🥦 Farm Direct',
-                  badgeBg: const Color(0xFFECFDF5),
-                  badgeBorder: const Color(0xFFA7F3D0),
-                  badgeColor: const Color(0xFF047857),
-                  products: _freshProduce,
-                ),
-              ),
-
-              // 6. ⚡ Lightning Rush Deals (if any)
-              if (_lightningDeals.isNotEmpty)
-                SliverToBoxAdapter(
-                  child: _buildLightningRushSection(),
-                ),
-
-              // 7. 🍿 Munchies & Quick Bites
-              SliverToBoxAdapter(
-                child: _buildProductSection(
-                  title: 'Munchies & Quick Bites',
-                  badgeText: '🍿 10m Party',
-                  badgeBg: const Color(0xFFFFF7ED),
-                  badgeBorder: const Color(0xFFFED7AA),
-                  badgeColor: const Color(0xFFC2410C),
-                  products: _munchies,
-                ),
-              ),
-
-              // 8. Popular Brands Spotlight
-              SliverToBoxAdapter(
-                child: _buildBrandsSpotlight(),
-              ),
-
-              // 9. Quick-Commerce Assurance Footer
-              SliverToBoxAdapter(
-                child: _buildQuickCommerceFooter(),
-              ),
-
-              // Clearance for Floating Cart Bar
-              const SliverToBoxAdapter(
-                child: SizedBox(height: 120),
               ),
             ],
           ),
+        ),
+      ),
 
-          // 10. Glossy Liquid Glass Floating Cart Bar
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: FloatingCartBar(
-              onViewCart: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const CartCheckoutScreen()),
-                );
-              },
+      // Header result count bar
+      if (_searchQuery.isNotEmpty)
+        SliverToBoxAdapter(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            color: TanizColors.canvasBackground,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  count > 0
+                      ? 'Showing $count ${count == 1 ? 'result' : 'results'} for "$_searchQuery"'
+                      : 'No results for "$_searchQuery"',
+                  style: TanizTypography.bodySmall.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: TanizColors.textPrimary,
+                    fontSize: 12.5,
+                  ),
+                ),
+                TanizTappable(
+                  onTap: _closeSearch,
+                  child: Text(
+                    'Exit Search',
+                    style: TanizTypography.caption.copyWith(
+                      color: TanizColors.primaryBlue,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
+
+      // Empty State or Product Grid
+      if (_searchQuery.isNotEmpty && _searchResults.isEmpty)
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(32),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 72,
+                    height: 72,
+                    decoration: const BoxDecoration(
+                      color: TanizColors.surfaceLow,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.search_off_rounded,
+                      size: 34,
+                      color: TanizColors.textMuted,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'No products found',
+                    style: TanizTypography.titleMedium.copyWith(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 17,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    'We couldn\'t find any items matching "$_searchQuery".\nTry checking the spelling or searching another item.',
+                    textAlign: TextAlign.center,
+                    style: TanizTypography.caption.copyWith(
+                      color: TanizColors.textSecondary,
+                      fontSize: 12.5,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  TanizTappable(
+                    onTap: _clearSearch,
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: TanizColors.blueContainer,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: TanizColors.primaryBlue.withValues(alpha: 0.3)),
+                      ),
+                      child: Text(
+                        'Clear Search',
+                        style: TanizTypography.labelLarge.copyWith(
+                          color: TanizColors.primaryBlue,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        )
+      else if (_searchResults.isNotEmpty)
+        SliverPadding(
+          padding: const EdgeInsets.all(12),
+          sliver: SliverGrid(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              childAspectRatio: 0.65,
+            ),
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final product = _searchResults[index];
+                return ProductCard(
+                  key: ValueKey(product.id),
+                  product: product,
+                  quantity: cart.getQuantity(product.id),
+                  onTap: () => _navigateToProductDetail(product),
+                  onAdd: () => cart.addItem(product),
+                  onIncrement: () => cart.addItem(product),
+                  onDecrement: () => cart.removeItem(product),
+                );
+              },
+              childCount: _searchResults.length,
+            ),
+          ),
+        )
+      else
+        // Search is active but no query typed yet -> show popular items
+        SliverPadding(
+          padding: const EdgeInsets.all(12),
+          sliver: SliverGrid(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              childAspectRatio: 0.65,
+            ),
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final product = _allProducts[index];
+                return ProductCard(
+                  key: ValueKey(product.id),
+                  product: product,
+                  quantity: cart.getQuantity(product.id),
+                  onTap: () => _navigateToProductDetail(product),
+                  onAdd: () => cart.addItem(product),
+                  onIncrement: () => cart.addItem(product),
+                  onDecrement: () => cart.removeItem(product),
+                );
+              },
+              childCount: _allProducts.length.clamp(0, 8),
+            ),
+          ),
+        ),
+
+      const SliverToBoxAdapter(
+        child: SizedBox(height: 130),
+      ),
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
+
+    return PopScope(
+      canPop: !_isSearchActive,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if (_searchFocusNode.hasFocus) {
+          _searchFocusNode.unfocus();
+          return;
+        }
+        _closeSearch();
+      },
+      child: Scaffold(
+        backgroundColor: TanizColors.canvasBackground,
+        body: Stack(
+          children: [
+            CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                // 1. Shaded Blurry Gradient Header with live inline search
+                SliverToBoxAdapter(
+                  child: RepaintBoundary(
+                    child: TanizLeafyHeader(
+                      onProfileTap: () {
+                        Provider.of<NavigationState>(context, listen: false).setIndex(3);
+                      },
+                      onNotificationTap: () {},
+                      onLocationTap: () {
+                        AddressBottomSheet.show(context);
+                      },
+                      isSearchActive: _isSearchActive,
+                      searchController: _searchController,
+                      searchFocusNode: _searchFocusNode,
+                      onSearchTap: _activateSearch,
+                      onSearchChanged: _onSearchChanged,
+                      onSearchClear: _clearSearch,
+                      onSearchClose: _closeSearch,
+                      onCategoryTap: (categoryName) {
+                        final match = _categories.firstWhere(
+                          (c) => c.name.toLowerCase().contains(categoryName.toLowerCase()),
+                          orElse: () => _categories.first,
+                        );
+                        _navigateToCategory(match);
+                      },
+                    ),
+                  ),
+                ),
+
+                if (_isSearchActive)
+                  ..._buildInlineSearchResults()
+                else ...[
+                  // 2. Exactly 3 Full-Bleed Watermark-Free Product Banners (Auto-playing with 3 dots)
+                  SliverToBoxAdapter(
+                    child: FarmFreshHeroBanner(
+                      onShopNow: _navigateToAllProducts,
+                    ),
+                  ),
+
+                  // 3. "Smart Combo Picks" Asymmetric Bento Layout (From Reference Image 1)
+                  SliverToBoxAdapter(
+                    child: _buildSmartComboPicksSection(),
+                  ),
+
+                  // 4. Category Filter Tabs & 2-Column Classy Showcase Grid (From Reference Image 2)
+                  SliverToBoxAdapter(
+                    child: _buildCategoryFilterShowcaseSection(),
+                  ),
+
+                  // 5. ⚡ Bestsellers in 10 Mins (Express)
+                  SliverToBoxAdapter(
+                    child: _buildProductSection(
+                      title: 'Bestsellers in 10m',
+                      badgeText: '⚡ Express',
+                      badgeBg: const Color(0xFFDCFCE7),
+                      badgeBorder: const Color(0xFF86EFAC),
+                      badgeColor: const Color(0xFF166534),
+                      products: _bestsellers,
+                    ),
+                  ),
+
+                  // 6. 🥦 Fresh Vegetables
+                  SliverToBoxAdapter(
+                    child: _buildProductSection(
+                      title: 'Fresh Vegetables',
+                      badgeText: '🥦 Farm Direct',
+                      badgeBg: const Color(0xFFECFDF5),
+                      badgeBorder: const Color(0xFFA7F3D0),
+                      badgeColor: const Color(0xFF047857),
+                      products: _freshProduce,
+                    ),
+                  ),
+
+                  // 6. ⚡ Lightning Rush Deals (if any)
+                  if (_lightningDeals.isNotEmpty)
+                    SliverToBoxAdapter(
+                      child: _buildLightningRushSection(),
+                    ),
+
+                  // 7. 🥛 Pure Dairy & Eggs
+                  SliverToBoxAdapter(
+                    child: _buildProductSection(
+                      title: 'Pure Dairy & Eggs',
+                      badgeText: '🥛 Farm Fresh',
+                      badgeBg: const Color(0xFFEFF6FF),
+                      badgeBorder: const Color(0xFFBFDBFE),
+                      badgeColor: const Color(0xFF1D4ED8),
+                      products: _dairyProducts,
+                    ),
+                  ),
+
+                  // 8. 🌾 Kitchen Groceries & Staples
+                  SliverToBoxAdapter(
+                    child: _buildProductSection(
+                      title: 'Kitchen Groceries',
+                      badgeText: '🌾 Wholesale',
+                      badgeBg: const Color(0xFFFEF9C3),
+                      badgeBorder: const Color(0xFFFDE047),
+                      badgeColor: const Color(0xFF854D0E),
+                      products: _groceries,
+                    ),
+                  ),
+
+                  // 8. Popular Brands Spotlight
+                  SliverToBoxAdapter(
+                    child: _buildBrandsSpotlight(),
+                  ),
+
+                  // 9. Quick-Commerce Assurance Footer
+                  SliverToBoxAdapter(
+                    child: _buildQuickCommerceFooter(),
+                  ),
+
+                  // Clearance for Floating Cart Bar
+                  const SliverToBoxAdapter(
+                    child: SizedBox(height: 120),
+                  ),
+                ],
+              ],
+            ),
+
+            // 10. Glossy Liquid Glass Floating Cart Bar
+            if (!isKeyboardOpen)
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: FloatingCartBar(
+                  onViewCart: () => CartNavigation.openCart(context),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -1081,28 +1441,10 @@ class _HomeScreenState extends State<HomeScreen> {
   // 3. RESILIENT NETWORK IMAGE BUILDER (100% Guaranteed Load & Fallback)
   // ---------------------------------------------------------------------------
   Widget _buildResilientImage(String url, {String? fallbackEmoji, BoxFit fit = BoxFit.cover}) {
-    return CachedNetworkImage(
+    return TanizImage(
       imageUrl: url,
       fit: fit,
-      placeholder: (context, url) => Container(
-        color: const Color(0xFFF8FAFC),
-        child: const Center(
-          child: SizedBox(
-            width: 18,
-            height: 18,
-            child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF0C831F)),
-          ),
-        ),
-      ),
-      errorWidget: (context, url, error) => Container(
-        color: const Color(0xFFF1F5F9),
-        child: Center(
-          child: Text(
-            fallbackEmoji ?? '🛒',
-            style: const TextStyle(fontSize: 24),
-          ),
-        ),
-      ),
+      fallbackEmoji: fallbackEmoji ?? '🛒',
     );
   }
 
