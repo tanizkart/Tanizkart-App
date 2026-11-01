@@ -10,7 +10,7 @@ import '../../../state/wishlist_state.dart';
 import '../../../state/location_state.dart';
 import '../../../state/navigation_state.dart';
 import '../../../shared/widgets/address_bottom_sheet.dart';
-import '../../auth/screens/login_sheet.dart';
+import '../../auth/screens/login_screen.dart';
 import 'edit_profile_screen.dart';
 import 'wishlist_screen.dart';
 import 'payment_methods_screen.dart';
@@ -843,7 +843,10 @@ class ProfileScreen extends StatelessWidget {
             onPressed: () {
               Navigator.pop(ctx);
               authState.logout();
-              LoginSheet.show(context);
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (_) => const LoginScreen()),
+                (route) => false,
+              );
             },
             child: const Text('Log Out', style: TextStyle(color: TanizColors.errorRed, fontWeight: FontWeight.bold)),
           ),

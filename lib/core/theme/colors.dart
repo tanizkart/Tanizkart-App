@@ -26,6 +26,8 @@ class TanizColors {
   // Speed & SLA
   static const Color rapidGreen = Color(0xFF0C831F);
   static const Color rapidGreenDark = Color(0xFF0A6818);
+  static const Color primaryEmerald = Color(0xFF059669);
+  static const Color primaryEmeraldDark = Color(0xFF047857);
   static const Color greenContainer = Color(0xFFE8F5E9);
   static const Color greenBorder = Color(0xFFA5D6A7);
 

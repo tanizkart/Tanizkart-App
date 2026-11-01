@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/typography.dart';
-import '../../main_navigation_shell.dart';
+import '../../auth/screens/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -50,7 +50,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       if (mounted) {
         Navigator.of(context).pushReplacement(
           PageRouteBuilder(
-            pageBuilder: (_, animation, secondaryAnimation) => const MainNavigationShell(),
+            pageBuilder: (_, animation, secondaryAnimation) => const LoginScreen(),
             transitionsBuilder: (_, animation, secondaryAnimation, child) {
               return FadeTransition(opacity: animation, child: child);
             },
