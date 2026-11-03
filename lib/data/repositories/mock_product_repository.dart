@@ -1,4 +1,5 @@
 import '../models/product_model.dart';
+import 'excel_products_data.dart';
 
 class MockProductRepository {
   static final List<Product> _products = [
@@ -1197,17 +1198,28 @@ class MockProductRepository {
 
   static final Map<String, List<Product>> _categoryProductCache = {};
   static final Map<String, Product> _idProductCache = {};
+  static List<Product>? _cachedAllProducts;
+
+  static List<Product> get _allProductsList {
+    return _cachedAllProducts ??= [
+      ..._products,
+      ...ExcelProductsData.products,
+    ];
+  }
 
   static void _ensureCache() {
     if (_idProductCache.isEmpty) {
-      for (final p in _products) {
+      for (final p in _allProductsList) {
         _idProductCache[p.id] = p;
         _categoryProductCache.putIfAbsent(p.categoryId, () => []).add(p);
       }
     }
   }
 
-  static List<Product> getAllProducts() => List.unmodifiable(_products);
+  static List<Product> getAllProducts() {
+    _ensureCache();
+    return List.unmodifiable(_allProductsList);
+  }
 
   static Product? getProductById(String id) {
     _ensureCache();
@@ -1234,9 +1246,10 @@ class MockProductRepository {
   }
 
   static List<Product> searchProducts(String query) {
+    _ensureCache();
     final clean = query.trim().toLowerCase();
     if (clean.isEmpty) return [];
-    return _products.where((p) {
+    return _allProductsList.where((p) {
       return p.name.toLowerCase().contains(clean) ||
           p.brand.toLowerCase().contains(clean) ||
           p.subcategory.toLowerCase().contains(clean);
@@ -1244,7 +1257,8 @@ class MockProductRepository {
   }
 
   static List<Product> getBestsellers() {
-    return _products.where((p) => p.ratingCount >= 10000).toList();
+    _ensureCache();
+    return _allProductsList.where((p) => p.ratingCount >= 1000).toList();
   }
 
   static List<Product> sortProducts(List<Product> products, ProductSortOption sortOption) {

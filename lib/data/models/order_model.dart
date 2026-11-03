@@ -3,6 +3,8 @@ import '../../core/pricing/pricing_engine.dart';
 
 enum OrderStatus {
   placed,
+  inTransit,
+  shipped,
   accepted,
   packing,
   readyForDispatch,
@@ -10,6 +12,68 @@ enum OrderStatus {
   outForDelivery,
   delivered,
   cancelled,
+}
+
+extension OrderStatusX on OrderStatus {
+  String get displayTitle {
+    switch (this) {
+      case OrderStatus.placed:
+      case OrderStatus.inTransit:
+        return 'In Transit';
+      case OrderStatus.packing:
+      case OrderStatus.readyForDispatch:
+      case OrderStatus.shipped:
+        return 'Shipped';
+      case OrderStatus.accepted:
+      case OrderStatus.partnerAssigned:
+      case OrderStatus.outForDelivery:
+        return 'Out for Delivery';
+      case OrderStatus.delivered:
+        return 'Delivered';
+      case OrderStatus.cancelled:
+        return 'Cancelled';
+    }
+  }
+
+  int get stepIndex {
+    switch (this) {
+      case OrderStatus.placed:
+      case OrderStatus.inTransit:
+        return 0;
+      case OrderStatus.packing:
+      case OrderStatus.readyForDispatch:
+      case OrderStatus.shipped:
+        return 1;
+      case OrderStatus.accepted:
+      case OrderStatus.partnerAssigned:
+      case OrderStatus.outForDelivery:
+        return 2;
+      case OrderStatus.delivered:
+        return 3;
+      case OrderStatus.cancelled:
+        return -1;
+    }
+  }
+
+  String get stepDescription {
+    switch (this) {
+      case OrderStatus.placed:
+      case OrderStatus.inTransit:
+        return 'Order packed and dispatched from dark store';
+      case OrderStatus.packing:
+      case OrderStatus.readyForDispatch:
+      case OrderStatus.shipped:
+        return 'Processed and shipped through logistics hub';
+      case OrderStatus.accepted:
+      case OrderStatus.partnerAssigned:
+      case OrderStatus.outForDelivery:
+        return 'Delivery partner is en route to your address';
+      case OrderStatus.delivered:
+        return 'Package safely delivered at doorstep';
+      case OrderStatus.cancelled:
+        return 'Order was cancelled';
+    }
+  }
 }
 
 enum PaymentStatus {

@@ -8,7 +8,7 @@ import '../../../shared/widgets/taniz_image.dart';
 import '../../../state/auth_state.dart';
 import '../../auth/screens/login_screen.dart';
 
-enum DeliveryStatusFilter { all, pending, accepted, delivered }
+enum DeliveryStatusFilter { all, inTransit, shipped, outForDelivery, delivered }
 
 class DeliveryOrdersScreen extends StatefulWidget {
   const DeliveryOrdersScreen({super.key});
@@ -26,12 +26,16 @@ class _DeliveryOrdersScreenState extends State<DeliveryOrdersScreen> {
   Widget build(BuildContext context) {
     final allOrders = _orderRepo.getAllOrders();
 
-    final pendingOrders = allOrders.where((o) =>
+    final inTransitOrders = allOrders.where((o) =>
         o.status == OrderStatus.placed ||
-        o.status == OrderStatus.packing ||
-        o.status == OrderStatus.readyForDispatch).toList();
+        o.status == OrderStatus.inTransit).toList();
 
-    final acceptedOrders = allOrders.where((o) =>
+    final shippedOrders = allOrders.where((o) =>
+        o.status == OrderStatus.packing ||
+        o.status == OrderStatus.readyForDispatch ||
+        o.status == OrderStatus.shipped).toList();
+
+    final outForDeliveryOrders = allOrders.where((o) =>
         o.status == OrderStatus.accepted ||
         o.status == OrderStatus.partnerAssigned ||
         o.status == OrderStatus.outForDelivery).toList();
@@ -43,11 +47,14 @@ class _DeliveryOrdersScreenState extends State<DeliveryOrdersScreen> {
       case DeliveryStatusFilter.all:
         filteredOrders = allOrders;
         break;
-      case DeliveryStatusFilter.pending:
-        filteredOrders = pendingOrders;
+      case DeliveryStatusFilter.inTransit:
+        filteredOrders = inTransitOrders;
         break;
-      case DeliveryStatusFilter.accepted:
-        filteredOrders = acceptedOrders;
+      case DeliveryStatusFilter.shipped:
+        filteredOrders = shippedOrders;
+        break;
+      case DeliveryStatusFilter.outForDelivery:
+        filteredOrders = outForDeliveryOrders;
         break;
       case DeliveryStatusFilter.delivered:
         filteredOrders = deliveredOrders;
@@ -168,15 +175,15 @@ class _DeliveryOrdersScreenState extends State<DeliveryOrdersScreen> {
                   Row(
                     children: [
                       _buildMetricTile(
-                        label: 'Pending',
-                        count: '${pendingOrders.length}',
+                        label: 'In Transit',
+                        count: '${inTransitOrders.length}',
                         color: const Color(0xFFF59E0B),
-                        icon: Icons.hourglass_top_rounded,
+                        icon: Icons.local_shipping_outlined,
                       ),
                       const SizedBox(width: 8),
                       _buildMetricTile(
-                        label: 'Accepted',
-                        count: '${acceptedOrders.length}',
+                        label: 'Out for Deliv',
+                        count: '${outForDeliveryOrders.length}',
                         color: const Color(0xFF38BDF8),
                         icon: Icons.two_wheeler_rounded,
                       ),
@@ -211,24 +218,31 @@ class _DeliveryOrdersScreenState extends State<DeliveryOrdersScreen> {
                     ),
                     const SizedBox(width: 8),
                     _buildFilterChip(
-                      label: 'Pending',
-                      count: pendingOrders.length,
-                      filter: DeliveryStatusFilter.pending,
-                      icon: Icons.hourglass_empty_rounded,
+                      label: 'In Transit',
+                      count: inTransitOrders.length,
+                      filter: DeliveryStatusFilter.inTransit,
+                      icon: Icons.local_shipping_outlined,
                     ),
                     const SizedBox(width: 8),
                     _buildFilterChip(
-                      label: 'Accepted',
-                      count: acceptedOrders.length,
-                      filter: DeliveryStatusFilter.accepted,
-                      icon: Icons.delivery_dining_rounded,
+                      label: 'Shipped',
+                      count: shippedOrders.length,
+                      filter: DeliveryStatusFilter.shipped,
+                      icon: Icons.inventory_2_outlined,
+                    ),
+                    const SizedBox(width: 8),
+                    _buildFilterChip(
+                      label: 'Out for Deliv',
+                      count: outForDeliveryOrders.length,
+                      filter: DeliveryStatusFilter.outForDelivery,
+                      icon: Icons.two_wheeler_rounded,
                     ),
                     const SizedBox(width: 8),
                     _buildFilterChip(
                       label: 'Delivered',
                       count: deliveredOrders.length,
                       filter: DeliveryStatusFilter.delivered,
-                      icon: Icons.done_all_rounded,
+                      icon: Icons.check_circle_outline_rounded,
                     ),
                   ],
                 ),
@@ -453,10 +467,12 @@ class _DeliveryOrdersScreenState extends State<DeliveryOrdersScreen> {
   }
 
   Widget _buildDeliveryOrderCard(Order order) {
-    final isPending = order.status == OrderStatus.placed ||
-        order.status == OrderStatus.packing ||
-        order.status == OrderStatus.readyForDispatch;
-    final isAccepted = order.status == OrderStatus.accepted ||
+    final isInTransit = order.status == OrderStatus.placed ||
+        order.status == OrderStatus.inTransit;
+    final isShipped = order.status == OrderStatus.packing ||
+        order.status == OrderStatus.readyForDispatch ||
+        order.status == OrderStatus.shipped;
+    final isOutForDelivery = order.status == OrderStatus.accepted ||
         order.status == OrderStatus.partnerAssigned ||
         order.status == OrderStatus.outForDelivery;
     final isDelivered = order.status == OrderStatus.delivered;
@@ -471,16 +487,21 @@ class _DeliveryOrdersScreenState extends State<DeliveryOrdersScreen> {
       badgeBg = const Color(0xFFECFDF5);
       badgeText = 'Delivered';
       badgeIcon = Icons.check_circle_rounded;
-    } else if (isAccepted) {
+    } else if (isOutForDelivery) {
+      badgeColor = const Color(0xFF1D4ED8);
+      badgeBg = const Color(0xFFEFF6FF);
+      badgeText = 'Out for Delivery';
+      badgeIcon = Icons.two_wheeler_rounded;
+    } else if (isShipped) {
       badgeColor = const Color(0xFF0284C7);
       badgeBg = const Color(0xFFF0F9FF);
-      badgeText = 'Accepted (On Way)';
-      badgeIcon = Icons.two_wheeler_rounded;
+      badgeText = 'Shipped';
+      badgeIcon = Icons.inventory_2_outlined;
     } else {
       badgeColor = const Color(0xFFD97706);
-      badgeBg = const Color(0xFFFFFBEB);
-      badgeText = 'Pending (To Pack/Assign)';
-      badgeIcon = Icons.hourglass_bottom_rounded;
+      badgeBg = const Color(0xFFFEF3C7);
+      badgeText = 'In Transit';
+      badgeIcon = Icons.local_shipping_outlined;
     }
 
     return Container(
@@ -489,10 +510,10 @@ class _DeliveryOrdersScreenState extends State<DeliveryOrdersScreen> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: isAccepted
+          color: isOutForDelivery
               ? const Color(0xFF38BDF8)
               : const Color(0xFFE2E8F0),
-          width: isAccepted ? 1.5 : 1,
+          width: isOutForDelivery ? 1.5 : 1,
         ),
         boxShadow: [
           BoxShadow(
@@ -754,39 +775,55 @@ class _DeliveryOrdersScreenState extends State<DeliveryOrdersScreen> {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    // Option 1: Pending
+                    // Option 1: In Transit
                     Expanded(
                       child: _buildStatusToggleButton(
-                        label: 'Pending',
-                        icon: Icons.hourglass_empty_rounded,
-                        isActive: isPending,
+                        label: 'In Transit',
+                        icon: Icons.local_shipping_outlined,
+                        isActive: isInTransit,
                         activeColor: const Color(0xFFD97706),
                         activeBg: const Color(0xFFFEF3C7),
                         onTap: () {
-                          _orderRepo.setOrderStatus(order.id, OrderStatus.placed);
+                          _orderRepo.setOrderStatus(order.id, OrderStatus.inTransit);
                           setState(() {});
-                          _showToast(context, '${order.id} marked as Pending ⏳');
+                          _showToast(context, '${order.id} marked as In Transit 📦');
                         },
                       ),
                     ),
-                    const SizedBox(width: 6),
-                    // Option 2: Accepted
+                    const SizedBox(width: 4),
+                    // Option 2: Shipped
                     Expanded(
                       child: _buildStatusToggleButton(
-                        label: 'Accepted',
-                        icon: Icons.two_wheeler_rounded,
-                        isActive: isAccepted,
+                        label: 'Shipped',
+                        icon: Icons.inventory_2_outlined,
+                        isActive: isShipped,
                         activeColor: const Color(0xFF0284C7),
                         activeBg: const Color(0xFFE0F2FE),
                         onTap: () {
-                          _orderRepo.setOrderStatus(order.id, OrderStatus.outForDelivery);
+                          _orderRepo.setOrderStatus(order.id, OrderStatus.shipped);
                           setState(() {});
-                          _showToast(context, '${order.id} marked as Accepted 🛵');
+                          _showToast(context, '${order.id} marked as Shipped 🏭');
                         },
                       ),
                     ),
-                    const SizedBox(width: 6),
-                    // Option 3: Delivered
+                    const SizedBox(width: 4),
+                    // Option 3: Out for Delivery
+                    Expanded(
+                      child: _buildStatusToggleButton(
+                        label: 'Out for Deliv',
+                        icon: Icons.two_wheeler_rounded,
+                        isActive: isOutForDelivery,
+                        activeColor: const Color(0xFF1D4ED8),
+                        activeBg: const Color(0xFFDBEAFE),
+                        onTap: () {
+                          _orderRepo.setOrderStatus(order.id, OrderStatus.outForDelivery);
+                          setState(() {});
+                          _showToast(context, '${order.id} marked as Out for Delivery 🛵');
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    // Option 4: Delivered
                     Expanded(
                       child: _buildStatusToggleButton(
                         label: 'Delivered',
@@ -860,10 +897,12 @@ class _DeliveryOrdersScreenState extends State<DeliveryOrdersScreen> {
     switch (filter) {
       case DeliveryStatusFilter.all:
         return 'All Active Orders';
-      case DeliveryStatusFilter.pending:
-        return 'Pending Orders';
-      case DeliveryStatusFilter.accepted:
-        return 'Accepted Orders';
+      case DeliveryStatusFilter.inTransit:
+        return 'In Transit Orders';
+      case DeliveryStatusFilter.shipped:
+        return 'Shipped Orders';
+      case DeliveryStatusFilter.outForDelivery:
+        return 'Out for Delivery';
       case DeliveryStatusFilter.delivered:
         return 'Delivered Orders';
     }

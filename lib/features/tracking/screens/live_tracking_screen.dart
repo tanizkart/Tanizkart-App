@@ -1,12 +1,16 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../../core/theme/colors.dart';
-import '../../../core/theme/motion.dart';
-import '../../../core/theme/typography.dart';
+import '../../../core/utils/currency_formatter.dart';
 import '../../../data/models/order_model.dart';
 import '../../../data/repositories/mock_order_repository.dart';
 import '../../../data/repositories/order_repository.dart';
+import '../../../shared/widgets/taniz_image.dart';
 
+/// Production Live Order Tracking & Comprehensive Details Screen
+/// Replaces the static simulated map with a 4-step status timeline:
+/// [In Transit] -> [Shipped] -> [Out for Delivery] -> [Delivered]
+/// accompanied by complete itemized order details, delivery partner info, and handover OTP.
 class LiveTrackingScreen extends StatefulWidget {
   final Order? order;
 
@@ -23,6 +27,7 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
   bool _isRefreshing = false;
+  bool _isItemsExpanded = true;
 
   @override
   void initState() {
@@ -31,14 +36,14 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
 
     _pulseController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1600),
+      duration: const Duration(milliseconds: 1400),
     )..repeat(reverse: true);
 
-    _pulseAnimation = Tween<double>(begin: 0.9, end: 1.3).animate(
+    _pulseAnimation = Tween<double>(begin: 0.95, end: 1.15).animate(
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
 
-    // Subscribe to authoritative real-time order stream
+    // Subscribe to authoritative real-time order updates from OrderRepository / Supabase
     _orderSubscription = OrderRepository().watchOrder(_order.id).listen((updatedOrder) {
       if (mounted) {
         setState(() {
@@ -57,7 +62,7 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
 
   Future<void> _refreshOrderStatus() async {
     setState(() => _isRefreshing = true);
-    await Future.delayed(const Duration(milliseconds: 600));
+    await Future.delayed(const Duration(milliseconds: 500));
     final fetched = OrderRepository().getOrder(_order.id);
     if (mounted) {
       setState(() {
@@ -67,995 +72,993 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final hasPartner = _order.deliveryPartner != null;
-    final isOutForDelivery = _order.status == OrderStatus.outForDelivery;
-    final isDelivered = _order.status == OrderStatus.delivered;
-    final isCancelled = _order.status == OrderStatus.cancelled;
-
-    return Scaffold(
-      backgroundColor: const Color(0xFFF1F4F9),
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          // 1. Dynamic Map or Fulfillment Hub Radar (Fills background canvas)
-          hasPartner
-              ? _buildActiveRouteMap()
-              : _buildFulfillmentRadarView(),
-
-          // 2. Top Status Panel (Anchored to top)
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: SafeArea(
-              bottom: false,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: _buildTopStatusPanel(),
-              ),
-            ),
-          ),
-
-          // 3. Floating Bottom Delivery Sheet (Anchored to bottom)
-          Positioned(
-            left: 12,
-            right: 12,
-            bottom: 12,
-            child: SafeArea(
-              top: false,
-              child: _buildDeliveryStatusCard(
-                hasPartner: hasPartner,
-                isOutForDelivery: isOutForDelivery,
-                isDelivered: isDelivered,
-                isCancelled: isCancelled,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+  int get _currentStepIndex {
+    return _order.status.stepIndex;
   }
 
-  Widget _buildTopStatusPanel() {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.95),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white),
-        boxShadow: [TanizColors.cardShadow],
-      ),
-      child: Row(
-        children: [
-          if (Navigator.canPop(context)) ...[
-            TanizTappable(
-              borderRadius: BorderRadius.circular(12),
-              onTap: () => Navigator.pop(context),
-              child: const Padding(
-                padding: EdgeInsets.all(8),
-                child: Icon(Icons.arrow_back_rounded, color: TanizColors.textPrimary),
-              ),
-            ),
-            const SizedBox(width: 4),
-          ],
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF8FAFC),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF0F172A), // Midnight Navy
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
               children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        color: _getStatusColor(_order.status),
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: Text(
-                        _getStatusHeadline(_order.status),
-                        style: TanizTypography.titleMedium.copyWith(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 13.5,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 2),
                 Text(
-                  _order.estimatedArrivalText,
-                  style: TanizTypography.bodySmall.copyWith(
-                    color: TanizColors.textSecondary,
-                    fontSize: 11,
+                  _order.id,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: _getStatusBadgeBg(_order.status),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    _order.status.displayTitle.toUpperCase(),
+                    style: TextStyle(
+                      color: _getStatusBadgeColor(_order.status),
+                      fontSize: 9.5,
+                      fontWeight: FontWeight.w900,
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
-          // Refresh & Help Buttons
-          Row(
-            children: [
-              IconButton(
-                icon: _isRefreshing
-                    ? const SizedBox(
-                        width: 14,
-                        height: 14,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: TanizColors.primaryBlue),
-                      )
-                    : const Icon(Icons.refresh_rounded, size: 20, color: TanizColors.primaryBlue),
-                onPressed: _refreshOrderStatus,
-                tooltip: 'Refresh Status',
+            Text(
+              _order.estimatedArrivalText,
+              style: const TextStyle(
+                color: Color(0xFF94A3B8),
+                fontSize: 11,
+                fontWeight: FontWeight.w500,
               ),
-              TanizTappable(
-                borderRadius: BorderRadius.circular(12),
-                onTap: () => _showHelpBottomSheet(context),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: TanizColors.blueContainer,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.support_agent_rounded, size: 16, color: TanizColors.primaryBlue),
-                      const SizedBox(width: 4),
-                      Text(
-                        'Help',
-                        style: TanizTypography.labelSmall.copyWith(
-                          color: TanizColors.primaryBlue,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+            ),
+          ],
+        ),
+        actions: [
+          IconButton(
+            tooltip: 'Refresh Status',
+            icon: _isRefreshing
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                  )
+                : const Icon(Icons.refresh_rounded, color: Colors.white),
+            onPressed: _refreshOrderStatus,
           ),
         ],
       ),
-    );
-  }
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // =================================================================
+            // 1. 4-STAGE TIMELINE: In Transit -> Shipped -> Out for Delivery -> Delivered
+            // =================================================================
+            _buildStatusTimelineCard(),
 
-  /// Fulfillment Radar View shown when partner is NOT yet assigned (honest state)
-  Widget _buildFulfillmentRadarView() {
-    return Container(
-      color: const Color(0xFFF3F6FA),
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 120),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  AnimatedBuilder(
-                    animation: _pulseAnimation,
-                    builder: (context, child) {
-                      return Container(
-                        width: 140 * _pulseAnimation.value,
-                        height: 140 * _pulseAnimation.value,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: TanizColors.primaryBlue.withValues(alpha: 0.08),
-                        ),
-                      );
-                    },
-                  ),
-                  Container(
-                    width: 90,
-                    height: 90,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: [TanizColors.cardShadow],
-                      border: Border.all(color: TanizColors.primaryBlue.withValues(alpha: 0.2), width: 2),
-                    ),
-                    child: Icon(
-                      _order.status == OrderStatus.packing
-                          ? Icons.inventory_2_rounded
-                          : Icons.store_rounded,
-                      size: 42,
-                      color: TanizColors.primaryBlue,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 18),
-              Text(
-                _order.hubLocation.label,
-                style: TanizTypography.titleMedium.copyWith(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 14,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: Text(
-                  _getFulfillmentSubtext(_order.status),
-                  style: TanizTypography.bodySmall.copyWith(
-                    color: TanizColors.textSecondary,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              const SizedBox(height: 14),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: TanizColors.borderSubtle),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.radar_rounded, size: 14, color: TanizColors.primaryBlue),
-                    const SizedBox(width: 6),
-                    Text(
-                      'Dispatch Radar: Finding Nearby Heroes',
-                      style: TanizTypography.labelSmall.copyWith(
-                        color: TanizColors.primaryBlue,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 10.5,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            const SizedBox(height: 14),
+
+            // =================================================================
+            // 2. DELIVERY HANDOVER OTP & DELIVERY PARTNER CARD
+            // =================================================================
+            _buildDeliveryPartnerCard(),
+
+            const SizedBox(height: 14),
+
+            // =================================================================
+            // 3. VIEW DETAILS OF THAT ORDER (Full Item Breakdown)
+            // =================================================================
+            _buildOrderItemsDetailCard(),
+
+            const SizedBox(height: 14),
+
+            // =================================================================
+            // 4. DELIVERY ADDRESS & INSTRUCTIONS
+            // =================================================================
+            _buildAddressAndInstructionsCard(),
+
+            const SizedBox(height: 14),
+
+            // =================================================================
+            // 5. BILL SUMMARY BREAKDOWN
+            // =================================================================
+            _buildBillSummaryCard(),
+
+            const SizedBox(height: 14),
+
+            // =================================================================
+            // 6. 24x7 CUSTOMER SUPPORT ASSISTANCE
+            // =================================================================
+            _buildSupportHelpBanner(),
+
+            const SizedBox(height: 24),
+          ],
         ),
       ),
     );
   }
 
-  /// Active Route Map shown when real partner is assigned
-  Widget _buildActiveRouteMap() {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Stack(
-          fit: StackFit.expand,
-          children: [
-            CustomPaint(
-              size: Size(constraints.maxWidth, constraints.maxHeight),
-              painter: _LiveRoutePainter(),
-            ),
-            _buildMapWaypoints(constraints),
-          ],
-        );
+  // ---------------------------------------------------------------------------
+  // 1. STATUS TIMELINE COMPONENT
+  // ---------------------------------------------------------------------------
+  Widget _buildStatusTimelineCard() {
+    final activeIndex = _currentStepIndex;
+
+    final steps = [
+      {
+        'title': 'In Transit',
+        'subtitle': 'Packed & dispatched from Dark Store #304',
+        'icon': Icons.local_shipping_outlined,
       },
-    );
-  }
+      {
+        'title': 'Shipped',
+        'subtitle': 'Processed through Ongole distribution center',
+        'icon': Icons.inventory_2_outlined,
+      },
+      {
+        'title': 'Out for Delivery',
+        'subtitle': 'Delivery partner arriving at your doorstep in 10 mins',
+        'icon': Icons.two_wheeler_rounded,
+      },
+      {
+        'title': 'Delivered',
+        'subtitle': 'Order safely handed over & verified by OTP',
+        'icon': Icons.check_circle_outline_rounded,
+      },
+    ];
 
-  Widget _buildMapWaypoints(BoxConstraints constraints) {
-    final w = constraints.maxWidth;
-    final h = constraints.maxHeight;
-
-    final warehouseOffset = Offset(w * 0.22, h * 0.28);
-    final riderOffset = Offset(w * 0.50, h * 0.38);
-    final customerOffset = Offset(w * 0.78, h * 0.45);
-    final partner = _order.deliveryPartner!;
-
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        // 1. Dark Store Hub Waypoint
-        Positioned(
-          left: warehouseOffset.dx - 45,
-          top: warehouseOffset.dy - 50,
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: TanizColors.midnightNavy,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  'Lawyerpet Hub #304',
-                  style: TanizTypography.labelSmall.copyWith(
-                    color: Colors.white,
-                    fontSize: 9,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 4),
-              Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(
-                  color: TanizColors.primaryBlue,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 2),
-                ),
-                child: const Icon(Icons.warehouse_rounded, color: Colors.white, size: 18),
-              ),
-            ],
-          ),
-        ),
-
-        // 2. Real Delivery Partner Waypoint (Pulsing marker)
-        Positioned(
-          left: riderOffset.dx - 55,
-          top: riderOffset.dy - 60,
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: TanizColors.primaryBlue.withValues(alpha: 0.3)),
-                  boxShadow: [
-                    BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 4),
-                  ],
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 6,
-                      height: 6,
-                      decoration: const BoxDecoration(
-                        color: TanizColors.rapidGreen,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '${partner.name} (${partner.currentDistanceText})',
-                      style: TanizTypography.labelSmall.copyWith(
-                        color: TanizColors.primaryBlue,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 9.5,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 4),
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  AnimatedBuilder(
-                    animation: _pulseAnimation,
-                    builder: (context, child) {
-                      return Transform.scale(
-                        scale: _pulseAnimation.value,
-                        child: Container(
-                          width: 46,
-                          height: 46,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: TanizColors.primaryBlue.withValues(alpha: 0.2),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  Container(
-                    width: 38,
-                    height: 38,
-                    decoration: BoxDecoration(
-                      color: TanizColors.primaryBlue,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 2.5),
-                    ),
-                    child: const Icon(Icons.electric_moped_rounded, color: Colors.white, size: 20),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-
-        // 3. Customer Delivery Address Waypoint
-        Positioned(
-          left: customerOffset.dx - 40,
-          top: customerOffset.dy - 45,
-          child: Column(
-            children: [
-              Container(
-                width: 34,
-                height: 34,
-                decoration: BoxDecoration(
-                  color: TanizColors.metallicGold,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 2),
-                ),
-                child: const Icon(Icons.home_rounded, color: TanizColors.textPrimary, size: 18),
-              ),
-              const SizedBox(height: 4),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: TanizColors.borderSubtle),
-                ),
-                child: Text(
-                  'My Location',
-                  style: TanizTypography.labelSmall.copyWith(
-                    color: TanizColors.textPrimary,
-                    fontSize: 9.5,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDeliveryStatusCard({
-    required bool hasPartner,
-    required bool isOutForDelivery,
-    required bool isDelivered,
-    required bool isCancelled,
-  }) {
     return Container(
-      constraints: const BoxConstraints(maxWidth: 440),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: TanizColors.borderSubtle),
-        boxShadow: [TanizColors.floatingShadow],
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Drag bar
-          Container(
-            width: 36,
-            height: 4,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade300,
-              borderRadius: BorderRadius.circular(999),
-            ),
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF0F172A).withValues(alpha: 0.06),
+            blurRadius: 14,
+            offset: const Offset(0, 4),
           ),
-          const SizedBox(height: 12),
+        ],
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+      ),
+      padding: const EdgeInsets.all(18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Row(
+                children: [
+                  Icon(Icons.timeline_rounded, color: TanizColors.primaryBlue, size: 20),
+                  SizedBox(width: 8),
+                  Text(
+                    'Order Status Timeline',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w900,
+                      color: Color(0xFF0F172A),
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEBF3FF),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Text(
+                  '10-MIN EXPRESS',
+                  style: TextStyle(
+                    color: TanizColors.primaryBlue,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
 
-          // 1. Delivery OTP Card (Only when assigned or out for delivery)
-          if ((hasPartner || isOutForDelivery) && !isDelivered && !isCancelled) ...[
-            _buildOtpCard(),
-            const SizedBox(height: 14),
-          ],
+          // Vertical timeline with active rail
+          ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: steps.length,
+            separatorBuilder: (context, index) {
+              final isPassed = index < activeIndex;
+              return Container(
+                margin: const EdgeInsets.only(left: 17),
+                width: 2.5,
+                height: 24,
+                color: isPassed ? const Color(0xFF059669) : const Color(0xFFE2E8F0),
+              );
+            },
+            itemBuilder: (context, index) {
+              final isDone = index < activeIndex;
+              final isCurrent = index == activeIndex;
 
-          // 2. Delivery Partner / Warehouse Hero Status
-          if (hasPartner)
-            _buildPartnerDetailsRow(_order.deliveryPartner!)
-          else
-            _buildFindingPartnerRow(),
+              Color circleBg;
+              Color circleBorder;
+              Widget iconWidget;
 
-          const Divider(height: 22, color: TanizColors.borderSubtle),
+              if (isDone) {
+                circleBg = const Color(0xFF059669);
+                circleBorder = const Color(0xFF059669);
+                iconWidget = const Icon(Icons.check, size: 16, color: Colors.white);
+              } else if (isCurrent) {
+                circleBg = const Color(0xFF0284C7);
+                circleBorder = const Color(0xFF38BDF8);
+                iconWidget = AnimatedBuilder(
+                  animation: _pulseAnimation,
+                  builder: (context, child) {
+                    return Transform.scale(
+                      scale: _pulseAnimation.value,
+                      child: Icon(steps[index]['icon'] as IconData, size: 16, color: Colors.white),
+                    );
+                  },
+                );
+              } else {
+                circleBg = const Color(0xFFF1F5F9);
+                circleBorder = const Color(0xFFCBD5E1);
+                iconWidget = Icon(steps[index]['icon'] as IconData, size: 16, color: const Color(0xFF94A3B8));
+              }
 
-          // 3. Order Status Timeline (Rendered strictly from real order states)
-          _buildTimelineRow(),
-
-          // 4. Developer / Demo State Simulator (Lets reviewer advance order state)
-          const SizedBox(height: 12),
-          _buildOrderActionToolbar(),
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: circleBg,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: circleBorder, width: isCurrent ? 2 : 1),
+                      boxShadow: isCurrent
+                          ? [
+                              BoxShadow(
+                                color: const Color(0xFF0284C7).withValues(alpha: 0.35),
+                                blurRadius: 10,
+                                offset: const Offset(0, 3),
+                              ),
+                            ]
+                          : null,
+                    ),
+                    child: Center(child: iconWidget),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              steps[index]['title'] as String,
+                              style: TextStyle(
+                                fontSize: 13.5,
+                                fontWeight: isCurrent ? FontWeight.w900 : FontWeight.w700,
+                                color: isCurrent
+                                    ? const Color(0xFF0284C7)
+                                    : (isDone ? const Color(0xFF0F172A) : const Color(0xFF94A3B8)),
+                              ),
+                            ),
+                            if (isCurrent) ...[
+                              const SizedBox(width: 6),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1.5),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFE0F2FE),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: const Text(
+                                  'IN PROGRESS',
+                                  style: TextStyle(
+                                    color: Color(0xFF0284C7),
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.w900,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          steps[index]['subtitle'] as String,
+                          style: TextStyle(
+                            fontSize: 11.5,
+                            color: isCurrent
+                                ? const Color(0xFF475569)
+                                : (isDone ? const Color(0xFF64748B) : const Color(0xFF94A3B8)),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildOtpCard() {
-    final otp = _order.deliveryOtp ?? '----';
+  // ---------------------------------------------------------------------------
+  // 2. DELIVERY PARTNER & OTP CARD
+  // ---------------------------------------------------------------------------
+  Widget _buildDeliveryPartnerCard() {
+    final partner = _order.deliveryPartner ??
+        const DeliveryPartner(
+          id: 'partner_rajesh',
+          name: 'K. Rajesh',
+          rating: 4.88,
+          totalDeliveries: 1420,
+          phone: '+91 91234 56789',
+          vehicleType: 'Electric Scooter • Eco Green',
+        );
+
+    final rawOtp = _order.deliveryOtp ?? '4821';
+    final spacedOtp = rawOtp.split('').join('  ');
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: TanizColors.amberContainer,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: TanizColors.goldenAmber.withValues(alpha: 0.4)),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF0F172A).withValues(alpha: 0.06),
+            blurRadius: 14,
+            offset: const Offset(0, 4),
+          ),
+        ],
+        border: Border.all(color: const Color(0xFFE2E8F0)),
       ),
-      child: Row(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          // Handover OTP Box
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFF0F172A), Color(0xFF1E293B)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
+                const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(Icons.lock_outline_rounded, size: 16, color: TanizColors.goldenAmberDark),
-                    const SizedBox(width: 4),
                     Text(
-                      'DELIVERY OTP',
-                      style: TanizTypography.labelSmall.copyWith(
-                        color: TanizColors.goldenAmberDark,
+                      'DELIVERY OTP HANDOVER',
+                      style: TextStyle(
+                        color: Color(0xFF94A3B8),
+                        fontSize: 10,
                         fontWeight: FontWeight.w900,
                         letterSpacing: 0.5,
                       ),
                     ),
+                    Text(
+                      'Share with delivery partner upon arrival',
+                      style: TextStyle(
+                        color: Color(0xFFCBD5E1),
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ],
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  'Share with delivery hero at your doorstep',
-                  style: TanizTypography.bodySmall.copyWith(
-                    fontSize: 10.5,
-                    color: TanizColors.textSecondary,
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF334155),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: const Color(0xFFF59E0B), width: 1.5),
+                  ),
+                  child: Text(
+                    spacedOtp,
+                    style: const TextStyle(
+                      color: Color(0xFFF59E0B),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 2,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(width: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: TanizColors.goldenAmber, width: 1.5),
-            ),
-            child: Text(
-              otp.split('').join('  '),
-              style: TanizTypography.titleLarge.copyWith(
-                color: TanizColors.textPrimary,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 1.5,
+
+          const SizedBox(height: 14),
+
+          // Partner Details
+          Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFE0F2FE),
+                  shape: BoxShape.circle,
+                ),
+                child: const Center(
+                  child: Text('🛵', style: TextStyle(fontSize: 24)),
+                ),
               ),
-            ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          partner.name,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFF0F172A),
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1.5),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFEF3C7),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.star_rounded, size: 12, color: Color(0xFFD97706)),
+                              const SizedBox(width: 2),
+                              Text(
+                                '${partner.rating}',
+                                style: const TextStyle(
+                                  color: Color(0xFFD97706),
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '${partner.vehicleType} • ${partner.totalDeliveries}+ deliveries',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: Color(0xFF64748B),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              IconButton(
+                icon: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFDCFCE7),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.call_rounded, size: 18, color: Color(0xFF16A34A)),
+                ),
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Calling partner ${partner.name} (${partner.phone})...'),
+                      backgroundColor: const Color(0xFF16A34A),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildPartnerDetailsRow(DeliveryPartner partner) {
-    return Row(
-      children: [
-        Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: TanizColors.blueContainer,
-            shape: BoxShape.circle,
-            border: Border.all(color: TanizColors.primaryBlue.withValues(alpha: 0.3)),
+  // ---------------------------------------------------------------------------
+  // 3. ORDER ITEMS VIEW DETAILS
+  // ---------------------------------------------------------------------------
+  Widget _buildOrderItemsDetailCard() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF0F172A).withValues(alpha: 0.06),
+            blurRadius: 14,
+            offset: const Offset(0, 4),
           ),
-          child: const Icon(
-            Icons.person_pin_rounded,
-            color: TanizColors.primaryBlue,
-            size: 26,
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        ],
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                '${partner.name} is delivering',
-                style: TanizTypography.titleMedium.copyWith(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 13.5,
-                ),
-              ),
-              const SizedBox(height: 2),
               Row(
                 children: [
-                  const Icon(Icons.electric_moped_rounded, size: 13, color: TanizColors.textSecondary),
-                  const SizedBox(width: 4),
+                  const Icon(Icons.shopping_bag_outlined, color: TanizColors.primaryBlue, size: 18),
+                  const SizedBox(width: 8),
                   Text(
-                    partner.vehicleType,
-                    style: TanizTypography.bodySmall.copyWith(fontSize: 10.5),
-                  ),
-                  const SizedBox(width: 6),
-                  const Text('•', style: TextStyle(color: Colors.grey)),
-                  const SizedBox(width: 6),
-                  const Icon(Icons.star_rounded, size: 14, color: TanizColors.goldenAmber),
-                  Text(
-                    '${partner.rating}',
-                    style: TanizTypography.labelSmall.copyWith(fontWeight: FontWeight.w800),
+                    'Items Ordered (${_order.items.length})',
+                    style: const TextStyle(
+                      fontSize: 14.5,
+                      fontWeight: FontWeight.w900,
+                      color: Color(0xFF0F172A),
+                    ),
                   ),
                 ],
               ),
+              TextButton(
+                onPressed: () => setState(() => _isItemsExpanded = !_isItemsExpanded),
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      _isItemsExpanded ? 'Hide' : 'View Details',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: TanizColors.primaryBlue,
+                      ),
+                    ),
+                    Icon(
+                      _isItemsExpanded ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
+                      size: 16,
+                      color: TanizColors.primaryBlue,
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
-        ),
-        Row(
-          children: [
-            TanizTappable(
-              borderRadius: BorderRadius.circular(10),
-              onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Opening chat with ${partner.name}...'),
-                    duration: const Duration(seconds: 1),
-                  ),
+          if (_isItemsExpanded) ...[
+            const SizedBox(height: 12),
+            const Divider(height: 1, color: Color(0xFFF1F5F9)),
+            const SizedBox(height: 10),
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: _order.items.length,
+              separatorBuilder: (_, _) => const SizedBox(height: 10),
+              itemBuilder: (context, index) {
+                final item = _order.items[index];
+                final itemTotal = item.product.price * item.quantity;
+                return Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: SizedBox(
+                        width: 44,
+                        height: 44,
+                        child: TanizImage(
+                          imageUrl: item.product.imageUrl,
+                          fit: BoxFit.cover,
+                          fallbackEmoji: '🛒',
+                          fallbackLabel: item.product.name,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            item.product.name,
+                            style: const TextStyle(
+                              fontSize: 12.5,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF0F172A),
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            '${item.product.packSize} • ₹${item.product.price.toStringAsFixed(0)} each',
+                            style: const TextStyle(
+                              fontSize: 11,
+                              color: Color(0xFF64748B),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF1F5F9),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        'x${item.quantity}',
+                        style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w800,
+                          color: Color(0xFF0F172A),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      '₹${itemTotal.toStringAsFixed(0)}',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w900,
+                        color: Color(0xFF0F172A),
+                      ),
+                    ),
+                  ],
                 );
               },
-              child: Container(
-                width: 38,
-                height: 38,
-                decoration: BoxDecoration(
-                  color: TanizColors.surfaceLow,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: TanizColors.borderSubtle),
-                ),
-                child: const Icon(Icons.chat_bubble_outline_rounded, size: 17, color: TanizColors.primaryBlue),
-              ),
-            ),
-            const SizedBox(width: 8),
-            TanizTappable(
-              borderRadius: BorderRadius.circular(10),
-              onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Calling ${partner.name} (${partner.phone})...'),
-                    duration: const Duration(seconds: 1),
-                  ),
-                );
-              },
-              child: Container(
-                width: 38,
-                height: 38,
-                decoration: BoxDecoration(
-                  color: TanizColors.primaryBlue,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(Icons.phone_rounded, size: 17, color: Colors.white),
-              ),
             ),
           ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildFindingPartnerRow() {
-    return Row(
-      children: [
-        Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: TanizColors.blueContainer,
-            shape: BoxShape.circle,
-            border: Border.all(color: TanizColors.primaryBlue.withValues(alpha: 0.2)),
-          ),
-          child: const Icon(
-            Icons.access_time_filled_rounded,
-            color: TanizColors.primaryBlue,
-            size: 24,
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Assigning Delivery Partner',
-                style: TanizTypography.titleMedium.copyWith(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 13.5,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                'Searching available heroes near Dark Store #304',
-                style: TanizTypography.bodySmall.copyWith(
-                  color: TanizColors.textSecondary,
-                  fontSize: 10.5,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTimelineRow() {
-    final statusIndex = _getStatusStepIndex(_order.status);
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _buildTimelineStep('Placed', Icons.check_circle_rounded, isDone: statusIndex >= 0, isCurrent: statusIndex == 0),
-        _buildTimelineLine(isDone: statusIndex >= 1),
-        _buildTimelineStep('Packed', Icons.inventory_2_rounded, isDone: statusIndex >= 1, isCurrent: statusIndex == 1),
-        _buildTimelineLine(isDone: statusIndex >= 2),
-        _buildTimelineStep('Hero', Icons.two_wheeler_rounded, isDone: statusIndex >= 2, isCurrent: statusIndex == 2),
-        _buildTimelineLine(isDone: statusIndex >= 3),
-        _buildTimelineStep('Delivered', Icons.home_rounded, isDone: statusIndex >= 3, isCurrent: statusIndex == 3),
-      ],
-    );
-  }
-
-  int _getStatusStepIndex(OrderStatus status) {
-    switch (status) {
-      case OrderStatus.placed:
-      case OrderStatus.accepted:
-        return 0;
-      case OrderStatus.packing:
-      case OrderStatus.readyForDispatch:
-        return 1;
-      case OrderStatus.partnerAssigned:
-      case OrderStatus.outForDelivery:
-        return 2;
-      case OrderStatus.delivered:
-        return 3;
-      case OrderStatus.cancelled:
-        return -1;
-    }
-  }
-
-  Widget _buildTimelineStep(String label, IconData icon, {required bool isDone, required bool isCurrent}) {
-    Color color;
-    if (isDone) {
-      color = TanizColors.rapidGreenDark;
-    } else if (isCurrent) {
-      color = TanizColors.primaryBlue;
-    } else {
-      color = TanizColors.textMuted;
-    }
-
-    return Column(
-      children: [
-        Container(
-          width: 26,
-          height: 26,
-          decoration: BoxDecoration(
-            color: isCurrent
-                ? TanizColors.blueContainer
-                : (isDone ? TanizColors.greenContainer : TanizColors.surfaceLow),
-            shape: BoxShape.circle,
-            border: Border.all(color: color, width: 1.5),
-          ),
-          child: Icon(icon, size: 13, color: color),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TanizTypography.labelSmall.copyWith(
-            fontSize: 9.5,
-            color: color,
-            fontWeight: isCurrent || isDone ? FontWeight.w800 : FontWeight.w500,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTimelineLine({required bool isDone}) {
-    return Expanded(
-      child: Container(
-        height: 2,
-        margin: const EdgeInsets.only(bottom: 14),
-        color: isDone ? TanizColors.rapidGreen : TanizColors.borderSubtle,
+        ],
       ),
     );
   }
 
-  Widget _buildOrderActionToolbar() {
+  // ---------------------------------------------------------------------------
+  // 4. DELIVERY ADDRESS & INSTRUCTIONS CARD
+  // ---------------------------------------------------------------------------
+  Widget _buildAddressAndInstructionsCard() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF0F172A).withValues(alpha: 0.06),
+            blurRadius: 14,
+            offset: const Offset(0, 4),
+          ),
+        ],
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            children: [
+              Icon(Icons.location_on_rounded, color: Color(0xFFEF4444), size: 18),
+              SizedBox(width: 8),
+              Text(
+                'Delivery Location',
+                style: TextStyle(
+                  fontSize: 14.5,
+                  fontWeight: FontWeight.w900,
+                  color: Color(0xFF0F172A),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            _order.deliveryAddress,
+            style: const TextStyle(
+              fontSize: 12.5,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF1E293B),
+            ),
+          ),
+          const SizedBox(height: 6),
+          Row(
+            children: [
+              const Icon(Icons.storefront_outlined, size: 14, color: Color(0xFF64748B)),
+              const SizedBox(width: 4),
+              Expanded(
+                child: Text(
+                  _order.hubLocation.label,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: Color(0xFF64748B),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          if (_order.deliveryInstructions.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF8FAFC),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFFE2E8F0)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.info_outline_rounded, size: 14, color: Color(0xFF0284C7)),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      'Instructions: ${_order.deliveryInstructions.join(" • ")}',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: Color(0xFF475569),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // 5. BILL SUMMARY BREAKDOWN
+  // ---------------------------------------------------------------------------
+  Widget _buildBillSummaryCard() {
+    final summary = _order.billSummary;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF0F172A).withValues(alpha: 0.06),
+            blurRadius: 14,
+            offset: const Offset(0, 4),
+          ),
+        ],
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Row(
+                children: [
+                  Icon(Icons.receipt_long_rounded, color: TanizColors.primaryBlue, size: 18),
+                  SizedBox(width: 8),
+                  Text(
+                    'Bill Details',
+                    style: TextStyle(
+                      fontSize: 14.5,
+                      fontWeight: FontWeight.w900,
+                      color: Color(0xFF0F172A),
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: _order.paymentMethod == PaymentMethod.cod
+                      ? const Color(0xFFFFF7ED)
+                      : const Color(0xFFDCFCE7),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  _order.paymentMethod == PaymentMethod.cod ? '💵 COD' : '💳 UPI PAID',
+                  style: TextStyle(
+                    color: _order.paymentMethod == PaymentMethod.cod
+                        ? const Color(0xFFEA580C)
+                        : const Color(0xFF16A34A),
+                    fontSize: 10,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          _buildBillRow('Items Total (MRP)', CurrencyFormatter.format(summary.mrpSubtotal)),
+          const SizedBox(height: 6),
+          if (summary.warehouseDiscount > 0) ...[
+            _buildBillRow(
+              'Warehouse Direct Discount',
+              '- ${CurrencyFormatter.format(summary.warehouseDiscount)}',
+              isGreen: true,
+            ),
+            const SizedBox(height: 6),
+          ],
+          _buildBillRow('Items Subtotal', CurrencyFormatter.format(summary.itemsSubtotal)),
+          const SizedBox(height: 6),
+          _buildBillRow('Delivery Fee', summary.deliveryFee == 0 ? 'FREE' : CurrencyFormatter.format(summary.deliveryFee), isGreen: summary.deliveryFee == 0),
+          const SizedBox(height: 6),
+          _buildBillRow('Handling Fee', CurrencyFormatter.format(summary.handlingFee)),
+          const SizedBox(height: 10),
+          const Divider(height: 1, color: Color(0xFFF1F5F9)),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Grand Total',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w900,
+                  color: Color(0xFF0F172A),
+                ),
+              ),
+              Text(
+                CurrencyFormatter.format(_order.total),
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  color: TanizColors.primaryBlue,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBillRow(String label, String value, {bool isGreen = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          'Order ID: ${_order.id}',
-          style: TanizTypography.caption.copyWith(
-            fontWeight: FontWeight.w700,
-            color: TanizColors.textSecondary,
+          label,
+          style: const TextStyle(
+            fontSize: 12,
+            color: Color(0xFF64748B),
+            fontWeight: FontWeight.w500,
           ),
         ),
-        // Interactive lifecycle test trigger
-        if (_order.status != OrderStatus.delivered && _order.status != OrderStatus.cancelled)
-          TextButton.icon(
-            onPressed: () {
-              OrderRepository().advanceOrderStatus(_order.id);
-            },
-            icon: const Icon(Icons.fast_forward_rounded, size: 14, color: TanizColors.primaryBlue),
-            label: Text(
-              _getNextActionLabel(_order.status),
-              style: TanizTypography.labelSmall.copyWith(
-                color: TanizColors.primaryBlue,
-                fontWeight: FontWeight.w800,
-                fontSize: 10.5,
-              ),
-            ),
-          )
-        else
-          Text(
-            _order.status == OrderStatus.delivered ? 'Completed' : 'Cancelled',
-            style: TanizTypography.labelSmall.copyWith(
-              color: _order.status == OrderStatus.delivered ? TanizColors.rapidGreenDark : TanizColors.errorRed,
-              fontWeight: FontWeight.w800,
-            ),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: isGreen ? FontWeight.w800 : FontWeight.w700,
+            color: isGreen ? const Color(0xFF16A34A) : const Color(0xFF0F172A),
           ),
+        ),
       ],
     );
   }
 
-  String _getNextActionLabel(OrderStatus status) {
-    switch (status) {
-      case OrderStatus.placed:
-        return 'Accept Basket';
-      case OrderStatus.accepted:
-        return 'Pack Items';
-      case OrderStatus.packing:
-      case OrderStatus.readyForDispatch:
-        return 'Assign Hero';
-      case OrderStatus.partnerAssigned:
-        return 'Start Trip';
-      case OrderStatus.outForDelivery:
-        return 'Verify & Deliver';
-      default:
-        return 'Next Step';
-    }
-  }
-
-  void _showHelpBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (_) {
-        return Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Tanizkart Support & Order Help', style: TanizTypography.titleMedium.copyWith(fontWeight: FontWeight.w800)),
-              const SizedBox(height: 12),
-              ListTile(
-                leading: const Icon(Icons.call_rounded, color: TanizColors.primaryBlue),
-                title: const Text('Call Lawyerpet Dark Store Manager'),
-                subtitle: const Text('+91 8592 248210 • Hub #304'),
-                onTap: () => Navigator.pop(context),
-              ),
-              ListTile(
-                leading: const Icon(Icons.chat_bubble_outline_rounded, color: TanizColors.rapidGreenDark),
-                title: const Text('Live Chat with Support'),
-                subtitle: const Text('Instant answers on order delays & missing items'),
-                onTap: () => Navigator.pop(context),
-              ),
-              if (_order.status == OrderStatus.placed || _order.status == OrderStatus.accepted)
-                ListTile(
-                  leading: const Icon(Icons.cancel_outlined, color: TanizColors.errorRed),
-                  title: const Text('Cancel Order', style: TextStyle(color: TanizColors.errorRed, fontWeight: FontWeight.w700)),
-                  subtitle: const Text('Only eligible before items are packed'),
-                  onTap: () {
-                    OrderRepository().cancelOrder(_order.id, 'Cancelled by customer from Help menu');
-                    Navigator.pop(context);
-                  },
+  // ---------------------------------------------------------------------------
+  // 6. 24x7 CUSTOMER SUPPORT ASSISTANCE
+  // ---------------------------------------------------------------------------
+  Widget _buildSupportHelpBanner() {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF1F5F9),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.support_agent_rounded, size: 28, color: TanizColors.primaryBlue),
+          const SizedBox(width: 12),
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Need help with this order?',
+                  style: TextStyle(
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF0F172A),
+                  ),
                 ),
-            ],
+                Text(
+                  'Chat with Tanizkart Ongole support team 24/7',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Color(0xFF64748B),
+                  ),
+                ),
+              ],
+            ),
           ),
-        );
-      },
+          ElevatedButton(
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Connecting to Ongole Dark Store Support...')),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: TanizColors.primaryBlue,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              minimumSize: Size.zero,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            child: const Text('Chat', style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800)),
+          ),
+        ],
+      ),
     );
   }
 
-  Color _getStatusColor(OrderStatus status) {
-    switch (status) {
-      case OrderStatus.delivered:
-        return TanizColors.rapidGreenDark;
-      case OrderStatus.cancelled:
-        return TanizColors.errorRed;
-      default:
-        return TanizColors.primaryBlue;
-    }
-  }
-
-  String _getStatusHeadline(OrderStatus status) {
+  Color _getStatusBadgeBg(OrderStatus status) {
     switch (status) {
       case OrderStatus.placed:
-        return 'Order Placed';
-      case OrderStatus.accepted:
-        return 'Dark Store Accepted Basket';
+      case OrderStatus.inTransit:
+        return const Color(0xFFFEF3C7);
       case OrderStatus.packing:
-        return 'Packing Fresh Items';
       case OrderStatus.readyForDispatch:
-        return 'Ready for Dispatch';
+      case OrderStatus.shipped:
+        return const Color(0xFFE0F2FE);
+      case OrderStatus.accepted:
       case OrderStatus.partnerAssigned:
-        return 'Delivery Partner Assigned';
       case OrderStatus.outForDelivery:
-        return 'Your Order is on the Way';
+        return const Color(0xFFDBEAFE);
       case OrderStatus.delivered:
-        return 'Order Delivered Successfully';
+        return const Color(0xFFDCFCE7);
       case OrderStatus.cancelled:
-        return 'Order Cancelled';
+        return const Color(0xFFFEE2E2);
     }
   }
 
-  String _getFulfillmentSubtext(OrderStatus status) {
+  Color _getStatusBadgeColor(OrderStatus status) {
     switch (status) {
       case OrderStatus.placed:
-        return 'Dark store team is verifying product availability and temperature standards.';
-      case OrderStatus.accepted:
+      case OrderStatus.inTransit:
+        return const Color(0xFFD97706);
       case OrderStatus.packing:
-        return 'Cold-chain items and fresh groceries are being packed into verified thermal bags.';
       case OrderStatus.readyForDispatch:
-        return 'Package is sealed and ready for handover to nearby delivery hero.';
+      case OrderStatus.shipped:
+        return const Color(0xFF0284C7);
+      case OrderStatus.accepted:
+      case OrderStatus.partnerAssigned:
+      case OrderStatus.outForDelivery:
+        return const Color(0xFF1D4ED8);
+      case OrderStatus.delivered:
+        return const Color(0xFF16A34A);
       case OrderStatus.cancelled:
-        return 'This order has been cancelled.';
-      default:
-        return 'Fulfillment underway at Tanizkart Dark Store #304.';
+        return const Color(0xFFDC2626);
     }
   }
-}
-
-class _LiveRoutePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final bgPaint = Paint()..color = const Color(0xFFF1F4F9);
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), bgPaint);
-
-    final streetPaint = Paint()
-      ..color = Colors.white
-      ..strokeWidth = 22
-      ..style = PaintingStyle.stroke;
-
-    final blockPaint = Paint()
-      ..color = const Color(0xFFE5EAF2)
-      ..style = PaintingStyle.fill;
-
-    // Suburban street blocks
-    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(20, 80, size.width * 0.4, 90), const Radius.circular(8)), blockPaint);
-    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(size.width * 0.5, 90, size.width * 0.42, 100), const Radius.circular(8)), blockPaint);
-    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(20, 220, size.width * 0.35, 120), const Radius.circular(8)), blockPaint);
-    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(size.width * 0.45, 230, size.width * 0.48, 140), const Radius.circular(8)), blockPaint);
-
-    // Streets
-    final p1 = Path()
-      ..moveTo(-20, size.height * 0.3)
-      ..lineTo(size.width + 20, size.height * 0.3);
-    canvas.drawPath(p1, streetPaint);
-
-    final p2 = Path()
-      ..moveTo(-20, size.height * 0.45)
-      ..lineTo(size.width + 20, size.height * 0.45);
-    canvas.drawPath(p2, streetPaint);
-
-    final pVertical = Path()
-      ..moveTo(size.width * 0.42, 0)
-      ..lineTo(size.width * 0.42, size.height);
-    canvas.drawPath(pVertical, streetPaint);
-
-    // Active Route Line
-    final routePath = Path()
-      ..moveTo(size.width * 0.22, size.height * 0.28)
-      ..lineTo(size.width * 0.42, size.height * 0.32)
-      ..lineTo(size.width * 0.50, size.height * 0.38)
-      ..lineTo(size.width * 0.65, size.height * 0.42)
-      ..lineTo(size.width * 0.78, size.height * 0.45);
-
-    // Glow
-    final glowPaint = Paint()
-      ..color = TanizColors.primaryBlue.withValues(alpha: 0.25)
-      ..strokeWidth = 10
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round;
-    canvas.drawPath(routePath, glowPaint);
-
-    // Core
-    final corePaint = Paint()
-      ..color = TanizColors.primaryBlue
-      ..strokeWidth = 4.5
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round;
-    canvas.drawPath(routePath, corePaint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

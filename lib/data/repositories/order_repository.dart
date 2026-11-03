@@ -3,6 +3,7 @@ import 'dart:math';
 import '../models/order_model.dart';
 import '../models/cart_item_model.dart';
 import 'mock_product_repository.dart';
+import '../services/supabase_service.dart';
 import '../../core/pricing/pricing_engine.dart';
 
 class OrderRepository {
@@ -93,6 +94,9 @@ class OrderRepository {
     _idempotencyToOrderId[idempotencyKey] = orderId;
     _orderStreamController.add(newOrder);
 
+    // Asynchronously push to Supabase collection
+    SupabaseService().createOrderInSupabase(order: newOrder);
+
     return newOrder;
   }
 
@@ -111,8 +115,8 @@ class OrderRepository {
       case OrderStatus.placed:
         timeline.add(OrderTimelineEvent(
           status: OrderStatus.accepted,
-          title: 'Order Accepted',
-          subtitle: 'Dark Store #304 accepted your basket.',
+          title: 'Order Confirmed',
+          subtitle: 'Store received your order.',
           timestamp: now,
         ));
         updatedOrder = order.copyWith(
@@ -121,6 +125,20 @@ class OrderRepository {
         );
         break;
 
+      case OrderStatus.inTransit:
+        timeline.add(OrderTimelineEvent(
+          status: OrderStatus.shipped,
+          title: 'Order Shipped',
+          subtitle: 'Dispatched through Ongole distribution hub.',
+          timestamp: now,
+        ));
+        updatedOrder = order.copyWith(
+          status: OrderStatus.shipped,
+          timeline: timeline,
+        );
+        break;
+
+      case OrderStatus.shipped:
       case OrderStatus.accepted:
         timeline.add(OrderTimelineEvent(
           status: OrderStatus.packing,
@@ -256,16 +274,21 @@ class OrderRepository {
 
     switch (newStatus) {
       case OrderStatus.placed:
+      case OrderStatus.inTransit:
+        title = 'In Transit';
+        subtitle = 'Order packed and in transit from Lawyerpet Hub.';
+        break;
       case OrderStatus.packing:
       case OrderStatus.readyForDispatch:
-        title = 'Pending Order';
-        subtitle = 'Queued at Dark Store #304 for packing & pickup.';
+      case OrderStatus.shipped:
+        title = 'Shipped';
+        subtitle = 'Package processed and shipped from fulfillment dark store.';
         break;
       case OrderStatus.accepted:
       case OrderStatus.partnerAssigned:
       case OrderStatus.outForDelivery:
-        title = 'Accepted by Delivery Hero';
-        subtitle = 'K. Rajesh accepted order and is on the way.';
+        title = 'Out for Delivery';
+        subtitle = 'Delivery Hero K. Rajesh is on the way with your order.';
         break;
       case OrderStatus.delivered:
         title = 'Delivered Successfully';
@@ -300,12 +323,15 @@ class OrderRepository {
                 phone: '+91 91234 56789',
                 vehicleType: 'Electric Scooter • Eco Green',
               ))
-          : (newStatus == OrderStatus.placed ? null : order.deliveryPartner),
+          : (newStatus == OrderStatus.placed || newStatus == OrderStatus.inTransit ? null : order.deliveryPartner),
       clearDeliveryPartner: newStatus == OrderStatus.placed,
     );
 
     _orders[orderId] = updated;
     _orderStreamController.add(updated);
+
+    // Asynchronously update status in Supabase collection
+    SupabaseService().updateOrderStatusInSupabase(orderId, newStatus.displayTitle);
   }
 
   /// Verifies OTP and completes delivery
@@ -398,7 +424,7 @@ class OrderRepository {
       paymentStatus: PaymentStatus.paid,
       paymentMethod: PaymentMethod.upi,
       transactionId: 'UPI-TXN-902148',
-      status: OrderStatus.placed,
+      status: OrderStatus.inTransit,
       orderTime: now.subtract(const Duration(minutes: 4)),
       estimatedDeliveryTime: now.add(const Duration(minutes: 10)),
       deliveryOtp: '6523',
@@ -411,7 +437,7 @@ class OrderRepository {
       ),
     );
 
-    // Order 3: Pending / Ready for Dispatch (TK-77402) - Grocery staples
+    // Order 3: Shipped (TK-77402) - Grocery staples
     final items3 = [
       CartItem(product: allProds.firstWhere((p) => p.id == 'prod_aashirvaad_atta', orElse: () => allProds[0]), quantity: 1),
       CartItem(product: allProds.firstWhere((p) => p.id == 'prod_basmati_rice', orElse: () => allProds[1]), quantity: 1),
@@ -427,7 +453,7 @@ class OrderRepository {
       paymentStatus: PaymentStatus.paid,
       paymentMethod: PaymentMethod.cod,
       transactionId: null,
-      status: OrderStatus.readyForDispatch,
+      status: OrderStatus.shipped,
       orderTime: now.subtract(const Duration(minutes: 2)),
       estimatedDeliveryTime: now.add(const Duration(minutes: 11)),
       deliveryOtp: '3190',

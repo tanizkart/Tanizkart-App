@@ -9,6 +9,7 @@ import 'state/auth_state.dart';
 import 'state/wishlist_state.dart';
 import 'state/payment_state.dart';
 import 'features/splash/screens/splash_screen.dart';
+import 'data/services/supabase_service.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +19,7 @@ void main() {
       statusBarIconBrightness: Brightness.dark,
     ),
   );
+  SupabaseService().checkConnection();
   runApp(const TanizkartApp());
 }
 
