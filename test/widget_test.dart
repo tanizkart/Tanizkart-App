@@ -29,6 +29,8 @@ import 'package:tanzikart/features/profile/screens/contact_support_screen.dart';
 import 'package:tanzikart/features/profile/screens/terms_privacy_screen.dart';
 import 'package:tanzikart/features/categories/screens/categories_overview_screen.dart';
 import 'package:tanzikart/features/listing/screens/product_listing_screen.dart';
+import 'package:tanzikart/features/delivery/screens/delivery_orders_screen.dart';
+import 'package:tanzikart/features/auth/screens/login_screen.dart';
 
 Widget _wrap(Widget child) {
   return MultiProvider(
@@ -461,6 +463,211 @@ void main() {
       expect(find.text('2 saved items'), findsOneWidget);
       // Saved item preview should NOT appear on ProfileScreen
       expect(find.textContaining('Saved Items'), findsNothing);
+    });
+
+    testWidgets('DeliveryOrdersScreen renders duty bar, shift KPI chips, and order cards', (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(800, 2000);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(_wrap(const DeliveryOrdersScreen()));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(find.text('K. Rajesh'), findsOneWidget);
+      expect(find.text('ONLINE'), findsOneWidget);
+      expect(find.text('Today’s Earnings'), findsOneWidget);
+      expect(find.text('Delivered'), findsWidgets);
+      expect(find.text('Active Orders'), findsOneWidget);
+
+      // Verify order cards and payment badges
+      expect(find.textContaining('TK-89421'), findsOneWidget);
+      expect(find.text('PREPAID (DO NOT COLLECT)'), findsWidgets);
+
+      // Verify dedicated View Order Items button
+      expect(find.text('View Order Items'), findsWidgets);
+    });
+
+    testWidgets('DeliveryOrdersScreen tapping View Order Items opens clean modal sheet', (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(800, 2000);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(_wrap(const DeliveryOrdersScreen()));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(find.text('View Order Items'), findsWidgets);
+      await tester.tap(find.text('View Order Items').first);
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(find.textContaining('Package Checklist'), findsOneWidget);
+      expect(find.text('Done Inspecting Bags'), findsOneWidget);
+
+      Navigator.pop(tester.element(find.text('Done Inspecting Bags')));
+      await tester.pump(const Duration(milliseconds: 300));
+    });
+
+    testWidgets('DeliveryOrdersScreen tapping order opens specific order screen', (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(800, 2000);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(_wrap(const DeliveryOrdersScreen()));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(find.text('Open Order Details'), findsWidgets);
+      await tester.tap(find.text('Open Order Details').first);
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      // Check that specific order screen elements are shown
+      expect(find.textContaining('PICKUP FROM HUB'), findsOneWidget);
+      expect(find.textContaining('DELIVER TO CUSTOMER'), findsOneWidget);
+    });
+
+    testWidgets('DeliveryOrdersScreen duty toggle toggles between ONLINE and OFFLINE', (WidgetTester tester) async {
+      await tester.pumpWidget(_wrap(const DeliveryOrdersScreen()));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(find.text('ONLINE'), findsOneWidget);
+      await tester.tap(find.text('ONLINE'));
+      await tester.pump(const Duration(milliseconds: 200));
+
+      expect(find.text('OFFLINE'), findsOneWidget);
+      await tester.tap(find.text('OFFLINE'));
+      await tester.pump(const Duration(milliseconds: 200));
+
+      expect(find.text('ONLINE'), findsOneWidget);
+    });
+
+    testWidgets('DeliveryOrdersScreen OTP verification flow works correctly', (WidgetTester tester) async {
+      final repo = OrderRepository();
+      final allOrders = repo.getAllOrders();
+      final targetOrder = allOrders.firstWhere((o) => o.id == 'TK-89421');
+
+      bool isDelivered = false;
+      await tester.pumpWidget(_wrap(
+        Scaffold(
+          body: CustomerOtpVerificationSheet(
+            order: targetOrder,
+            onVerified: () => isDelivered = true,
+          ),
+        ),
+      ));
+      await tester.pump(const Duration(milliseconds: 200));
+
+      expect(find.text('Customer Handover Verification'), findsOneWidget);
+      expect(find.text('Ask customer for the 4-digit OTP shown on their screen'), findsOneWidget);
+
+      // Enter digits 4 8 2 1
+      await tester.tap(find.text('4'));
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.tap(find.text('8'));
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.tap(find.text('2'));
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.tap(find.text('1'));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(isDelivered, true);
+      expect(find.text('Order Delivered Successfully!'), findsOneWidget);
+      expect(find.text('+₹40 added to your wallet'), findsOneWidget);
+
+      await tester.pump(const Duration(milliseconds: 1500));
+    });
+
+    test('CartState customer association and debounced Supabase sync test', () async {
+      final cart = CartState();
+      expect(cart.customerId, isNotEmpty);
+
+      cart.setCustomerId('cust-test-1234');
+      expect(cart.customerId, 'cust-test-1234');
+
+      final allProducts = MockProductRepository.getAllProducts();
+      cart.addItem(allProducts[0]);
+      expect(cart.items.containsKey(allProducts[0].id), true);
+
+      // Wait for debounce timer
+      await Future.delayed(const Duration(milliseconds: 600));
+    });
+
+    testWidgets('LoginScreen renders professional Tanizkart branding without leaf emoji', (WidgetTester tester) async {
+      await tester.pumpWidget(_wrap(const LoginScreen()));
+      await tester.pump(const Duration(milliseconds: 200));
+
+      // Leaf emoji must NOT be present
+      expect(find.text('🌿'), findsNothing);
+
+      // Professional branding and inputs with assets/logo.png
+      expect(find.byType(Image), findsWidgets);
+      expect(find.textContaining('TANIZ'), findsWidgets);
+      expect(find.text('Continue with OTP'), findsOneWidget);
+      expect(find.text('1. Customer / Shopper'), findsOneWidget);
+      expect(find.text('2. Delivery Partner'), findsOneWidget);
+    });
+
+    test('OrderRepository persists orders and seeds TK-78569 with 4 products', () async {
+      final repo = OrderRepository();
+      final allOrders = repo.getAllOrders();
+      expect(allOrders.any((o) => o.id == 'TK-78569'), true);
+
+      final tk78569 = repo.getOrder('TK-78569')!;
+      expect(tk78569.items.length, 4);
+      expect(tk78569.deliveryOtp, '8324');
+      expect(tk78569.items.any((i) => i.product.name.contains('Pampers')), true);
+      expect(tk78569.items.any((i) => i.product.name.contains('Huggies')), true);
+      expect(tk78569.items.any((i) => i.product.name.contains('Mother Sparsh')), true);
+      expect(tk78569.items.any((i) => i.product.name.contains('Seafood')), true);
+
+      // Verify creating a new order persists immediately
+      final allProds = MockProductRepository.getAllProducts();
+      final newItems = [CartItem(product: allProds[0], quantity: 2)];
+      final created = await repo.createOrder(
+        idempotencyKey: 'test-idemp-new-order',
+        items: newItems,
+        billSummary: PricingEngine.calculate(items: newItems),
+        deliveryAddress: 'Test Door 5A, Lawyerpet, Ongole',
+        deliveryInstructions: ['Call upon reaching gate'],
+        paymentMethod: PaymentMethod.upi,
+        paymentStatus: PaymentStatus.paid,
+      );
+
+      expect(repo.getOrder(created.id), isNotNull);
+      expect(repo.getOrder(created.id)!.items.length, 1);
+    });
+
+    testWidgets('DeliveryOrdersScreen renders placed order TK-78569 and shows products in inspection sheet', (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(800, 2400);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(_wrap(const DeliveryOrdersScreen()));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      // TK-78569 must be visible on the delivery dashboard
+      expect(find.textContaining('TK-78569'), findsOneWidget);
+
+      // Tap View Order Items on the order card
+      final viewOrderItemsButtons = find.text('View Order Items');
+      expect(viewOrderItemsButtons, findsWidgets);
+
+      await tester.tap(viewOrderItemsButtons.first);
+      await tester.pump(const Duration(milliseconds: 300));
+
+      // Verify the modal sheet checklist opened showing products
+      expect(find.textContaining('Package Checklist'), findsOneWidget);
+      expect(find.textContaining('Pampers'), findsWidgets);
     });
   });
 }

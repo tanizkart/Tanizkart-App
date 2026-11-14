@@ -163,6 +163,10 @@ class Order {
   final OrderLocation hubLocation;
   final OrderLocation customerLocation;
   final List<OrderTimelineEvent> timeline;
+  final String customerId;
+  final String customerName;
+  final String customerPhone;
+  final String warehouseId;
 
   const Order({
     required this.id,
@@ -183,6 +187,10 @@ class Order {
     required this.hubLocation,
     required this.customerLocation,
     this.timeline = const [],
+    this.customerId = '00000000-0000-0000-0000-000000000001',
+    this.customerName = 'K. Yaswanth',
+    this.customerPhone = '+91 98480 22338',
+    this.warehouseId = 'wh_lawyerpet_304',
   });
 
   // Backward-compatible helpers
@@ -220,6 +228,10 @@ class Order {
     DateTime? estimatedDeliveryTime,
     String? deliveryOtp,
     List<OrderTimelineEvent>? timeline,
+    String? customerId,
+    String? customerName,
+    String? customerPhone,
+    String? warehouseId,
   }) {
     return Order(
       id: id,
@@ -240,6 +252,10 @@ class Order {
       hubLocation: hubLocation,
       customerLocation: customerLocation,
       timeline: timeline ?? this.timeline,
+      customerId: customerId ?? this.customerId,
+      customerName: customerName ?? this.customerName,
+      customerPhone: customerPhone ?? this.customerPhone,
+      warehouseId: warehouseId ?? this.warehouseId,
     );
   }
 }

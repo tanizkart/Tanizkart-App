@@ -18,6 +18,7 @@ import 'dark_store_vicinity_screen.dart';
 import 'help_center_screen.dart';
 import 'contact_support_screen.dart';
 import 'terms_privacy_screen.dart';
+import '../../delivery/screens/delivery_orders_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -620,7 +621,101 @@ class ProfileScreen extends StatelessWidget {
               ),
             ]),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
+
+            // ==========================================
+            // DELIVERY PARTNER PORTAL QUICK ACCESS
+            // ==========================================
+            Container(
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFFFF7ED), Color(0xFFFEF3C7)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: const Color(0xFFFED7AA)),
+                boxShadow: const [
+                  BoxShadow(color: Color(0x06000000), blurRadius: 8, offset: Offset(0, 2)),
+                ],
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const DeliveryOrdersScreen()),
+                    );
+                  },
+                  borderRadius: BorderRadius.circular(16),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 44,
+                          height: 44,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFEA580C),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Icon(Icons.two_wheeler_rounded, color: Colors.white, size: 24),
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Text(
+                                    'Delivery Hero Portal',
+                                    style: TextStyle(
+                                      color: Color(0xFF0F172A),
+                                      fontWeight: FontWeight.w900,
+                                      fontSize: 14.5,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1.5),
+                                    decoration: const BoxDecoration(
+                                      color: Color(0xFFDCFCE7),
+                                      borderRadius: BorderRadius.all(Radius.circular(6)),
+                                    ),
+                                    child: const Text(
+                                      'ONLINE',
+                                      style: TextStyle(
+                                        color: Color(0xFF15803D),
+                                        fontSize: 9.5,
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 2),
+                              const Text(
+                                'Manage live dark store pickups, OTPs & orders',
+                                style: TextStyle(
+                                  color: Color(0xFF78350F),
+                                  fontSize: 11.5,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: Color(0xFFEA580C)),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 14),
 
             // ==========================================
             // LOGOUT BUTTON

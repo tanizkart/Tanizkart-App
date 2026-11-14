@@ -1,4 +1,5 @@
 class UserProfile {
+  final String id;
   final String name;
   final String phone;
   final String email;
@@ -13,6 +14,7 @@ class UserProfile {
   final String defaultAddress;
 
   const UserProfile({
+    this.id = '00000000-0000-0000-0000-000000000001',
     required this.name,
     required this.phone,
     this.email = 'yaswanth@tanizkart.com',
@@ -31,6 +33,7 @@ class UserProfile {
   String get phoneNumber => phone;
 
   UserProfile copyWith({
+    String? id,
     String? name,
     String? phone,
     String? email,
@@ -45,6 +48,7 @@ class UserProfile {
     String? defaultAddress,
   }) {
     return UserProfile(
+      id: id ?? this.id,
       name: name ?? this.name,
       phone: phone ?? this.phone,
       email: email ?? this.email,

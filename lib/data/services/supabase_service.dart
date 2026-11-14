@@ -2,11 +2,13 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/product_model.dart';
 import '../models/order_model.dart';
+import '../models/cart_item_model.dart';
 
 /// Production Supabase Service for Tanizkart Mobile App
-/// Connects to Taniz Admin Supabase database instance with graceful offline fallback.
+/// Connects to Taniz Admin Supabase database instance with graceful offline fallback & local caching.
 class SupabaseService {
   static final SupabaseService _instance = SupabaseService._internal();
   factory SupabaseService() => _instance;
@@ -69,16 +71,130 @@ class SupabaseService {
         }).toList();
       }
     } catch (e) {
-      debugPrint('[SupabaseService] fetchProducts failed, using local store: $e');
+      debugPrint('[SupabaseService] fetchProducts fallback: $e');
     }
     return null;
   }
 
+  // ===========================================================================
+  // 1. USER CART SYNCHRONIZATION (Supabase + Local Debounced Sync)
+  // ===========================================================================
+
+  /// Debounce-sync active cart payload to Supabase & persistent storage
+  Future<bool> syncCartToSupabase({
+    required String customerId,
+    required List<CartItem> items,
+  }) async {
+    final serializedItems = items.map((item) {
+      return {
+        'product_id': item.product.id,
+        'name': item.product.name,
+        'price': item.product.price,
+        'quantity': item.quantity,
+        'pack_size': item.product.packSize,
+        'image': item.product.imageUrl,
+      };
+    }).toList();
+
+    // Cache locally first for instantaneous offline persistence
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('taniz_cart_$customerId', jsonEncode(serializedItems));
+    } catch (e) {
+      debugPrint('[SupabaseService] Local cart cache fallback: $e');
+    }
+
+    // Push to Supabase 'carts' table if reachable
+    try {
+      final uri = Uri.parse('$supabaseUrl/rest/v1/carts');
+      final payload = {
+        'customer_id': customerId,
+        'items': serializedItems,
+        'total_items': items.fold(0, (sum, i) => sum + i.quantity),
+        'updated_at': DateTime.now().toIso8601String(),
+      };
+
+      final headers = Map<String, String>.from(_headers)
+        ..['Prefer'] = 'resolution=merge-duplicates';
+
+      final res = await http.post(
+        uri,
+        headers: headers,
+        body: jsonEncode(payload),
+      ).timeout(const Duration(seconds: 4));
+
+      if (res.statusCode >= 200 && res.statusCode < 300) {
+        _isOnline = true;
+        debugPrint('[SupabaseService] Cart synced to Supabase for customer $customerId');
+        return true;
+      }
+    } catch (e) {
+      debugPrint('[SupabaseService] syncCartToSupabase offline fallback: $e');
+    }
+
+    return false;
+  }
+
+  /// Fetches saved cart for the user upon login from Supabase or local cache
+  Future<List<Map<String, dynamic>>?> fetchUserCartFromSupabase(String customerId) async {
+    try {
+      final uri = Uri.parse('$supabaseUrl/rest/v1/carts?customer_id=eq.$customerId&select=*');
+      final res = await http.get(uri, headers: _headers).timeout(const Duration(seconds: 4));
+
+      if (res.statusCode >= 200 && res.statusCode < 300) {
+        final List<dynamic> list = jsonDecode(res.body);
+        if (list.isNotEmpty && list.first['items'] != null) {
+          final items = list.first['items'] as List<dynamic>;
+          _isOnline = true;
+          return items.cast<Map<String, dynamic>>();
+        }
+      }
+    } catch (e) {
+      debugPrint('[SupabaseService] fetchUserCartFromSupabase offline: $e');
+    }
+
+    // Fallback to local storage
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final cached = prefs.getString('taniz_cart_$customerId');
+      if (cached != null) {
+        final List<dynamic> list = jsonDecode(cached);
+        return list.cast<Map<String, dynamic>>();
+      }
+    } catch (e) {
+      debugPrint('[SupabaseService] Local cart read error: $e');
+    }
+
+    return null;
+  }
+
+  /// Empties user's cart in Supabase & local storage
+  Future<bool> clearUserCartInSupabase(String customerId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('taniz_cart_$customerId');
+    } catch (_) {}
+
+    try {
+      final uri = Uri.parse('$supabaseUrl/rest/v1/carts?customer_id=eq.$customerId');
+      final res = await http.delete(uri, headers: _headers).timeout(const Duration(seconds: 4));
+      return (res.statusCode >= 200 && res.statusCode < 300);
+    } catch (e) {
+      debugPrint('[SupabaseService] clearUserCartInSupabase error: $e');
+    }
+    return false;
+  }
+
+  // ===========================================================================
+  // 2. ORDER PLACEMENT & SYNCHRONIZATION (Supabase 'orders' table)
+  // ===========================================================================
+
   /// Inserts a newly placed order into the Supabase 'orders' collection/table
   Future<bool> createOrderInSupabase({
     required Order order,
-    String customerName = 'K. Rajesh (Customer)',
-    String customerPhone = '+91 98765 43210',
+    String? customerName,
+    String? customerPhone,
+    String? customerId,
   }) async {
     try {
       final uri = Uri.parse('$supabaseUrl/rest/v1/orders');
@@ -97,32 +213,36 @@ class SupabaseService {
 
       final payload = {
         'order_number': order.id,
-        'customer_id': '00000000-0000-0000-0000-000000000001',
-        'customer_name': customerName,
-        'customer_phone': customerPhone,
+        'customer_id': customerId ?? order.customerId,
+        'customer_name': customerName ?? order.customerName,
+        'customer_phone': customerPhone ?? order.customerPhone,
         'customer_email': 'customer@tanizkart.com',
-        'delivery_address': {
-          'address': order.deliveryAddress,
-          'instructions': order.deliveryInstructions,
-          'otp': order.deliveryOtp,
-        },
-        'service_area_name': 'Ongole Central',
+        'delivery_address': order.deliveryAddress,
+        'delivery_instructions': order.deliveryInstructions,
+        'warehouse_id': order.warehouseId,
         'warehouse_name': order.hubLocation.label,
         'items': itemsJson,
         'subtotal': order.subtotal,
-        'mrp_total': order.billSummary.mrpSubtotal,
-        'total_discount': order.discount,
         'delivery_fee': order.deliveryFee,
-        'premium_free_delivery': order.deliveryFee == 0.0,
         'grand_total': order.total,
-        'status': order.status.displayTitle,
-        'payment_status': order.paymentStatus == PaymentStatus.paid ? 'Paid' : 'Pending',
-        'payment_method': order.paymentMethod == PaymentMethod.cod ? 'Cash on Delivery' : 'UPI Instant',
-        'transaction_ref': order.transactionId ?? 'TXN-${DateTime.now().millisecondsSinceEpoch}',
+        'status': 'Pending',
+        'payment_status': order.paymentStatus == PaymentStatus.paid ? 'Paid' : 'COD',
+        'delivery_otp': order.deliveryOtp ?? '1234',
+        'created_at': DateTime.now().toIso8601String(),
         'assigned_delivery_partner_id': order.deliveryPartner != null ? '00000000-0000-0000-0000-000000000002' : null,
         'assigned_delivery_partner_name': order.deliveryPartner?.name,
         'notes': order.customInstruction,
       };
+
+      // Always cache order payload locally for instantaneous offline resilience
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final raw = prefs.getString('taniz_supabase_offline_orders') ?? '[]';
+        final List<dynamic> list = jsonDecode(raw);
+        list.removeWhere((item) => item['order_number'] == order.id);
+        list.insert(0, payload);
+        await prefs.setString('taniz_supabase_offline_orders', jsonEncode(list));
+      } catch (_) {}
 
       final res = await http.post(
         uri,
@@ -141,15 +261,45 @@ class SupabaseService {
     return false;
   }
 
-  /// Updates an order's status in Supabase
-  Future<bool> updateOrderStatusInSupabase(String orderNumber, String status, {String? notes}) async {
+  /// Updates an order's status in Supabase (e.g. Accepted -> Out for Delivery -> Delivered via OTP)
+  Future<bool> updateOrderStatusInSupabase(
+    String orderNumber,
+    String status, {
+    String? notes,
+    String? deliveryPartnerName,
+    String? deliveryPartnerId,
+  }) async {
+    // Update local offline cache as well
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final raw = prefs.getString('taniz_supabase_offline_orders');
+      if (raw != null && raw.isNotEmpty) {
+        final List<dynamic> list = jsonDecode(raw);
+        for (final item in list) {
+          if (item['order_number'] == orderNumber) {
+            item['status'] = status;
+            item['updated_at'] = DateTime.now().toIso8601String();
+            if (notes != null) item['notes'] = notes;
+            if (deliveryPartnerName != null) item['assigned_delivery_partner_name'] = deliveryPartnerName;
+          }
+        }
+        await prefs.setString('taniz_supabase_offline_orders', jsonEncode(list));
+      }
+    } catch (_) {}
+
     try {
       final uri = Uri.parse('$supabaseUrl/rest/v1/orders?order_number=eq.$orderNumber');
-      final payload = {
+      final payload = <String, dynamic>{
         'status': status,
         'updated_at': DateTime.now().toIso8601String(),
-        'notes': ?notes,
       };
+      if (notes != null) payload['notes'] = notes;
+      if (deliveryPartnerName != null) {
+        payload['assigned_delivery_partner_name'] = deliveryPartnerName;
+      }
+      if (deliveryPartnerId != null) {
+        payload['assigned_delivery_partner_id'] = deliveryPartnerId;
+      }
 
       final res = await http.patch(
         uri,
@@ -169,9 +319,16 @@ class SupabaseService {
   }
 
   /// Fetches orders from Supabase for Delivery Guy portal
-  Future<List<Map<String, dynamic>>?> fetchOrdersFromSupabase() async {
+  Future<List<Map<String, dynamic>>?> fetchOrdersFromSupabase({
+    String warehouseId = 'wh_lawyerpet_304',
+    bool activeOnly = false,
+  }) async {
     try {
-      final uri = Uri.parse('$supabaseUrl/rest/v1/orders?select=*&order=created_at.desc');
+      var query = 'order=created_at.desc';
+      if (activeOnly) {
+        query += '&status=neq.Delivered';
+      }
+      final uri = Uri.parse('$supabaseUrl/rest/v1/orders?$query');
       final res = await http.get(uri, headers: _headers).timeout(const Duration(seconds: 5));
       if (res.statusCode >= 200 && res.statusCode < 300) {
         final List<dynamic> data = jsonDecode(res.body);
@@ -181,6 +338,17 @@ class SupabaseService {
     } catch (e) {
       debugPrint('[SupabaseService] fetchOrdersFromSupabase fallback: $e');
     }
+
+    // Fallback to local offline cache
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final raw = prefs.getString('taniz_supabase_offline_orders');
+      if (raw != null && raw.isNotEmpty) {
+        final List<dynamic> list = jsonDecode(raw);
+        return list.cast<Map<String, dynamic>>();
+      }
+    } catch (_) {}
+
     return null;
   }
 }

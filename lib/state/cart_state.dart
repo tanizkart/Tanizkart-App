@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import '../data/models/product_model.dart';
 import '../data/models/cart_item_model.dart';
@@ -5,11 +6,14 @@ import '../data/models/order_model.dart';
 import '../data/models/coupon_model.dart';
 import '../data/repositories/mock_product_repository.dart';
 import '../data/repositories/order_repository.dart';
+import '../data/services/supabase_service.dart';
 import '../core/pricing/pricing_engine.dart';
 
 class CartState extends ChangeNotifier {
   final Map<String, CartItem> _items = {};
   Coupon? _appliedCoupon;
+  String _customerId = '00000000-0000-0000-0000-000000000001';
+  Timer? _syncDebounceTimer;
 
   CartState() {
     // Seed with initial items for instant interactive feel
@@ -25,6 +29,7 @@ class CartState extends ChangeNotifier {
     }
   }
 
+  String get customerId => _customerId;
   Map<String, CartItem> get items => Map.unmodifiable(_items);
   List<CartItem> get itemsList => _items.values.toList();
   List<Product> get distinctProducts => _items.values.map((i) => i.product).toList();
@@ -58,12 +63,70 @@ class CartState extends ChangeNotifier {
     return _items[productId]?.quantity ?? 0;
   }
 
+  /// Sets active user association and hydrates cart from Supabase / cache
+  void setCustomerId(String id) {
+    if (_customerId != id) {
+      _customerId = id;
+      hydrateUserCart(id);
+    }
+  }
+
+  /// Debounce-sync the active cart state to Supabase
+  void _scheduleSync() {
+    _syncDebounceTimer?.cancel();
+    _syncDebounceTimer = Timer(const Duration(milliseconds: 500), () {
+      SupabaseService().syncCartToSupabase(
+        customerId: _customerId,
+        items: itemsList,
+      );
+    });
+  }
+
+  /// Hydrates user cart from Supabase or persistent local cache on user login
+  Future<void> hydrateUserCart(String customerId) async {
+    _customerId = customerId;
+    try {
+      final remoteItems = await SupabaseService().fetchUserCartFromSupabase(customerId);
+      if (remoteItems != null && remoteItems.isNotEmpty) {
+        final allProducts = MockProductRepository.getAllProducts();
+        _items.clear();
+        for (final raw in remoteItems) {
+          final pid = raw['product_id']?.toString() ?? raw['id']?.toString() ?? '';
+          final prod = allProducts.firstWhere(
+            (p) => p.id == pid,
+            orElse: () => Product(
+              id: pid.isNotEmpty ? pid : 'prod_item',
+              name: raw['name']?.toString() ?? 'Essential Item',
+              brand: 'Tanizkart',
+              packSize: raw['pack_size']?.toString() ?? 'Standard',
+              price: (raw['price'] is num) ? (raw['price'] as num).toDouble() : 50.0,
+              originalPrice: (raw['mrp'] is num) ? (raw['mrp'] as num).toDouble() : 50.0,
+              discountPercent: 0,
+              imageUrl: raw['image']?.toString() ?? '',
+              categoryId: 'cat_groceries',
+              subcategory: 'All',
+              description: '',
+            ),
+          );
+          final qty = (raw['quantity'] is num) ? (raw['quantity'] as num).toInt() : 1;
+          if (qty > 0) {
+            _items[prod.id] = CartItem(product: prod, quantity: qty);
+          }
+        }
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint('[CartState] hydrateUserCart error: $e');
+    }
+  }
+
   void addItem(Product product) {
     if (_items.containsKey(product.id)) {
       _items[product.id]!.quantity += 1;
     } else {
       _items[product.id] = CartItem(product: product, quantity: 1);
     }
+    _scheduleSync();
     notifyListeners();
   }
 
@@ -75,6 +138,7 @@ class CartState extends ChangeNotifier {
     } else {
       _items.remove(product.id);
     }
+    _scheduleSync();
     notifyListeners();
   }
 
@@ -88,12 +152,15 @@ class CartState extends ChangeNotifier {
         _items[product.id] = CartItem(product: product, quantity: quantity);
       }
     }
+    _scheduleSync();
     notifyListeners();
   }
 
   void clearCart() {
     _items.clear();
     _appliedCoupon = null;
+    _syncDebounceTimer?.cancel();
+    SupabaseService().clearUserCartInSupabase(_customerId);
     notifyListeners();
   }
 
@@ -150,7 +217,7 @@ class CartState extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Places an order via authoritative OrderRepository
+  /// Places an order via authoritative OrderRepository and syncs to Supabase
   Future<Order> placeOrder({
     required String idempotencyKey,
     required String deliveryAddress,
@@ -159,6 +226,10 @@ class CartState extends ChangeNotifier {
     required PaymentMethod paymentMethod,
     required PaymentStatus paymentStatus,
     String? transactionId,
+    String? customerId,
+    String? customerName,
+    String? customerPhone,
+    String? warehouseId,
   }) async {
     final summary = billSummary;
     final order = await OrderRepository().createOrder(
@@ -171,8 +242,13 @@ class CartState extends ChangeNotifier {
       paymentMethod: paymentMethod,
       paymentStatus: paymentStatus,
       transactionId: transactionId,
+      customerId: customerId ?? _customerId,
+      customerName: customerName,
+      customerPhone: customerPhone,
+      warehouseId: warehouseId,
     );
 
+    // Empty user cart in local state and in Supabase
     clearCart();
     return order;
   }

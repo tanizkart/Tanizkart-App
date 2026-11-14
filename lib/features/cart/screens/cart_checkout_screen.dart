@@ -1013,8 +1013,11 @@ class _CartCheckoutScreenState extends State<CartCheckoutScreen> {
         deliveryInstructions: _selectedInstructions.toList(),
         customInstruction: customInstruction,
         paymentMethod: _selectedPaymentMethod,
-        paymentStatus: PaymentStatus.paid,
+        paymentStatus: _selectedPaymentMethod == PaymentMethod.cod ? PaymentStatus.pending : PaymentStatus.paid,
         transactionId: result.transactionId,
+        customerId: authState.profile.id,
+        customerName: authState.userName,
+        customerPhone: authState.phoneNumber,
       );
 
       if (!mounted) return;
